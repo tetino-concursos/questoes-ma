@@ -169,14 +169,27 @@ const SUPABASE_PUBLIC_KEY='sb_publishable_rRKrza682_7gRi-I_MTyAA_cQYP61Xs';
 const client=window.supabase?.createClient(SUPABASE_URL,SUPABASE_PUBLIC_KEY);
 let usuario=null,historico={},lista=[],indice=0,selecionada=null,corrigida=false,authVersion=0,catalogoCarregado=false;
 const GUEST_KEY='questoesMA_v1';
+const PROGRESS_PREFIX='tetino_progresso_v2_';
+const FILTER_IDS=['banca','ano','organizacao','materia','tipo','modo'];
+let progressoRestauradoPara=null;
+function progressKey(){return usuario?.id?PROGRESS_PREFIX+usuario.id:null}
+function readProgress(){const key=progressKey();if(!key)return null;try{const p=JSON.parse(localStorage.getItem(key)||'null');return p&&typeof p==='object'?p:null}catch{return null}}
+function saveProgress(){const key=progressKey();if(!key||!catalogoCarregado)return;const q=lista[indice];try{localStorage.setItem(key,JSON.stringify({filters:Object.fromEntries(FILTER_IDS.map(id=>[id,$(id).value])),questionId:q?.id??null,index:indice,selected:selecionada,corrected:corrigida,updatedAt:Date.now()}))}catch{}}
+function restoreFilters(p){if(!p?.filters)return;for(const id of FILTER_IDS){const value=p.filters[id];if(typeof value==='string'&&Array.from($(id).options).some(o=>o.value===value))$(id).value=value}}
+function restorePosition(p){if(!p||!lista.length)return;const i=lista.findIndex(q=>q.id===p.questionId);if(i>=0){indice=i;mostrar();if(Number.isInteger(p.selected)&&p.selected>=0&&p.selected<lista[indice].opcoes.length){selecionada=p.selected;const opts=document.querySelectorAll('.option');opts[selecionada]?.classList.add('selected');if(p.corrected){ // Reexibe a correção sem salvar outra resposta.
+  const q=lista[indice];corrigida=true;opts.forEach((el,j)=>{el.classList.remove('selected');if(j===q.correta)el.classList.add('correct');else if(j===selecionada)el.classList.add('wrong')});
+  const fb=$('feedback');fb.replaceChildren();const result=document.createElement('strong');result.textContent=selecionada===q.correta?'✓ Você acertou!':'✕ Você errou.';const title=document.createElement('div');title.className='teacher-title';title.textContent='📘 Comentário do professor';const answer=document.createElement('div');answer.className='teacher-answer';answer.textContent='Resposta correta: '+String.fromCharCode(65+q.correta)+'. '+q.opcoes[q.correta];const exp=document.createElement('p');exp.className='teacher-explanation';exp.textContent=q.comentario?.trim()||'Explicação em preparação. Confira a alternativa correta indicada acima.';fb.append(result,title,answer,exp);
+  if(q.recurso_banca?.trim()){const recurso=document.createElement('section');recurso.className='recurso-banca';const cab=document.createElement('div');cab.className='recurso-titulo';cab.textContent='⚖️ Recurso da banca — Instituto Legatus';const decisao=document.createElement('div');decisao.className='recurso-decisao';decisao.textContent='Resultado: '+(q.resultado_recurso||'Consulte a justificativa oficial');const texto=document.createElement('p');texto.className='recurso-texto';texto.textContent=q.recurso_banca;recurso.append(cab,decisao,texto);fb.appendChild(recurso)}fb.classList.remove('hidden');$('responder').disabled=true;
+}}}}
+
 const BANCA_ATIVA='Instituto Legatus';
 const PROVA_LEGATUS_INICIO=2024001, PROVA_LEGATUS_FIM=2024040;
 function guestHistory(){try{return JSON.parse(localStorage.getItem(GUEST_KEY)||'{}')||{}}catch{return {}}}
 function message(text,error=false){$('auth-message').textContent=text;$('auth-message').className='auth-message '+(error?'error':'ok')}
 function setSync(text){$('sync-status').textContent=text}
 function estatisticas(){const h=Object.values(historico);$('respondidas').textContent=h.length;$('acertos').textContent=h.filter(x=>x.acertou).length;$('taxa').textContent=h.length?Math.round(h.filter(x=>x.acertou).length/h.length*100)+'%':'0%'}
-function filtros(){const b=$('banca').value,a=$('ano').value,o=$('organizacao').value,m=$('materia').value,t=$('tipo').value,e=$('modo').value;lista=questoes.filter(q=>(!b||q.banca===b)&&(!a||String(q.ano)===a)&&(!o||q.organizacao===o)&&(!m||q.materia===m)&&(!t||q.tipo===t)&&(e!=='erros'||historico[q.id]?.acertou===false));indice=0;mostrar()}
-function mostrar(){selecionada=null;corrigida=false;$('feedback').classList.add('hidden');$('responder').disabled=!catalogoCarregado;const q=lista[indice];$('opcoes').innerHTML='';if(!q){$('meta').textContent=catalogoCarregado?'Nenhuma questão encontrada':'Carregando catálogo...';$('enunciado').textContent=catalogoCarregado?'Altere os filtros ou resolva algumas questões para formar seu caderno de erros.':'Aguarde a consulta ao Supabase.';$('contagem').textContent='0 questões';$('responder').disabled=true;$('proxima').disabled=true;return}$('proxima').disabled=false;$('meta').replaceChildren();[['Ano',String(q.ano)],['Organização',q.organizacao],['Matéria',q.materia]].forEach(([rotulo,valor])=>{const item=document.createElement('div');item.className='question-meta-item';const nome=document.createElement('span');nome.textContent=rotulo;const dado=document.createElement('strong');dado.textContent=valor;item.append(nome,dado);$('meta').appendChild(item)});$('enunciado').textContent=q.texto;$('contagem').textContent='Questão '+(indice+1)+' de '+lista.length;q.opcoes.forEach((op,i)=>{const btn=document.createElement('button');btn.className='option';btn.textContent=String.fromCharCode(65+i)+'. '+op;btn.onclick=()=>{if(corrigida)return;selecionada=i;document.querySelectorAll('.option').forEach(el=>el.classList.remove('selected'));btn.classList.add('selected')};$('opcoes').appendChild(btn)})}
+function filtros(){const b=$('banca').value,a=$('ano').value,o=$('organizacao').value,m=$('materia').value,t=$('tipo').value,e=$('modo').value;lista=questoes.filter(q=>(!b||q.banca===b)&&(!a||String(q.ano)===a)&&(!o||q.organizacao===o)&&(!m||q.materia===m)&&(!t||q.tipo===t)&&(e!=='erros'||historico[q.id]?.acertou===false));indice=0;mostrar();saveProgress()}
+function mostrar(){selecionada=null;corrigida=false;$('feedback').classList.add('hidden');$('responder').disabled=!catalogoCarregado;const q=lista[indice];$('opcoes').innerHTML='';if(!q){$('meta').textContent=catalogoCarregado?'Nenhuma questão encontrada':'Carregando catálogo...';$('enunciado').textContent=catalogoCarregado?'Altere os filtros ou resolva algumas questões para formar seu caderno de erros.':'Aguarde a consulta ao Supabase.';$('contagem').textContent='0 questões';$('responder').disabled=true;$('proxima').disabled=true;return}$('proxima').disabled=false;$('meta').replaceChildren();[['Ano',String(q.ano)],['Organização',q.organizacao],['Matéria',q.materia]].forEach(([rotulo,valor])=>{const item=document.createElement('div');item.className='question-meta-item';const nome=document.createElement('span');nome.textContent=rotulo;const dado=document.createElement('strong');dado.textContent=valor;item.append(nome,dado);$('meta').appendChild(item)});$('enunciado').textContent=q.texto;$('contagem').textContent='Questão '+(indice+1)+' de '+lista.length;q.opcoes.forEach((op,i)=>{const btn=document.createElement('button');btn.className='option';btn.textContent=String.fromCharCode(65+i)+'. '+op;btn.onclick=()=>{if(corrigida)return;selecionada=i;document.querySelectorAll('.option').forEach(el=>el.classList.remove('selected'));btn.classList.add('selected');saveProgress()};$('opcoes').appendChild(btn)})}
 async function saveAnswer(q,resposta,acertou){const currentUser=usuario;if(!currentUser){try{localStorage.setItem(GUEST_KEY,JSON.stringify(historico))}catch{}return}setSync('Salvando resposta...');const {error}=await client.from('respostas').upsert({user_id:currentUser.id,questao_id:q.id,resposta,acertou,atualizado_em:new Date().toISOString()},{onConflict:'user_id,questao_id'});if(usuario?.id!==currentUser.id)return;if(error){setSync('Não foi possível sincronizar esta resposta.');message('Erro ao salvar: '+error.message,true)}else setSync('Histórico sincronizado com sua conta.')}
 async function corrigir(){const q=lista[indice];if(!q||corrigida)return;if(selecionada===null){$('feedback').textContent='Selecione uma alternativa antes de corrigir.';$('feedback').classList.remove('hidden');return}corrigida=true;const acertou=selecionada===q.correta;historico[q.id]={acertou,resposta:selecionada};estatisticas();document.querySelectorAll('.option').forEach((el,i)=>{el.classList.remove('selected');if(i===q.correta)el.classList.add('correct');else if(i===selecionada)el.classList.add('wrong')});$('feedback').replaceChildren();
   const resultado=document.createElement('strong');
@@ -194,7 +207,7 @@ async function corrigir(){const q=lista[indice];if(!q||corrigida)return;if(selec
     const texto=document.createElement('p');texto.className='recurso-texto';texto.textContent=q.recurso_banca;
     recurso.append(cab,decisao,texto);$('feedback').appendChild(recurso);
   }
-  $('feedback').classList.remove('hidden');$('responder').disabled=true;await saveAnswer(q,selecionada,acertou)}
+  $('feedback').classList.remove('hidden');$('responder').disabled=true;saveProgress();await saveAnswer(q,selecionada,acertou)}
 function preencher(id,values){$(id).length=1;[...new Set(values.filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR')).forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v;$(id).appendChild(o)})}
 function atualizarTela(){
   const logado=!!usuario;
@@ -204,7 +217,9 @@ function atualizarTela(){
 }
 async function loadAccount(session){
   const version=++authVersion;
-  usuario=session?.user||null;
+  const nextUser=session?.user||null;
+  if(usuario?.id&&nextUser?.id===usuario.id&&catalogoCarregado)return; // Evita reinício por renovação de sessão ou troca de aba.
+  usuario=nextUser;
   document.body.classList.toggle('logged-in', !!usuario);
   atualizarTela();
   $('auth-form').classList.toggle('hidden',!!usuario);
@@ -255,7 +270,11 @@ async function carregarQuestoes(version=authVersion){
     preencher('ano',questoes.map(q=>String(q.ano)));
     preencher('organizacao',questoes.map(q=>q.organizacao));
     preencher('materia',questoes.map(q=>q.materia));
+    const saved=readProgress();
+    restoreFilters(saved);
     filtros();
+    restorePosition(saved);
+    saveProgress();
     if(!questoes.length){$('meta').textContent='Nenhuma questão publicada';$('enunciado').textContent='O catálogo está vazio ou as permissões de leitura precisam ser verificadas.'}
   }catch(e){
     if(version!==authVersion||!usuario)return;
@@ -265,7 +284,9 @@ async function carregarQuestoes(version=authVersion){
     $('opcoes').replaceChildren();$('responder').disabled=true;$('proxima').disabled=true;
   }
 }
-$('login-slot').appendChild($('account-card'));$('filtrar').onclick=filtros;$('responder').onclick=corrigir;$('proxima').onclick=()=>{if(lista.length){indice=(indice+1)%lista.length;mostrar()}};$('entrar').onclick=()=>authAction('login');$('cadastrar').onclick=()=>authAction('signup');$('recuperar').onclick=()=>authAction('reset');$('sair').onclick=async()=>{const {error}=await client.auth.signOut();if(error)message(error.message,true);else message('Você saiu da sua conta.')};
+$('login-slot').appendChild($('account-card'));$('filtrar').onclick=filtros;$('responder').onclick=corrigir;$('proxima').onclick=()=>{if(lista.length){indice=(indice+1)%lista.length;mostrar();saveProgress()}};$('entrar').onclick=()=>authAction('login');$('cadastrar').onclick=()=>authAction('signup');$('recuperar').onclick=()=>authAction('reset');$('sair').onclick=async()=>{const {error}=await client.auth.signOut();if(error)message(error.message,true);else message('Você saiu da sua conta.')};
+window.addEventListener('pagehide',saveProgress);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')saveProgress()});
 // O link de redefinição de senha é tratado antes da navegação normal.
 if(client){client.auth.onAuthStateChange((event,session)=>{setTimeout(()=>{loadAccount(session);if(event==='PASSWORD_RECOVERY'){const nova=prompt('Digite sua nova senha (mínimo 6 caracteres):');if(nova&&nova.length>=6)client.auth.updateUser({password:nova}).then(({error})=>message(error?'Erro: '+error.message:'Senha atualizada com sucesso.',!!error));else if(nova)message('A senha deve ter pelo menos 6 caracteres.',true)}},0)})}else{message('Biblioteca Supabase não carregada. Confira sua conexão.',true);loadAccount(null)}
 </script></body></html>
