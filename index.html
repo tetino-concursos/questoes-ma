@@ -254,7 +254,82 @@ body.logged-in .question-navigation button{background:#f7fbff!important;color:#4
 body.logged-in .question-navigation button:hover:not(:disabled){background:#e5f1ff!important;color:#145fbe!important}
 @media(max-width:700px){body.logged-in .hero{padding:19px 17px;border-radius:17px}}
 
-</style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script></head><body><header><div class="brand"><img alt="TeTino Concursos" class="brand-logo" src="tetino_assets/logo-tetino-transparente.png"/></div><div class="pill">Instituto Legatus • 2024</div></header><main><section class="hero"><div class="eyebrow">Sua aprovação começa aqui</div><h1>Treine com foco.<br/> Evolua com dados.</h1><p>Resolva questões, filtre por banca e matéria, acompanhe seus resultados e revise seus erros.</p></section><div id="login-screen"><div class="login-brand"><img alt="TeTino Concursos" class="login-logo" src="tetino_assets/logo-tetino-transparente.png"/></div><div id="login-slot"></div><div class="login-benefits"><div><span>◎</span><small>Questões atualizadas</small></div><div><span>▥</span><small>Acompanhe seu desempenho</small></div><div><span>▤</span><small>Estude com estratégia</small></div></div></div><div class="layout hidden" id="study-area"><nav aria-label="Navegação da área de membros" class="member-nav"><a href="#study-area">⌂  Início</a><a href="#enunciado">▤  Resolver questões</a><a href="#modo">▣  Caderno de erros</a><a href="#respondidas">▥  Meu desempenho</a></nav><aside><div id="account-slot"></div><div class="card" id="account-card" style="margin-bottom:16px"><h2 id="account-title">Acesse sua conta</h2><div id="auth-form"><label for="email">E-mail</label><input autocomplete="email" class="auth-input" id="email" placeholder="seuemail@exemplo.com" type="email"/><label for="senha">Senha (mínimo 6 caracteres)</label><input autocomplete="current-password" class="auth-input" id="senha" minlength="6" placeholder="Sua senha" type="password"/><div class="auth-actions"><button class="primary" id="entrar">Entrar</button><button class="secondary" id="cadastrar">Criar conta</button></div><button class="secondary" id="recuperar" style="width:100%;margin-top:10px">Esqueci minha senha</button></div><div class="hidden" id="auth-account"><p>Conectado como:<br/><strong class="account-email" id="account-email"></strong></p><button class="secondary" id="sair" style="width:100%">Sair da conta</button></div><p aria-live="polite" class="auth-message" id="auth-message" role="status"></p><p class="muted" id="sync-status">Visitante: seu histórico fica apenas neste navegador.</p></div><div class="card"><h2>Personalize seus estudos</h2><label for="banca">Banca</label><select id="banca"><option value="">Todas as bancas</option></select><label for="ano">Ano</label><select id="ano"><option value="">Todos os anos</option></select><label for="organizacao">Organização</label><select id="organizacao"><option value="">Todas as organizações</option></select><label for="materia">Matéria</label><select id="materia"><option value="">Todas as matérias</option></select><label for="tipo">Tipo de questão</label><select id="tipo"><option value="">Todos os tipos</option><option value="ce">Certo ou Errado</option><option value="multi">Múltipla escolha</option></select><label for="modo">Modo de estudo</label><select id="modo"><option value="todas">Todas as questões</option><option value="erros">Caderno de erros</option></select><button class="primary" id="filtrar">Aplicar filtros</button><p class="muted">Por enquanto, apenas questões do Instituto Legatus estão disponíveis.</p><p class="muted">Suas respostas são salvas na sua conta.</p></div></aside><section><div class="stats"><div class="stat"><strong id="respondidas">0</strong><small>Respondidas</small></div><div class="stat"><strong id="acertos">0</strong><small>Acertos</small></div><div class="stat"><strong id="taxa">0%</strong><small>Aproveitamento</small></div></div><div class="card"><div class="meta" id="meta">Carregando questões...</div><div class="question" id="enunciado"></div><div class="options" id="opcoes"></div><div aria-live="polite" class="feedback hidden" id="feedback"></div><div class="actions study-actions"><button class="primary" id="responder">Corrigir resposta</button><div class="question-navigation"><button class="secondary nav-quiet" id="anterior" type="button">← Voltar</button><button class="secondary nav-quiet" id="proxima" type="button">Pular questão →</button></div></div><p class="muted" id="contagem"></p></div></section></div><footer>TeTino Concursos • Plataforma de estudos para concursos públicos.</footer></main><script>
+
+/* TeTino Concursos — interface de estudos clara, inspirada em painéis educacionais */
+body.logged-in{background:linear-gradient(125deg,#f0edfa 0%,#edf5fa 47%,#e9f3f8 100%)!important;color:#1d2d45!important}
+body.logged-in header{background:#fff!important;border-bottom:1px solid #e0e6ef!important;box-shadow:0 2px 15px #243a5510!important}
+body.logged-in header .pill{color:#4d6481!important;border-color:#d9e2ef!important}
+body.logged-in .hero{background:transparent!important;border:0!important;box-shadow:none!important;padding:13px 3px 8px!important;margin:0 0 8px!important}
+body.logged-in .hero .eyebrow{color:#4783b6!important}
+body.logged-in .hero h1{color:#20334f!important;font-size:clamp(24px,2.7vw,33px)!important}
+body.logged-in .hero p{color:#61748d!important}
+body.logged-in main{max-width:1520px!important;padding:18px 22px 50px!important}
+body.logged-in .layout{display:grid!important;grid-template-columns:195px 245px minmax(0,1fr)!important;gap:16px!important;align-items:start!important}
+body.logged-in .member-nav{grid-column:1!important;grid-row:1!important;position:sticky;top:16px;background:#fff!important;border:1px solid #e1e8f1!important;border-radius:20px!important;padding:13px!important;box-shadow:0 8px 25px #314b6b0d!important}
+body.logged-in .member-nav .nav-caption{font-size:10px;letter-spacing:1.2px;color:#93a1b2;font-weight:800;margin:10px 10px 7px}
+body.logged-in .member-nav a{font-size:13px!important;color:#52647e!important;padding:13px 11px!important}
+body.logged-in .member-nav a:nth-of-type(2){background:#eaf3fa!important;color:#2577b1!important}
+body.logged-in .member-nav a:first-of-type{background:transparent!important;color:#52647e!important}
+body.logged-in .member-nav a:hover{background:#edf4f9!important;color:#2577b1!important}
+body.logged-in .nav-tip{margin:14px 8px 5px;padding:12px 10px;border-radius:12px;background:#f3f7fa;color:#667f94;font-size:11px;line-height:1.5}
+body.logged-in .layout>aside:not(.session-panel){grid-column:2!important;grid-row:1!important}
+body.logged-in .layout>section{grid-column:3!important;grid-row:1!important;min-width:0;display:grid;grid-template-columns:minmax(0,1fr) 270px;gap:16px;align-items:start}
+body.logged-in .layout>section>.stats{grid-column:1/-1;margin:0}
+body.logged-in .layout>section>.card{grid-column:1;min-width:0}
+body.logged-in .card,body.logged-in .stat{background:#fff!important;border:1px solid #e1e8f1!important;border-radius:20px!important;box-shadow:0 8px 28px #34465b0b!important}
+body.logged-in .card h2{color:#263b56!important}
+body.logged-in .stat{padding:14px 17px!important}
+body.logged-in .stat:before{height:4px!important;margin-bottom:7px!important;background:#7caad0!important}
+body.logged-in .stat strong{font-size:25px!important;color:#21344e!important}
+body.logged-in select{background:#f8fafc!important;color:#2a3c52!important;border-color:#dbe5ee!important}
+body.logged-in .meta{background:transparent!important;border:0!important;padding:0!important}
+body.logged-in .question-meta-item{background:#f0f5f9!important;border:1px solid #e1eaf1!important}
+body.logged-in .question-meta-item strong{color:#385b7c!important}
+body.logged-in .question{color:#1d2c43!important;font-weight:540!important;line-height:1.72!important}
+body.logged-in .option{background:#f8fafc!important;color:#293b54!important;border:1px solid #dce5ee!important;box-shadow:none!important}
+body.logged-in .option:nth-child(even){background:#f8fafc!important}
+body.logged-in .option:hover:not(:disabled){background:#f0f5f9!important;border-color:#aac8df!important}
+body.logged-in .option.selected{background:#eaf3f9!important;border:2px solid #78a9cd!important;color:#214e73!important}
+body.logged-in .option.correct{background:#e4f5ed!important;border-color:#4bb58b!important;color:#126548!important}
+body.logged-in .option.wrong{background:#fcebed!important;border-color:#d9808e!important;color:#8d3343!important}
+body.logged-in .primary,body.logged-in .actions #responder{background:#347db2!important;color:#fff!important;box-shadow:none!important}
+body.logged-in .question-navigation button{background:#fff!important;color:#60748b!important;border:1px solid #d9e4ee!important}
+body.logged-in .feedback,body.logged-in #feedback{background:#f3f7fa!important;color:#2b425a!important;border:1px solid #dce7ef!important}
+body.logged-in #feedback .teacher-title{color:#2d6797!important}
+body.logged-in #feedback .teacher-answer{color:#20694f!important}
+body.logged-in #feedback .teacher-explanation{color:#344a60!important}
+body.logged-in .recurso-banca{background:#fffaf0!important;border:1px solid #e9d8a8!important}
+body.logged-in .recurso-titulo{color:#936e22!important}
+body.logged-in .recurso-decisao,body.logged-in .recurso-texto{color:#35465a!important}
+body.logged-in .session-panel{grid-column:2;grid-row:2;background:#fff;border:1px solid #e1e8f1;border-radius:20px;box-shadow:0 8px 28px #34465b0b;overflow:hidden;min-width:0}
+.session-top{padding:17px 14px;display:flex;align-items:center;justify-content:space-between;gap:6px;border-bottom:1px solid #e6ecf3}
+.session-top strong{display:block;color:#24364e;font-size:13px}.session-top small{display:block;color:#8392a6;font-size:11px;margin-top:4px}
+.focus-toggle{font-size:11px!important;padding:8px!important;background:#f1f5f9!important;color:#526d87!important;border:1px solid #dbe6ef!important;white-space:nowrap}
+.focus-toggle[aria-pressed=true]{background:#dceef9!important;color:#1c6c9f!important}
+.session-body{padding:17px 14px}.panel-label,.panel-map-heading{font-size:11px;color:#3185bb;font-weight:850;letter-spacing:.65px}
+.session-numbers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:15px 0}
+.session-number{padding:12px 3px;text-align:center;border:1px solid;border-radius:12px;min-width:0}.session-number small{font-size:9px;font-weight:750;display:block}.session-number strong{font-size:24px;display:block;margin-top:3px}
+.session-number.green{background:#eaf6f1;border-color:#c6e7d8;color:#15815e}.session-number.red{background:#fdf0f0;border-color:#f3d1d1;color:#c34343}.session-number.neutral{background:#f1f5fa;border-color:#dae4ef;color:#273c57}
+.session-metrics{display:grid;grid-template-columns:1fr 1fr;gap:8px;border-top:1px solid #e6ecf3;border-bottom:1px solid #e6ecf3;padding:15px 0;margin-bottom:17px}
+.session-metrics small{display:block;color:#8797aa;font-size:9px;font-weight:750}.session-metrics strong{display:block;color:#253852;margin-top:5px;font-size:16px}
+.panel-map-heading{display:flex;justify-content:space-between;align-items:center;gap:6px}.panel-map-heading small{color:#6d7d91;font-size:11px;font-weight:600;letter-spacing:0}
+.map-legend{display:flex;gap:10px;flex-wrap:wrap;font-size:10px;color:#6c7e91;margin:12px 0}.dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:3px}.green-dot{background:#39a779}.red-dot{background:#dc6972}.blue-dot{background:#5b9dc9}
+.question-map{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:5px;max-height:290px;overflow-y:auto;padding:2px}
+.question-map button{padding:7px 0!important;border:1px solid #dce5ef!important;border-radius:7px!important;background:#f5f8fb!important;color:#536882!important;font-size:11px!important;font-weight:700!important;min-width:0}
+.question-map button.current{background:#d9ebf7!important;border-color:#5e9fcb!important;color:#195f91!important;box-shadow:inset 0 0 0 1px #5e9fcb}
+.question-map button.hit{background:#dff3e9!important;border-color:#9bd7b9!important;color:#1b7957!important}
+.question-map button.miss{background:#fbe5e7!important;border-color:#efb4bc!important;color:#a53e4b!important}
+.question-map button.current.hit,.question-map button.current.miss{outline:2px solid #5e9fcb;outline-offset:1px}
+.map-hint{font-size:11px!important;color:#8b99aa!important;margin:12px 0 0!important}
+body.logged-in.focus-mode .member-nav,body.logged-in.focus-mode .layout>aside:not(.session-panel),body.logged-in.focus-mode .stats,body.logged-in.focus-mode .hero{display:none!important}
+body.logged-in.focus-mode .layout{grid-template-columns:minmax(0,1fr)!important;max-width:1050px;margin:0 auto}
+body.logged-in.focus-mode .layout>section{grid-column:1!important;grid-template-columns:minmax(0,1fr) 210px!important}
+body.logged-in.focus-mode .session-panel .session-body{display:none}
+@media(max-width:1370px){body.logged-in .layout{grid-template-columns:175px 215px minmax(0,1fr)!important}body.logged-in .layout>section{grid-template-columns:minmax(0,1fr) 225px}.question-map{grid-template-columns:repeat(5,minmax(0,1fr))}}
+@media(max-width:1100px){body.logged-in .layout{grid-template-columns:205px minmax(0,1fr)!important}body.logged-in .member-nav{grid-column:1!important;grid-row:1!important}body.logged-in .layout>aside:not(.session-panel){grid-column:1!important;grid-row:2!important}body.logged-in .layout>section{grid-column:2!important;grid-row:1/span 2!important;grid-template-columns:minmax(0,1fr)!important}body.logged-in .session-panel{grid-column:1!important;grid-row:3!important}.question-map{grid-template-columns:repeat(8,minmax(0,1fr))}body.logged-in.focus-mode .layout>section{grid-template-columns:1fr!important}body.logged-in.focus-mode .session-panel{grid-column:1!important;grid-row:4!important}}
+@media(max-width:700px){body.logged-in main{padding:12px!important}body.logged-in .layout{display:flex!important;flex-direction:column!important}body.logged-in .member-nav{position:static;width:100%;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important}body.logged-in .member-nav .nav-caption,body.logged-in .nav-tip{grid-column:1/-1}body.logged-in .layout>aside:not(.session-panel),body.logged-in .layout>section{width:100%!important}body.logged-in .layout>section{display:flex!important;flex-direction:column!important}body.logged-in .layout>section>.stats,body.logged-in .layout>section>.card,body.logged-in .session-panel{width:100%!important}body.logged-in .session-panel{order:3}body.logged-in .hero{padding:8px 0!important}body.logged-in .hero h1{font-size:25px!important}.question-map{grid-template-columns:repeat(8,minmax(0,1fr))}body.logged-in.focus-mode .member-nav{display:none!important}body.logged-in.focus-mode .layout>aside:not(.session-panel){display:none!important}body.logged-in.focus-mode .stats{display:none!important}}
+
+</style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script></head><body><header><div class="brand"><img alt="TeTino Concursos" class="brand-logo" src="tetino_assets/logo-tetino-transparente.png"/></div><div class="pill">Instituto Legatus • 2024</div></header><main><section class="hero"><div class="eyebrow">Sua aprovação começa aqui</div><h1>Treine com foco.<br/> Evolua com dados.</h1><p>Resolva questões, filtre por banca e matéria, acompanhe seus resultados e revise seus erros.</p></section><div id="login-screen"><div class="login-brand"><img alt="TeTino Concursos" class="login-logo" src="tetino_assets/logo-tetino-transparente.png"/></div><div id="login-slot"></div><div class="login-benefits"><div><span>◎</span><small>Questões atualizadas</small></div><div><span>▥</span><small>Acompanhe seu desempenho</small></div><div><span>▤</span><small>Estude com estratégia</small></div></div></div><div class="layout hidden" id="study-area"><nav aria-label="Navegação da área de membros" class="member-nav"><div class="nav-caption">ÁREA DE ESTUDOS</div><a href="#study-area">⌂  Início</a><a href="#enunciado">◎  Resolver questões</a><a href="#modo">▣  Caderno de erros</a><a href="#respondidas">▥  Meu desempenho</a><div class="nav-tip">✦ Um passo por vez, rumo à aprovação.</div></nav><aside><div id="account-slot"></div><div class="card" id="account-card" style="margin-bottom:16px"><h2 id="account-title">Acesse sua conta</h2><div id="auth-form"><label for="email">E-mail</label><input autocomplete="email" class="auth-input" id="email" placeholder="seuemail@exemplo.com" type="email"/><label for="senha">Senha (mínimo 6 caracteres)</label><input autocomplete="current-password" class="auth-input" id="senha" minlength="6" placeholder="Sua senha" type="password"/><div class="auth-actions"><button class="primary" id="entrar">Entrar</button><button class="secondary" id="cadastrar">Criar conta</button></div><button class="secondary" id="recuperar" style="width:100%;margin-top:10px">Esqueci minha senha</button></div><div class="hidden" id="auth-account"><p>Conectado como:<br/><strong class="account-email" id="account-email"></strong></p><button class="secondary" id="sair" style="width:100%">Sair da conta</button></div><p aria-live="polite" class="auth-message" id="auth-message" role="status"></p><p class="muted" id="sync-status">Visitante: seu histórico fica apenas neste navegador.</p></div><div class="card"><h2>Personalize seus estudos</h2><label for="banca">Banca</label><select id="banca"><option value="">Todas as bancas</option></select><label for="ano">Ano</label><select id="ano"><option value="">Todos os anos</option></select><label for="organizacao">Organização</label><select id="organizacao"><option value="">Todas as organizações</option></select><label for="materia">Matéria</label><select id="materia"><option value="">Todas as matérias</option></select><label for="tipo">Tipo de questão</label><select id="tipo"><option value="">Todos os tipos</option><option value="ce">Certo ou Errado</option><option value="multi">Múltipla escolha</option></select><label for="modo">Modo de estudo</label><select id="modo"><option value="todas">Todas as questões</option><option value="erros">Caderno de erros</option></select><button class="primary" id="filtrar">Aplicar filtros</button><p class="muted">Por enquanto, apenas questões do Instituto Legatus estão disponíveis.</p><p class="muted">Suas respostas são salvas na sua conta.</p></div></aside><section><div class="stats"><div class="stat"><strong id="respondidas">0</strong><small>Respondidas</small></div><div class="stat"><strong id="acertos">0</strong><small>Acertos</small></div><div class="stat"><strong id="taxa">0%</strong><small>Aproveitamento</small></div></div><div class="card"><div class="meta" id="meta">Carregando questões...</div><div class="question" id="enunciado"></div><div class="options" id="opcoes"></div><div aria-live="polite" class="feedback hidden" id="feedback"></div><div class="actions study-actions"><button class="primary" id="responder">Corrigir resposta</button><div class="question-navigation"><button class="secondary nav-quiet" id="anterior" type="button">← Voltar</button><button class="secondary nav-quiet" id="proxima" type="button">Pular questão →</button></div></div><p class="muted" id="contagem"></p></div><aside class="session-panel" aria-label="Painel da sessão"><div class="session-top"><div><strong>◈ Painel de estudos</strong><small>Acompanhe sua evolução</small></div><button id="focus-toggle" class="focus-toggle" type="button" aria-pressed="false">Modo foco</button></div><div class="session-body"><div class="panel-label">DESEMPENHO DA SESSÃO</div><div class="session-numbers"><div class="session-number green"><small>ACERTOS</small><strong id="session-hits">0</strong></div><div class="session-number red"><small>ERROS</small><strong id="session-misses">0</strong></div><div class="session-number neutral"><small>RESTANTES</small><strong id="session-left">0</strong></div></div><div class="session-metrics"><div><small>APROVEITAMENTO</small><strong id="session-percent">0%</strong></div><div><small>TEMPO DE ESTUDO</small><strong id="session-time">00:00</strong></div></div><div class="panel-map-heading"><span>MAPA DAS QUESTÕES</span><small id="map-position">—</small></div><div class="map-legend"><span><i class="dot green-dot"></i>Acerto</span><span><i class="dot red-dot"></i>Erro</span><span><i class="dot blue-dot"></i>Atual</span></div><div id="question-map" class="question-map" aria-label="Navegar entre questões"></div><p class="map-hint">Clique em um número para abrir a questão.</p></div></aside></section></div><footer>TeTino Concursos • Plataforma de estudos para concursos públicos.</footer></main><script>
 let questoes=[];
 const $=id=>document.getElementById(id);
 const SUPABASE_URL='https://kdalqvbexttclxtjmsxc.supabase.co';
@@ -382,4 +457,40 @@ window.addEventListener('pagehide',saveProgress);
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')saveProgress()});
 // O link de redefinição de senha é tratado antes da navegação normal.
 if(client){client.auth.onAuthStateChange((event,session)=>{setTimeout(()=>{loadAccount(session);if(event==='PASSWORD_RECOVERY'){const nova=prompt('Digite sua nova senha (mínimo 6 caracteres):');if(nova&&nova.length>=6)client.auth.updateUser({password:nova}).then(({error})=>message(error?'Erro: '+error.message:'Senha atualizada com sucesso.',!!error));else if(nova)message('A senha deve ter pelo menos 6 caracteres.',true)}},0)})}else{message('Biblioteca Supabase não carregada. Confira sua conexão.',true);loadAccount(null)}
-</script></body></html>
+</script>
+<script>
+/* Painel visual: utiliza o histórico já carregado, sem modificar o Supabase. */
+(function(){
+  const map=document.getElementById('question-map');
+  const focus=document.getElementById('focus-toggle');
+  const started=Date.now();
+  function refreshPanel(){
+    if(!map)return;
+    const all=Array.isArray(lista)?lista:[];
+    const answered=all.filter(q=>historico[q.id]);
+    const hits=answered.filter(q=>historico[q.id].acertou).length;
+    document.getElementById('session-hits').textContent=hits;
+    document.getElementById('session-misses').textContent=answered.length-hits;
+    document.getElementById('session-left').textContent=all.length-answered.length;
+    document.getElementById('session-percent').textContent=answered.length?Math.round(100*hits/answered.length)+'%':'0%';
+    document.getElementById('map-position').textContent=all.length?(indice+1)+' de '+all.length:'0 questões';
+    const signature=all.map(q=>q.id).join(',');
+    if(map.dataset.signature!==signature){
+      map.dataset.signature=signature;map.replaceChildren();
+      all.forEach((q,i)=>{const btn=document.createElement('button');btn.type='button';btn.textContent=String(i+1);btn.title='Ir para a questão '+(i+1);btn.setAttribute('aria-label','Abrir questão '+(i+1));btn.onclick=()=>{indice=i;mostrar();saveProgress();document.getElementById('enunciado')?.scrollIntoView({behavior:'smooth',block:'center'})};map.appendChild(btn)});
+    }
+    [...map.children].forEach((btn,i)=>{const h=historico[all[i].id];btn.className=(h?(h.acertou?'hit':'miss'):'')+(i===indice?' current':'');btn.setAttribute('aria-current',i===indice?'step':'false')});
+  }
+  const originalMostrar=mostrar;
+  mostrar=function(){originalMostrar();refreshPanel()};
+  const originalStats=estatisticas;
+  estatisticas=function(){originalStats();refreshPanel()};
+  const originalFilters=filtros;
+  filtros=function(persistir=true){originalFilters(persistir);refreshPanel()};
+  focus.addEventListener('click',()=>{const active=document.body.classList.toggle('focus-mode');focus.setAttribute('aria-pressed',String(active));focus.textContent=active?'Sair do foco':'Modo foco'});
+  function tick(){const secs=Math.floor((Date.now()-started)/1000);document.getElementById('session-time').textContent=String(Math.floor(secs/60)).padStart(2,'0')+':'+String(secs%60).padStart(2,'0')}
+  setInterval(tick,1000);
+  refreshPanel();
+})();
+</script>
+</body></html>
