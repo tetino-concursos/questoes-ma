@@ -663,7 +663,7 @@ body.logged-in.tt-profile-open #tt-home,body.logged-in.tt-profile-open #study-ar
 <a href="#erros" data-tt-page="errors"><svg class="tt-nav-icon" viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 3v18M12 8h4M12 12h4"/></svg><span>Caderno de erros</span></a>
 <a href="#favoritas" data-tt-page="favorites"><svg class="tt-nav-icon" viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 3.1 6.3 7 1-5 4.9 1.2 7-6.3-3.3-6.3 3.3 1.2-7-5-4.9 7-1z"/></svg><span>Questões favoritas</span></a>
 <div class="tt-section">SUPORTE</div>
-<a href="https://wa.me/5599984488733" target="_blank" rel="noopener noreferrer" aria-label="Falar com o suporte pelo WhatsApp"><svg class="tt-nav-icon" viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 11.5a8.5 8.5 0 0 1-12.4 7.5L3 20.5l1.6-4.9a8.5 8.5 0 1 1 15.9-4.1Z"/><path d="M8.3 8.1c-.4.4-.6 1-.5 1.6.4 2.7 3.4 5.7 6.1 6.1.6.1 1.2-.1 1.6-.5l.5-.7-2.4-1.2-1 1c-1.2-.6-2.2-1.6-2.8-2.8l1-1-1.2-2.4-.7.5" stroke-width="1.3"/></svg><span>Suporte (WhatsApp)</span></a>
+<a href="https://wa.me/5599984488733" target="_blank" rel="noopener noreferrer" aria-label="Falar com o suporte pelo WhatsApp"><svg class="tt-nav-icon" viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 11.5a8.5 8.5 0 0 1-12.4 7.5L3 20.5l1.6-4.9a8.5 8.5 0 1 1 15.9-4.1Z"/><path d="M8.4 8.3c-.3.1-.8.8-.8 1.6 0 1.5 2.1 4 4.6 5.2 1.8.9 2.8.6 3.3.1.4-.4.6-1.1.5-1.3l-2.1-1-1 1c-1.1-.5-2-1.3-2.7-2.4l.8-.9-1-2.1c-.2-.3-1.1-.4-1.6-.2Z"/></svg><span>Suporte (WhatsApp)</span></a>
 <div class="tt-section">CONTA</div>
 <button class="tt-link" id="tt-profile-settings" type="button"><span class="tt-menu-gear" aria-hidden="true"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l1.5 0.2.7 2.2c.5.2 1 .4 1.5.7l2.1-1 2.1 2.1-1 2.1c.3.5.5 1 .7 1.5l2.2.7v3l-2.2.7c-.2.5-.4 1-.7 1.5l1 2.1-2.1 2.1-2.1-1c-.5.3-1 .5-1.5.7l-.7 2.2h-3l-.7-2.2c-.5-.2-1-.4-1.5-.7l-2.1 1-2.1-2.1 1-2.1c-.3-.5-.5-1-.7-1.5l-2.2-.7v-3l2.2-.7c.2-.5.4-1 .7-1.5l-1-2.1 2.1-2.1 2.1 1c.5-.3 1-.5 1.5-.7l.7-2.2z"/><circle cx="12" cy="12" r="3.5"/></svg></span><span>Meu perfil</span></button>
 <button class="tt-link" id="tt-theme-toggle" type="button" aria-label="Alternar modo claro ou escuro"><span class="tt-power-switch" aria-hidden="true"><span class="tt-power-knob"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><path d="M12 3v9"/><path d="M6.1 6.7a9 9 0 1 0 11.8 0"/></svg></span></span><span id="tt-theme-label">Modo escuro</span></button>
@@ -810,7 +810,31 @@ async function carregarQuestoes(version=authVersion){
     $('opcoes').replaceChildren();$('responder').disabled=true;$('proxima').disabled=true;
   }
 }
-$('login-slot').appendChild($('account-card'));$('filtrar').onclick=()=>filtros(true);$('responder').onclick=corrigir;function ttScrollQuestionTop(){requestAnimationFrame(()=>{const card=document.getElementById('meta')?.closest('.card');if(!card)return;const header=document.querySelector('body.logged-in header');const offset=(header?.getBoundingClientRect().height||0)+12;const top=window.scrollY+card.getBoundingClientRect().top-offset;window.scrollTo({top:Math.max(0,top),behavior:'instant'});});}$('proxima').onclick=()=>{if(lista.length&&indice<lista.length-1){indice++;mostrar();saveProgress();ttScrollQuestionTop()}};$('anterior').onclick=()=>{if(lista.length&&indice>0){indice--;mostrar();saveProgress();ttScrollQuestionTop()}};$('entrar').onclick=()=>authAction('login');$('cadastrar').onclick=()=>authAction('signup');$('recuperar').onclick=()=>authAction('reset');$('sair').onclick=async()=>{const {error}=await client.auth.signOut();if(error)message(error.message,true);else message('Você saiu da sua conta.')};
+$('login-slot').appendChild($('account-card'));$('filtrar').onclick=()=>filtros(true);$('responder').onclick=corrigir;function ttScrollQuestionTop(){requestAnimationFrame(()=>{const card=document.getElementById('meta')?.closest('.card');if(!card)return;const header=document.querySelector('body.logged-in header');const offset=(header?.getBoundingClientRect().height||0)+12;const top=window.scrollY+card.getBoundingClientRect().top-offset;window.scrollTo({top:Math.max(0,top),behavior:'instant'});});}$('proxima').onclick=()=>{if(lista.length&&indice<lista.length-1){indice++;mostrar();saveProgress();ttScrollQuestionTop()}};$('anterior').onclick=()=>{if(lista.length&&indice>0){indice--;mostrar();saveProgress();ttScrollQuestionTop()}};$('entrar').onclick=()=>authAction('login');$('cadastrar').onclick=()=>authAction('signup');$('recuperar').onclick=()=>authAction('reset');$('sair').onclick=async()=>{
+  const btn=$('sair');
+  if(btn.disabled)return;
+  btn.disabled=true;
+  btn.textContent='Saindo...';
+  try{
+    if(!client)throw new Error('Conexão com o Supabase indisponível.');
+    const {error}=await Promise.race([
+      client.auth.signOut({scope:'local'}),
+      new Promise((_,reject)=>setTimeout(()=>reject(new Error('A saída demorou mais que o esperado. Tente novamente.')),8000))
+    ]);
+    if(error)throw error;
+    // Atualiza a tela sem esperar consultas de histórico ou questões.
+    await loadAccount(null);
+    document.body.classList.remove('tt-menu-open','tt-view-home','tt-view-filter','tt-view-questions','tt-view-analytics','analytics-open');
+    message('Você saiu da sua conta.');
+    // Recarrega a interface de login, sem deixar a barra de carregamento presa.
+    window.location.replace(window.location.pathname);
+  }catch(e){
+    message('Não foi possível concluir a saída: '+(e.message||'Erro desconhecido'),true);
+  }finally{
+    btn.disabled=false;
+    btn.textContent='Sair da conta';
+  }
+};
 window.addEventListener('pagehide',saveProgress);
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')saveProgress()});
 // O link de redefinição de senha é tratado antes da navegação normal.
