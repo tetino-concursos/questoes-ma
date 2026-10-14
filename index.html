@@ -740,15 +740,20 @@ async function loadAccount(session){
     setSync('Entre na sua conta para acessar o banco de questões.');
     return;
   }
-  setSync('Carregando histórico da sua conta...');
+  setSync('Carregando seus dados...');
   const userId=usuario.id;
-  const {data,error}=await client.from('respostas').select('questao_id,resposta,acertou').eq('user_id',userId);
+  // Catálogo e histórico são independentes: buscar em paralelo reduz a espera.
+  const catalogPromise=!catalogoCarregado?carregarQuestoes(version):Promise.resolve();
+  const historyPromise=client.from('respostas').select('questao_id,resposta,acertou').eq('user_id',userId);
+  const {data,error}=await historyPromise;
   if(version!==authVersion||usuario?.id!==userId)return;
-  if(error){setSync('Erro ao carregar histórico.');message('Erro ao carregar respostas: '+error.message,true);return}
-  historico=Object.fromEntries((data||[]).map(r=>[r.questao_id,{resposta:r.resposta,acertou:r.acertou}]));
-  setSync('Histórico sincronizado com sua conta.');estatisticas();
-  if(!catalogoCarregado)await carregarQuestoes(version);
-  else filtros();
+  if(error){setSync('Erro ao carregar histórico.');message('Erro ao carregar respostas: '+error.message,true)}
+  else{
+    historico=Object.fromEntries((data||[]).map(r=>[r.questao_id,{resposta:r.resposta,acertou:r.acertou}]));
+    setSync('Histórico sincronizado com sua conta.');estatisticas();
+  }
+  await catalogPromise;
+  if(version===authVersion&&usuario?.id===userId&&catalogoCarregado)filtros();
 }
 async function authAction(action){if(!client){message('Não foi possível carregar a conexão Supabase.',true);return}const email=$('email').value.trim(),password=$('senha').value;if(!email||!email.includes('@')){message('Informe um e-mail válido.',true);return}if(action!=='reset'&&password.length<6){message('A senha deve ter no mínimo 6 caracteres.',true);return}['entrar','cadastrar','recuperar'].forEach(id=>$(id).disabled=true);try{let result;if(action==='signup')result=await client.auth.signUp({email,password,options:{emailRedirectTo:location.origin+location.pathname}});else if(action==='login')result=await client.auth.signInWithPassword({email,password});else result=await client.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});if(result.error)throw result.error;if(action==='signup')message(result.data?.session?'Conta criada! Você já está conectado.':'Cadastro recebido. Confira seu e-mail para confirmar a conta.');else if(action==='reset')message('Se o e-mail estiver cadastrado, você receberá instruções para redefinir a senha.');else message('Login realizado com sucesso.')}catch(e){message(e.message||'Não foi possível concluir a operação.',true)}finally{['entrar','cadastrar','recuperar'].forEach(id=>$(id).disabled=false)}}
 async function carregarQuestoes(version=authVersion){
@@ -758,16 +763,16 @@ async function carregarQuestoes(version=authVersion){
   $('enunciado').textContent='Aguarde a consulta ao Supabase.';
   $('responder').disabled=true;$('proxima').disabled=true;
   try{
-    const todas=[];
-    const pagina=500;
-    for(let inicio=0;inicio<100000;inicio+=pagina){
-      const {data,error}=await client.from('questoes')
-        .select('id,banca,materia,assunto,tipo,texto,opcoes,correta,comentario,recurso_banca,resultado_recurso')
-        .eq('publicada',true).order('id',{ascending:true}).range(inicio,inicio+pagina-1);
-      if(error)throw error;
-      todas.push(...(data||[]));
-      if(!data||data.length<pagina)break;
-    }
+    // Consultar apenas a prova selecionada: evita baixar todo o banco de questões.
+    const {data,error}=await client.from('questoes')
+      .select('id,banca,materia,assunto,tipo,texto,opcoes,correta,comentario,recurso_banca,resultado_recurso')
+      .eq('publicada',true)
+      .eq('banca',BANCA_ATIVA)
+      .gte('id',PROVA_LEGATUS_INICIO)
+      .lte('id',PROVA_LEGATUS_FIM)
+      .order('id',{ascending:true});
+    if(error)throw error;
+    const todas=data||[];
     if(version!==authVersion||!usuario)return;
     questoes=todas.filter(q=>q.banca===BANCA_ATIVA&&q.id>=PROVA_LEGATUS_INICIO&&q.id<=PROVA_LEGATUS_FIM&&!CLASSIFICACAO_EDITAL_2024[q.id]?.anulada&&Array.isArray(q.opcoes)&&q.opcoes.length>=2&&Number.isInteger(q.correta)&&q.correta>=0&&q.correta<q.opcoes.length).map(q=>({...q,...(CLASSIFICACAO_EDITAL_2024[q.id]||{}),ano:2024,organizacao:'Prefeitura Municipal de Buriti Bravo – MA'}));
     catalogoCarregado=true;
