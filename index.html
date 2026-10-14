@@ -948,102 +948,6 @@ document.getElementById('topico').addEventListener('change',()=>{
  if(body.classList.contains('logged-in'))go('home');
 })();
 </script>
-<div id="tt-profile-modal" class="tt-profile-modal" hidden>
-<div class="tt-profile-dialog" role="dialog" aria-modal="true" aria-labelledby="tt-profile-title">
-<button type="button" id="tt-profile-close" class="tt-profile-close" aria-label="Fechar">×</button>
-<h2 id="tt-profile-title">Meu perfil</h2>
-<p>Escolha uma foto para aparecer na sua conta.</p>
-<div class="tt-profile-preview" id="tt-profile-preview"><span id="tt-profile-preview-initials">?</span><img id="tt-profile-preview-img" alt="Prévia da foto" hidden/></div>
-<label class="tt-profile-select" for="tt-profile-file">Escolher foto</label>
-<input id="tt-profile-file" type="file" accept="image/png,image/jpeg,image/webp" hidden/>
-<p class="tt-profile-hint">JPG, PNG ou WebP • até 5 MB. A imagem será ajustada para um quadrado.</p>
-<button type="button" id="tt-profile-save" disabled>Salvar foto</button>
-<p id="tt-profile-message" role="status" aria-live="polite"></p>
-</div></div>
-
-<script>
-(function(){
- const update=()=>{
-  const email=document.getElementById('account-email')?.textContent?.trim()||'';
-  const logged=document.body.classList.contains('logged-in');
-  if(!logged)return;
-  const user=typeof usuario!=='undefined'?usuario:null;
-  const meta=user?.user_metadata||{};
-  const name=meta.full_name||meta.name||meta.display_name||email.split('@')[0]||'Aluno';
-  const initials=name.trim().split(/\s+/).slice(0,2).map(w=>w[0]?.toUpperCase()||'').join('');
-  document.getElementById('tt-user-name').textContent=name;
-  document.getElementById('tt-user-email').textContent=email;
-  document.querySelector('.tt-user-avatar').textContent=initials||'?';
-  document.querySelector('.tt-avatar-initials').textContent=initials||'?';
-  const img=document.querySelector('.tt-avatar-image');
-  const drawerAvatar=document.querySelector('.tt-user-avatar');
-  const url=meta.avatar_url||meta.picture||'';
-  if(url && /^https:\/\//i.test(url)){
-    if(img.src!==url)img.src=url;
-    img.hidden=false;
-    drawerAvatar.style.backgroundImage='url("'+url.replace(/\\"/g,'')+'")';drawerAvatar.style.backgroundSize='cover';drawerAvatar.style.backgroundPosition='center';drawerAvatar.textContent='';
-    img.onerror=()=>{img.hidden=true};
-  }else{img.hidden=true;img.removeAttribute('src');drawerAvatar.style.backgroundImage='';drawerAvatar.textContent=initials||'?'}
- };
- document.getElementById('tt-profile-button')?.addEventListener('click',()=>document.getElementById('tt-menu-button')?.click());
- const modal=document.getElementById('tt-profile-modal');
- const fileInput=document.getElementById('tt-profile-file');
- const previewImg=document.getElementById('tt-profile-preview-img');
- const save=document.getElementById('tt-profile-save');
- const message=document.getElementById('tt-profile-message');
- let imageBlob=null;
- const openProfile=()=>{
-   document.getElementById('tt-menu-close').click();
-   modal.hidden=false;message.textContent='';fileInput.value='';imageBlob=null;save.disabled=true;
-   const current=document.querySelector('.tt-avatar-image');
-   const visible=!current.hidden && !!current.src;
-   previewImg.hidden=!visible;
-   if(visible)previewImg.src=current.src;
-   document.getElementById('tt-profile-preview-initials').hidden=visible;
- };
- const closeProfile=()=>{modal.hidden=true};
- document.getElementById('tt-profile-settings').addEventListener('click',openProfile);
- document.getElementById('tt-profile-close').addEventListener('click',closeProfile);
- modal.addEventListener('click',e=>{if(e.target===modal)closeProfile()});
- document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!modal.hidden)closeProfile()});
- fileInput.addEventListener('change',async()=>{
-  const f=fileInput.files?.[0];imageBlob=null;save.disabled=true;
-  if(!f)return;
-  if(!['image/jpeg','image/png','image/webp'].includes(f.type)||f.size>5*1024*1024){message.textContent='Escolha uma imagem JPG, PNG ou WebP de até 5 MB.';return}
-  try{
-    const bitmap=await createImageBitmap(f);
-    const side=Math.min(bitmap.width,bitmap.height),canvas=document.createElement('canvas');canvas.width=256;canvas.height=256;
-    const ctx=canvas.getContext('2d');ctx.drawImage(bitmap,(bitmap.width-side)/2,(bitmap.height-side)/2,side,side,0,0,256,256);
-    bitmap.close?.();
-    imageBlob=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',.82));
-    if(!imageBlob)throw Error('Não foi possível preparar a imagem.');
-    previewImg.src=URL.createObjectURL(imageBlob);previewImg.hidden=false;
-    document.getElementById('tt-profile-preview-initials').hidden=true;
-    save.disabled=false;message.textContent='Foto pronta para salvar.';
-  }catch(err){message.textContent='Não foi possível abrir esta imagem.'}
- });
- save.addEventListener('click',async()=>{
-  if(!imageBlob||!usuario?.id||!client){message.textContent='Entre na sua conta para salvar.';return}
-  save.disabled=true;message.textContent='Salvando foto...';
-  try{
-    const path=usuario.id+'/avatar.jpg';
-    const upload=await client.storage.from('avatares').upload(path,imageBlob,{contentType:'image/jpeg',upsert:true,cacheControl:'60'});
-    if(upload.error)throw upload.error;
-    const publicUrl=client.storage.from('avatares').getPublicUrl(path).data.publicUrl;
-    const avatarUrl=publicUrl+'?v='+Date.now();
-    const result=await client.auth.updateUser({data:{avatar_url:avatarUrl}});
-    if(result.error)throw result.error;
-    usuario=result.data.user||usuario;
-    update();message.textContent='Foto salva com sucesso!';
-    setTimeout(closeProfile,700);
-  }catch(err){message.textContent='Não foi possível salvar: '+(err.message||'verifique o armazenamento no Supabase');save.disabled=false}
- });
- const obs=new MutationObserver(update);
- obs.observe(document.body,{attributes:true,attributeFilter:['class']});
- obs.observe(document.getElementById('account-email'),{childList:true,characterData:true,subtree:true});
- update();
-})();
-</script>
 <script>
 /* Perfil em página própria: captura cliques antes da janela antiga. */
 (()=>{
@@ -1051,8 +955,10 @@ document.getElementById('topico').addEventListener('change',()=>{
  const section=$('tt-profile-page');
  function current(){try{return typeof usuario!=='undefined'?usuario:null}catch{return null}}
  function photo(container,url,initials){container.replaceChildren();if(url&&/^https:\/\//.test(url)){const im=document.createElement('img');im.src=url;im.alt='Foto do perfil';im.onerror=()=>{container.textContent=initials};container.append(im)}else container.textContent=initials}
- function load(){const u=current();if(!u)return;const m=u.user_metadata||{};const name=m.full_name||m.name||m.display_name||u.email?.split('@')[0]||'Aluno';const initials=name.trim().split(/\s+/).slice(0,2).map(w=>w[0]?.toUpperCase()||'').join('');$('tt-prof-heading').textContent=name.toUpperCase();$('tt-prof-hero-email').textContent=u.email||'';$('tt-prof-email').value=u.email||'';$('tt-prof-name').value=name;$('tt-prof-phone').value=m.phone_whatsapp||'';$('tt-prof-course').value=m.concurso_alvo||'';const created=u.created_at?new Date(u.created_at):null;$('tt-prof-member').textContent=created&&!isNaN(created)?'Membro desde '+created.toLocaleDateString('pt-BR',{month:'long',year:'numeric'}):'Membro TeTino';photo($('tt-prof-hero-photo'),m.avatar_url||m.picture,initials);photo($('tt-prof-edit-photo'),m.avatar_url||m.picture,initials)}
- function open(e){e?.preventDefault();e?.stopImmediatePropagation();if(!body.classList.contains('logged-in'))return;body.classList.remove('tt-menu-open');$('tt-menu-button')?.setAttribute('aria-expanded','false');$('tt-profile-modal').hidden=true;body.classList.add('tt-view-home','tt-profile-open');$('tt-home').classList.remove('tt-visible');load();window.scrollTo(0,0)}
+ function load(){const u=current();if(!u)return;syncAvatar();const m=u.user_metadata||{};const name=m.full_name||m.name||m.display_name||u.email?.split('@')[0]||'Aluno';const initials=name.trim().split(/\s+/).slice(0,2).map(w=>w[0]?.toUpperCase()||'').join('');$('tt-prof-heading').textContent=name.toUpperCase();$('tt-prof-hero-email').textContent=u.email||'';$('tt-prof-email').value=u.email||'';$('tt-prof-name').value=name;$('tt-prof-phone').value=m.phone_whatsapp||'';$('tt-prof-course').value=m.concurso_alvo||'';const created=u.created_at?new Date(u.created_at):null;$('tt-prof-member').textContent=created&&!isNaN(created)?'Membro desde '+created.toLocaleDateString('pt-BR',{month:'long',year:'numeric'}):'Membro TeTino';photo($('tt-prof-hero-photo'),m.avatar_url||m.picture,initials);photo($('tt-prof-edit-photo'),m.avatar_url||m.picture,initials)}
+ function syncAvatar(){const u=current();if(!u)return;const m=u.user_metadata||{};const name=m.full_name||m.name||m.display_name||u.email?.split('@')[0]||'Aluno';const initials=name.trim().split(/\s+/).slice(0,2).map(w=>w[0]?.toUpperCase()||'').join('')||'?';const url=m.avatar_url||m.picture||'';const im=document.querySelector('.tt-avatar-image');const da=document.querySelector('.tt-user-avatar');if(im){if(url&&/^https:\/\//.test(url)){if(im.getAttribute('src')!==url)im.src=url;im.hidden=false}else{im.hidden=true;im.removeAttribute('src')}}if(da){da.textContent=url?'':initials;da.style.backgroundImage=url?'url("'+url.replace(/"/g,'')+'")':'';da.style.backgroundSize='cover';da.style.backgroundPosition='center'}const h=document.querySelector('.tt-avatar-initials');if(h)h.textContent=initials;const n=$('tt-user-name');if(n)n.textContent=name;const e=$('tt-user-email');if(e)e.textContent=u.email||''}
+ if(typeof client!=='undefined'&&client)client.auth.onAuthStateChange(()=>{setTimeout(syncAvatar,0)});
+ function open(e){e?.preventDefault();e?.stopImmediatePropagation();if(!body.classList.contains('logged-in'))return;body.classList.remove('tt-menu-open');$('tt-menu-button')?.setAttribute('aria-expanded','false');body.classList.add('tt-view-home','tt-profile-open');$('tt-home').classList.remove('tt-visible');load();window.scrollTo(0,0)}
  function close(){body.classList.remove('tt-profile-open');$('tt-home').classList.add('tt-visible');window.scrollTo(0,0)}
  $('tt-profile-settings').addEventListener('click',open,true);$('tt-profile-button').addEventListener('click',open,true);$('tt-prof-back').addEventListener('click',close);
  document.querySelectorAll('[data-tt-page],[data-tt-go]').forEach(el=>el.addEventListener('click',()=>body.classList.remove('tt-profile-open'),true));
