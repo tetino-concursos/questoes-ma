@@ -810,7 +810,26 @@ async function carregarQuestoes(version=authVersion){
     $('opcoes').replaceChildren();$('responder').disabled=true;$('proxima').disabled=true;
   }
 }
-$('login-slot').appendChild($('account-card'));$('filtrar').onclick=()=>filtros(true);$('responder').onclick=corrigir;function ttScrollQuestionTop(){requestAnimationFrame(()=>{const card=document.getElementById('meta')?.closest('.card');if(!card)return;const header=document.querySelector('body.logged-in header');const offset=(header?.getBoundingClientRect().height||0)+12;const top=window.scrollY+card.getBoundingClientRect().top-offset;window.scrollTo({top:Math.max(0,top),behavior:'instant'});});}$('proxima').onclick=()=>{if(lista.length&&indice<lista.length-1){indice++;mostrar();saveProgress();ttScrollQuestionTop()}};$('anterior').onclick=()=>{if(lista.length&&indice>0){indice--;mostrar();saveProgress();ttScrollQuestionTop()}};$('entrar').onclick=()=>authAction('login');$('cadastrar').onclick=()=>authAction('signup');$('recuperar').onclick=()=>authAction('reset');$('sair').onclick=async()=>{const {error}=await client.auth.signOut();if(error)message(error.message,true);else message('Você saiu da sua conta.')};
+$('login-slot').appendChild($('account-card'));$('filtrar').onclick=()=>filtros(true);$('responder').onclick=corrigir;function ttScrollQuestionTop(){requestAnimationFrame(()=>{const card=document.getElementById('meta')?.closest('.card');if(!card)return;const header=document.querySelector('body.logged-in header');const offset=(header?.getBoundingClientRect().height||0)+12;const top=window.scrollY+card.getBoundingClientRect().top-offset;window.scrollTo({top:Math.max(0,top),behavior:'instant'});});}$('proxima').onclick=()=>{if(lista.length&&indice<lista.length-1){indice++;mostrar();saveProgress();ttScrollQuestionTop()}};$('anterior').onclick=()=>{if(lista.length&&indice>0){indice--;mostrar();saveProgress();ttScrollQuestionTop()}};$('entrar').onclick=()=>authAction('login');$('cadastrar').onclick=()=>authAction('signup');$('recuperar').onclick=()=>authAction('reset');$('sair').onclick=async()=>{
+  const button=$('sair');
+  if(button.disabled)return;
+  button.disabled=true;
+  const originalText=button.textContent;
+  button.textContent='Saindo...';
+  try{
+    // O escopo local encerra apenas a sessão deste navegador, sem chamada global ao servidor.
+    const result=await Promise.race([
+      client.auth.signOut({scope:'local'}),
+      new Promise((_,reject)=>setTimeout(()=>reject(new Error('Tempo limite ao encerrar sessão.')),8000))
+    ]);
+    if(result?.error)throw result.error;
+    window.location.replace(window.location.pathname+'?saiu=1');
+  }catch(error){
+    message('Não foi possível sair: '+(error.message||String(error)),true);
+    button.disabled=false;
+    button.textContent=originalText;
+  }
+};
 window.addEventListener('pagehide',saveProgress);
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')saveProgress()});
 // O link de redefinição de senha é tratado antes da navegação normal.
