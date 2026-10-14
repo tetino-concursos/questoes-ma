@@ -914,6 +914,19 @@ document.getElementById('topico').addEventListener('change',()=>{
  if(body.classList.contains('logged-in'))go('home');
 })();
 </script>
+<div id="tt-profile-modal" class="tt-profile-modal" hidden>
+<div class="tt-profile-dialog" role="dialog" aria-modal="true" aria-labelledby="tt-profile-title">
+<button type="button" id="tt-profile-close" class="tt-profile-close" aria-label="Fechar">×</button>
+<h2 id="tt-profile-title">Meu perfil</h2>
+<p>Escolha uma foto para aparecer na sua conta.</p>
+<div class="tt-profile-preview" id="tt-profile-preview"><span id="tt-profile-preview-initials">?</span><img id="tt-profile-preview-img" alt="Prévia da foto" hidden/></div>
+<label class="tt-profile-select" for="tt-profile-file">Escolher foto</label>
+<input id="tt-profile-file" type="file" accept="image/png,image/jpeg,image/webp" hidden/>
+<p class="tt-profile-hint">JPG, PNG ou WebP • até 5 MB. A imagem será ajustada para um quadrado.</p>
+<button type="button" id="tt-profile-save" disabled>Salvar foto</button>
+<p id="tt-profile-message" role="status" aria-live="polite"></p>
+</div></div>
+
 <script>
 (function(){
  const update=()=>{
@@ -936,7 +949,7 @@ document.getElementById('topico').addEventListener('change',()=>{
     img.onerror=()=>{img.hidden=true};
   }else{img.hidden=true;img.removeAttribute('src');drawerAvatar.style.backgroundImage='';drawerAvatar.textContent=initials||'?'}
  };
- document.getElementById('tt-profile-button').addEventListener('click',()=>document.getElementById('tt-menu-button').click());
+ document.getElementById('tt-profile-button')?.addEventListener('click',()=>document.getElementById('tt-menu-button')?.click());
  const modal=document.getElementById('tt-profile-modal');
  const fileInput=document.getElementById('tt-profile-file');
  const previewImg=document.getElementById('tt-profile-preview-img');
@@ -995,16 +1008,4 @@ document.getElementById('topico').addEventListener('change',()=>{
  update();
 })();
 </script>
-<div id="tt-profile-modal" class="tt-profile-modal" hidden>
-<div class="tt-profile-dialog" role="dialog" aria-modal="true" aria-labelledby="tt-profile-title">
-<button type="button" id="tt-profile-close" class="tt-profile-close" aria-label="Fechar">×</button>
-<h2 id="tt-profile-title">Meu perfil</h2>
-<p>Escolha uma foto para aparecer na sua conta.</p>
-<div class="tt-profile-preview" id="tt-profile-preview"><span id="tt-profile-preview-initials">?</span><img id="tt-profile-preview-img" alt="Prévia da foto" hidden/></div>
-<label class="tt-profile-select" for="tt-profile-file">Escolher foto</label>
-<input id="tt-profile-file" type="file" accept="image/png,image/jpeg,image/webp" hidden/>
-<p class="tt-profile-hint">JPG, PNG ou WebP • até 5 MB. A imagem será ajustada para um quadrado.</p>
-<button type="button" id="tt-profile-save" disabled>Salvar foto</button>
-<p id="tt-profile-message" role="status" aria-live="polite"></p>
-</div></div>
 </body></html>
