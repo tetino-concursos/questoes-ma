@@ -744,6 +744,23 @@ async function loadAccount(session){
   const version=++authVersion;
   const nextUser=session?.user||null;
   if(usuario?.id&&nextUser?.id===usuario.id&&catalogoCarregado)return; // Evita reinício por renovação de sessão ou troca de aba.
+  if(nextUser){
+    try{
+      const {data:liberado,error:aprovacaoErro}=await client.rpc('tetino_acesso_aprovado');
+      if(version!==authVersion)return;
+      if(aprovacaoErro)throw aprovacaoErro;
+      if(!liberado){
+        message('Cadastro realizado! Aguarde a aprovação do administrador para acessar as questões.');
+        await client.auth.signOut();
+        return;
+      }
+    }catch(e){
+      if(version!==authVersion)return;
+      message('Não foi possível verificar sua aprovação. Tente novamente mais tarde.',true);
+      await client.auth.signOut();
+      return;
+    }
+  }
   usuario=nextUser;
   document.body.classList.toggle('logged-in', !!usuario);
   atualizarTela();
@@ -771,7 +788,7 @@ async function loadAccount(session){
   if(!catalogoCarregado)await carregarQuestoes(version);
   else filtros();
 }
-async function authAction(action){if(!client){message('Não foi possível carregar a conexão Supabase.',true);return}const email=$('email').value.trim(),password=$('senha').value;if(!email||!email.includes('@')){message('Informe um e-mail válido.',true);return}if(action!=='reset'&&password.length<6){message('A senha deve ter no mínimo 6 caracteres.',true);return}['entrar','cadastrar','recuperar'].forEach(id=>$(id).disabled=true);try{let result;if(action==='signup')result=await client.auth.signUp({email,password,options:{emailRedirectTo:location.origin+location.pathname}});else if(action==='login')result=await client.auth.signInWithPassword({email,password});else result=await client.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});if(result.error)throw result.error;if(action==='signup')message(result.data?.session?'Conta criada! Você já está conectado.':'Cadastro recebido. Confira seu e-mail para confirmar a conta.');else if(action==='reset')message('Se o e-mail estiver cadastrado, você receberá instruções para redefinir a senha.');else message('Login realizado com sucesso.')}catch(e){message(e.message||'Não foi possível concluir a operação.',true)}finally{['entrar','cadastrar','recuperar'].forEach(id=>$(id).disabled=false)}}
+async function authAction(action){if(!client){message('Não foi possível carregar a conexão Supabase.',true);return}const email=$('email').value.trim(),password=$('senha').value;if(!email||!email.includes('@')){message('Informe um e-mail válido.',true);return}if(action!=='reset'&&password.length<6){message('A senha deve ter no mínimo 6 caracteres.',true);return}['entrar','cadastrar','recuperar'].forEach(id=>$(id).disabled=true);try{let result;if(action==='signup')result=await client.auth.signUp({email,password,options:{emailRedirectTo:location.origin+location.pathname}});else if(action==='login')result=await client.auth.signInWithPassword({email,password});else result=await client.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});if(result.error)throw result.error;if(action==='signup')message('Cadastro realizado! Aguarde a aprovação do administrador para acessar as questões.');else if(action==='reset')message('Se o e-mail estiver cadastrado, você receberá instruções para redefinir a senha.');else message('Login realizado com sucesso.')}catch(e){message(e.message||'Não foi possível concluir a operação.',true)}finally{['entrar','cadastrar','recuperar'].forEach(id=>$(id).disabled=false)}}
 async function carregarQuestoes(version=authVersion){
   if(!usuario)return;
   if(!client){$('meta').textContent='Erro de conexão';$('enunciado').textContent='A biblioteca do Supabase não carregou. Atualize a página.';return}
