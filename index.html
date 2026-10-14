@@ -559,6 +559,17 @@ body.logged-in .tt-menu-button{position:fixed!important;top:17px!important;left:
 .tt-drawer .tt-course-link{border:1px solid #286eaa!important;border-left:4px solid #29b7e9!important;background:#132944!important;color:#e5f5ff!important}
 .tt-drawer-bottom{margin-top:auto;padding-top:18px;border-top:1px solid #253755}.tt-user-card{display:flex;align-items:center;gap:11px;padding:12px 8px;color:#e6efff}.tt-user-avatar{display:grid;place-items:center;width:43px;height:43px;flex-shrink:0;border-radius:50%;border:2px solid #4e9cd2;background:#19395d;font-weight:800}.tt-user-card strong{display:block;font-size:14px}.tt-user-card small{display:block;font-size:11px;color:#9eafc9;overflow-wrap:anywhere;margin-top:3px}
 @media(max-width:500px){body.logged-in header .brand-logo{width:145px!important;height:58px!important}.tt-header-brand{max-width:calc(100% - 145px)}.tt-logo-fallback{font-size:15px}.tt-logo-fallback b{font-size:10px}}
+
+/* Correção de contraste: cabeçalho escuro para destacar a logo */
+body.logged-in header{
+  background:linear-gradient(110deg,#07152d 0%,#102c56 55%,#07152d 100%)!important;
+  border-bottom:2px solid #2d6ca9!important;
+  box-shadow:0 4px 18px #0a1a332b!important;
+}
+body.logged-in .tt-menu-button{color:#fff!important;background:transparent!important}
+body.logged-in .tt-logo-fallback{color:#fff!important}
+body.logged-in .tt-logo-fallback b{color:#f7c84d!important}
+body.logged-in .tt-profile-button{border-color:#72c5ff!important;background:#1c4069!important;color:#fff!important}
 </style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script></head><body><header><div class="tt-header-brand"><img alt="TeTino Concursos" class="brand-logo" src="tetino_assets/logo-tetino-transparente.png" onerror="this.hidden=true;this.nextElementSibling.hidden=false"/><span class="tt-logo-fallback" hidden>TeTino <b>CONCURSOS</b></span></div><button type="button" id="tt-profile-button" class="tt-profile-button" aria-label="Meu perfil"><span class="tt-avatar-initials">?</span><img class="tt-avatar-image" alt="Foto do perfil" hidden/></button></header><button class="tt-menu-button" id="tt-menu-button" type="button" aria-label="Abrir menu" aria-expanded="false">☰</button><div class="tt-backdrop" id="tt-backdrop"></div><nav class="tt-drawer" id="tt-drawer" aria-label="Menu principal">
 <div class="tt-drawer-head"><div class="tt-drawer-logo"><img src="tetino_assets/logo-tetino-transparente.png" alt="TeTino Concursos" onerror="this.hidden=true;this.nextElementSibling.hidden=false"/><strong class="tt-logo-fallback" hidden>TeTino <b>CONCURSOS</b></strong></div><button type="button" id="tt-menu-close" aria-label="Fechar menu">×</button></div>
 <a href="#inicio" data-tt-page="home">⌂ &nbsp; Início</a>
