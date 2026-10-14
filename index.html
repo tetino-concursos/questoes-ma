@@ -810,31 +810,37 @@ async function carregarQuestoes(version=authVersion){
     $('opcoes').replaceChildren();$('responder').disabled=true;$('proxima').disabled=true;
   }
 }
-$('login-slot').appendChild($('account-card'));$('filtrar').onclick=()=>filtros(true);$('responder').onclick=corrigir;function ttScrollQuestionTop(){requestAnimationFrame(()=>{const card=document.getElementById('meta')?.closest('.card');if(!card)return;const header=document.querySelector('body.logged-in header');const offset=(header?.getBoundingClientRect().height||0)+12;const top=window.scrollY+card.getBoundingClientRect().top-offset;window.scrollTo({top:Math.max(0,top),behavior:'instant'});});}$('proxima').onclick=()=>{if(lista.length&&indice<lista.length-1){indice++;mostrar();saveProgress();ttScrollQuestionTop()}};$('anterior').onclick=()=>{if(lista.length&&indice>0){indice--;mostrar();saveProgress();ttScrollQuestionTop()}};$('entrar').onclick=()=>authAction('login');$('cadastrar').onclick=()=>authAction('signup');$('recuperar').onclick=()=>authAction('reset');$('sair').onclick=async()=>{
-  const btn=$('sair');
-  if(btn.disabled)return;
-  btn.disabled=true;
-  btn.textContent='Saindo...';
+$('login-slot').appendChild($('account-card'));$('filtrar').onclick=()=>filtros(true);$('responder').onclick=corrigir;function ttScrollQuestionTop(){requestAnimationFrame(()=>{const card=document.getElementById('meta')?.closest('.card');if(!card)return;const header=document.querySelector('body.logged-in header');const offset=(header?.getBoundingClientRect().height||0)+12;const top=window.scrollY+card.getBoundingClientRect().top-offset;window.scrollTo({top:Math.max(0,top),behavior:'instant'});});}$('proxima').onclick=()=>{if(lista.length&&indice<lista.length-1){indice++;mostrar();saveProgress();ttScrollQuestionTop()}};$('anterior').onclick=()=>{if(lista.length&&indice>0){indice--;mostrar();saveProgress();ttScrollQuestionTop()}};$('entrar').onclick=()=>authAction('login');$('cadastrar').onclick=()=>authAction('signup');$('recuperar').onclick=()=>authAction('reset');async function ttLogoutAluno(){
+  if(ttLogoutAluno.running)return;
+  ttLogoutAluno.running=true;
+  const btn=$('sair'),menuBtn=document.getElementById('tt-signout');
+  if(btn){btn.disabled=true;btn.textContent='Saindo...';}
+  if(menuBtn){menuBtn.disabled=true;menuBtn.textContent='Saindo...';}
+  // Fecha o menu e mostra imediatamente a tela de login.
+  document.body.classList.remove('tt-menu-open','tt-view-home','tt-view-filter','tt-view-questions','tt-view-analytics','analytics-open','logged-in');
+  document.getElementById('tt-drawer')?.setAttribute('aria-hidden','true');
+  $('login-screen').classList.remove('hidden');
+  $('study-area').classList.add('hidden');
+  $('auth-form').classList.remove('hidden');
+  $('auth-account').classList.add('hidden');
+  $('login-slot').appendChild($('account-card'));
   try{
-    if(!client)throw new Error('Conexão com o Supabase indisponível.');
-    const {error}=await Promise.race([
+    if(!client)throw new Error('Supabase indisponível');
+    const result=await Promise.race([
       client.auth.signOut({scope:'local'}),
-      new Promise((_,reject)=>setTimeout(()=>reject(new Error('A saída demorou mais que o esperado. Tente novamente.')),8000))
+      new Promise((_,reject)=>setTimeout(()=>reject(new Error('Tempo esgotado ao sair')),7000))
     ]);
-    if(error)throw error;
-    // Atualiza a tela sem esperar consultas de histórico ou questões.
-    await loadAccount(null);
-    document.body.classList.remove('tt-menu-open','tt-view-home','tt-view-filter','tt-view-questions','tt-view-analytics','analytics-open');
-    message('Você saiu da sua conta.');
-    // Recarrega a interface de login, sem deixar a barra de carregamento presa.
-    window.location.replace(window.location.pathname);
-  }catch(e){
-    message('Não foi possível concluir a saída: '+(e.message||'Erro desconhecido'),true);
-  }finally{
-    btn.disabled=false;
-    btn.textContent='Sair da conta';
+    if(result?.error)throw result.error;
+    // Reabre a página inicial sem manter a tela anterior em cache.
+    window.location.replace(window.location.pathname+'?logout='+Date.now());
+  }catch(err){
+    message('Não foi possível confirmar a saída. Atualize a página e tente novamente: '+(err?.message||'Erro desconhecido'),true);
+    ttLogoutAluno.running=false;
+    if(btn){btn.disabled=false;btn.textContent='Sair da conta';}
+    if(menuBtn){menuBtn.disabled=false;menuBtn.textContent='Sair da conta';}
   }
-};
+}
+$('sair').onclick=ttLogoutAluno;
 window.addEventListener('pagehide',saveProgress);
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')saveProgress()});
 // O link de redefinição de senha é tratado antes da navegação normal.
@@ -984,7 +990,7 @@ document.getElementById('topico').addEventListener('change',()=>{
  document.querySelectorAll('[data-tt-page]').forEach(el=>el.addEventListener('click',e=>{e.preventDefault();go(el.dataset.ttPage)}));
  document.querySelectorAll('[data-tt-go]').forEach(el=>el.addEventListener('click',()=>go(el.dataset.ttGo)));
  document.getElementById('tt-enter-course').addEventListener('click',()=>go('filter'));
- document.getElementById('tt-signout').addEventListener('click',()=>{close();document.getElementById('sair').click()});
+ document.getElementById('tt-signout').addEventListener('click',()=>{close();ttLogoutAluno()});
  document.getElementById('picker-apply').addEventListener('click',()=>go('questions'));
  document.getElementById('nav-performance').addEventListener('click',()=>go('analytics'));
  document.getElementById('close-analytics').addEventListener('click',()=>go('questions'));
