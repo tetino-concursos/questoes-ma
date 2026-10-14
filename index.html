@@ -773,7 +773,19 @@ async function loadAccountCore(session){
   }
   usuario=nextUser;
   document.body.classList.toggle('logged-in', !!usuario);
+  // Remove telas temporárias que poderiam ocultar a página inicial.
+  if(usuario){
+    document.body.classList.remove('tt-profile-open','tt-menu-open','focus-mode','analytics-open');
+  }
   atualizarTela();
+  if(usuario){
+    // Executa após os observadores e componentes receberem a mudança de login.
+    setTimeout(()=>{
+      if(usuario?.id===nextUser.id && document.body.classList.contains('logged-in')){
+        window.ttNavigateToHome?.();
+      }
+    },80);
+  }
   $('auth-form').classList.toggle('hidden',!!usuario);
   $('auth-account').classList.toggle('hidden',!usuario);
   $('account-email').textContent=usuario?.email||'';
@@ -781,6 +793,7 @@ async function loadAccountCore(session){
   $('account-title').textContent=usuario?'Minha conta':'Acesse sua conta';
   historico={};loadFavorites();estatisticas();
   if(!usuario){
+    document.body.classList.remove('tt-profile-open','tt-menu-open','tt-view-home','tt-view-filter','tt-view-questions','tt-view-analytics');
     questoes=[];catalogoCarregado=false;lista=[];indice=0;
     $('opcoes').replaceChildren();$('enunciado').textContent='';$('feedback').classList.add('hidden');
     $('banca').length=1;$('ano').length=1;$('organizacao').length=1;$('materia').length=1;$('topico').length=1;$('subtopico').length=1;
@@ -984,6 +997,7 @@ document.getElementById('topico').addEventListener('change',()=>{
   else{body.classList.add('tt-view-questions');if(!lista.length&&questoes.length)filtros(true)}
   window.scrollTo({top:0,behavior:'instant'});
  }
+ window.ttNavigateToHome=()=>go('home');
  document.querySelectorAll('[data-tt-page]').forEach(el=>el.addEventListener('click',e=>{e.preventDefault();go(el.dataset.ttPage)}));
  document.querySelectorAll('[data-tt-go]').forEach(el=>el.addEventListener('click',()=>go(el.dataset.ttGo)));
  document.getElementById('tt-enter-course').addEventListener('click',()=>go('filter'));
