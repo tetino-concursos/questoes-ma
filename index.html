@@ -740,7 +740,17 @@ function atualizarTela(){
   $('study-area').classList.toggle('hidden',!logado);
   $(logado?'account-slot':'login-slot').appendChild($('account-card'));
 }
+// Evita que eventos de autenticação repetidos cancelem a carga inicial
+// enquanto a consulta de aprovação ainda está em andamento.
+let ttAuthPendingId=null;
 async function loadAccount(session){
+  const id=session?.user?.id||null;
+  if(id&&ttAuthPendingId===id)return;
+  ttAuthPendingId=id;
+  try{return await loadAccountCore(session)}
+  finally{if(ttAuthPendingId===id)ttAuthPendingId=null}
+}
+async function loadAccountCore(session){
   const version=++authVersion;
   const nextUser=session?.user||null;
   if(usuario?.id&&nextUser?.id===usuario.id&&catalogoCarregado)return; // Evita reinício por renovação de sessão ou troca de aba.
