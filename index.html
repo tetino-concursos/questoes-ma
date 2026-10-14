@@ -811,29 +811,39 @@ async function carregarQuestoes(version=authVersion){
   }
 }
 $('login-slot').appendChild($('account-card'));$('filtrar').onclick=()=>filtros(true);$('responder').onclick=corrigir;function ttScrollQuestionTop(){requestAnimationFrame(()=>{const card=document.getElementById('meta')?.closest('.card');if(!card)return;const header=document.querySelector('body.logged-in header');const offset=(header?.getBoundingClientRect().height||0)+12;const top=window.scrollY+card.getBoundingClientRect().top-offset;window.scrollTo({top:Math.max(0,top),behavior:'instant'});});}$('proxima').onclick=()=>{if(lista.length&&indice<lista.length-1){indice++;mostrar();saveProgress();ttScrollQuestionTop()}};$('anterior').onclick=()=>{if(lista.length&&indice>0){indice--;mostrar();saveProgress();ttScrollQuestionTop()}};$('entrar').onclick=()=>authAction('login');$('cadastrar').onclick=()=>authAction('signup');$('recuperar').onclick=()=>authAction('reset');$('sair').onclick=async()=>{
-  const button=$('sair');
-  if(button.disabled)return;
-  button.disabled=true;
-  const originalText=button.textContent;
-  button.textContent='Saindo...';
+  const botao=$('sair');
+  if(botao.dataset.saindo==='1')return;
+  botao.dataset.saindo='1';
+  botao.disabled=true;
+  botao.textContent='Saindo...';
+  // A saída já é concluída pelo Supabase; a tela não deve esperar o
+  // carregamento do histórico ou a reconstrução do painel.
+  let finalizado=false;
+  const mostrarLogin=()=>{
+    if(finalizado)return;
+    finalizado=true;
+    document.body.classList.remove('logged-in','tt-menu-open','tt-view-home','tt-view-filter','tt-view-questions','tt-view-analytics','analytics-open');
+    window.location.replace(window.location.pathname+'?sair='+Date.now());
+  };
+  const timeout=setTimeout(()=>{
+    botao.dataset.saindo='';botao.disabled=false;botao.textContent='Sair da conta';
+    message('A saída está demorando. Atualize a página para verificar se a sessão foi encerrada.',true);
+  },10000);
   try{
-    // O escopo local encerra apenas a sessão deste navegador, sem chamada global ao servidor.
-    const result=await Promise.race([
-      client.auth.signOut({scope:'local'}),
-      new Promise((_,reject)=>setTimeout(()=>reject(new Error('Tempo limite ao encerrar sessão.')),8000))
-    ]);
-    if(result?.error)throw result.error;
-    window.location.replace(window.location.pathname+'?saiu=1');
-  }catch(error){
-    message('Não foi possível sair: '+(error.message||String(error)),true);
-    button.disabled=false;
-    button.textContent=originalText;
+    const {error}=await client.auth.signOut({scope:'local'});
+    if(error)throw error;
+    clearTimeout(timeout);
+    mostrarLogin();
+  }catch(e){
+    clearTimeout(timeout);
+    botao.dataset.saindo='';botao.disabled=false;botao.textContent='Sair da conta';
+    message('Não foi possível sair: '+(e.message||String(e)),true);
   }
 };
 window.addEventListener('pagehide',saveProgress);
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')saveProgress()});
 // O link de redefinição de senha é tratado antes da navegação normal.
-if(client){client.auth.onAuthStateChange((event,session)=>{setTimeout(()=>{loadAccount(session);if(event==='PASSWORD_RECOVERY'){const nova=prompt('Digite sua nova senha (mínimo 6 caracteres):');if(nova&&nova.length>=6)client.auth.updateUser({password:nova}).then(({error})=>message(error?'Erro: '+error.message:'Senha atualizada com sucesso.',!!error));else if(nova)message('A senha deve ter pelo menos 6 caracteres.',true)}},0)})}else{message('Biblioteca Supabase não carregada. Confira sua conexão.',true);loadAccount(null)}
+if(client){client.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'&&$('sair').dataset.saindo==='1'){window.location.replace(window.location.pathname+'?sair='+Date.now());return;}setTimeout(()=>{loadAccount(session);if(event==='PASSWORD_RECOVERY'){const nova=prompt('Digite sua nova senha (mínimo 6 caracteres):');if(nova&&nova.length>=6)client.auth.updateUser({password:nova}).then(({error})=>message(error?'Erro: '+error.message:'Senha atualizada com sucesso.',!!error));else if(nova)message('A senha deve ter pelo menos 6 caracteres.',true)}},0)})}else{message('Biblioteca Supabase não carregada. Confira sua conexão.',true);loadAccount(null)}
 </script>
 <script>
 /* Painel visual: utiliza o histórico já carregado, sem modificar o Supabase. */
