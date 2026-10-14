@@ -844,7 +844,36 @@ async function carregarQuestoes(version=authVersion){
       if(!data||data.length<pagina)break;
     }
     if(version!==authVersion||!usuario)return;
-    questoes=todas.filter(q=>q.banca===BANCA_ATIVA&&q.id>=PROVA_LEGATUS_INICIO&&q.id<=PROVA_LEGATUS_FIM&&!CLASSIFICACAO_EDITAL_2024[q.id]?.anulada&&Array.isArray(q.opcoes)&&q.opcoes.length>=2&&Number.isInteger(q.correta)&&q.correta>=0&&q.correta<q.opcoes.length).map(q=>({...q,...(CLASSIFICACAO_EDITAL_2024[q.id]||{}),ano:2024,organizacao:'Prefeitura Municipal de Buriti Bravo – MA'}));
+    // Consulta a ordem definida pelo administrador. Se a consulta falhar, não bloqueia as questões.
+    let ordemPastas=new Map();
+    try{
+      const [pastasResult,ordemResult]=await Promise.all([
+        client.from('tetino_pastas').select('id,nome').order('nome',{ascending:true}),
+        client.from('tetino_questao_pastas').select('questao_id,pasta_id,posicao')
+      ]);
+      if(pastasResult.error)throw pastasResult.error;
+      if(ordemResult.error)throw ordemResult.error;
+      const nomes=new Map((pastasResult.data||[]).map(p=>[String(p.id),p.nome]));
+      ordemPastas=new Map((ordemResult.data||[]).map(r=>[String(r.questao_id),{
+        pasta:String(r.pasta_id),nome:nomes.get(String(r.pasta_id))||'',posicao:Number(r.posicao)||0
+      }]));
+    }catch(err){console.warn('Ordem de pastas indisponível:',err.message||err)}
+    if(version!==authVersion||!usuario)return;
+    questoes=todas.filter(q=>q.banca===BANCA_ATIVA&&q.id>=PROVA_LEGATUS_INICIO&&q.id<=PROVA_LEGATUS_FIM&&!CLASSIFICACAO_EDITAL_2024[q.id]?.anulada&&Array.isArray(q.opcoes)&&q.opcoes.length>=2&&Number.isInteger(q.correta)&&q.correta>=0&&q.correta<q.opcoes.length).map(q=>({...q,...(CLASSIFICACAO_EDITAL_2024[q.id]||{}),ano:2024,organizacao:'Prefeitura Municipal de Buriti Bravo – MA'}))
+      .sort((a,b)=>{
+        const x=ordemPastas.get(String(a.id)),y=ordemPastas.get(String(b.id));
+        // Preserva a ordem das pastas e a sequência manual dentro de cada pasta.
+        if(x&&y){
+          const byFolder=x.nome.localeCompare(y.nome,'pt-BR');
+          if(byFolder)return byFolder;
+          const px=x.posicao>0?x.posicao:Number.MAX_SAFE_INTEGER;
+          const py=y.posicao>0?y.posicao:Number.MAX_SAFE_INTEGER;
+          return px-py||Number(a.id)-Number(b.id);
+        }
+        if(x&&!y)return -1;
+        if(!x&&y)return 1;
+        return Number(a.id)-Number(b.id);
+      });
     catalogoCarregado=true;
     preencher('banca',questoes.map(q=>q.banca));
     preencher('ano',questoes.map(q=>String(q.ano)));
