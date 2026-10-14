@@ -936,16 +936,18 @@ document.getElementById('topico').addEventListener('change',()=>{
   const user=typeof usuario!=='undefined'?usuario:null;
   const meta=user?.user_metadata||{};
   const name=meta.full_name||meta.name||meta.display_name||email.split('@')[0]||'Aluno';
-  const initials=name.trim().split(/\\s+/).slice(0,2).map(w=>w[0]?.toUpperCase()||'').join('');
+  const initials=name.trim().split(/\s+/).slice(0,2).map(w=>w[0]?.toUpperCase()||'').join('');
   document.getElementById('tt-user-name').textContent=name;
   document.getElementById('tt-user-email').textContent=email;
   document.querySelector('.tt-user-avatar').textContent=initials||'?';
   document.querySelector('.tt-avatar-initials').textContent=initials||'?';
-  const img=document.querySelector('.tt-avatar-image');\n  const drawerAvatar=document.querySelector('.tt-user-avatar');
+  const img=document.querySelector('.tt-avatar-image');
+  const drawerAvatar=document.querySelector('.tt-user-avatar');
   const url=meta.avatar_url||meta.picture||'';
   if(url && /^https:\/\//i.test(url)){
     if(img.src!==url)img.src=url;
-    img.hidden=false;\n    drawerAvatar.style.backgroundImage='url("'+url.replace(/\\"/g,'')+'")';drawerAvatar.style.backgroundSize='cover';drawerAvatar.style.backgroundPosition='center';drawerAvatar.textContent='';
+    img.hidden=false;
+    drawerAvatar.style.backgroundImage='url("'+url.replace(/\\"/g,'')+'")';drawerAvatar.style.backgroundSize='cover';drawerAvatar.style.backgroundPosition='center';drawerAvatar.textContent='';
     img.onerror=()=>{img.hidden=true};
   }else{img.hidden=true;img.removeAttribute('src');drawerAvatar.style.backgroundImage='';drawerAvatar.textContent=initials||'?'}
  };
