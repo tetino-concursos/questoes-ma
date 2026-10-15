@@ -694,7 +694,7 @@ body.logged-in .teacher-explanation strong{font-weight:800!important}
 .tt-general-course h2{font-size:clamp(24px,5vw,31px);margin:8px 0;color:#16365d}
 .tt-general-course p{line-height:1.6;margin:5px 0 16px;color:#506783}
 .tt-general-tags{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:17px}.tt-general-tags span{font-size:12px;border-radius:999px;background:#e0ebfa;color:#245781;padding:6px 10px}
-#tt-enter-general{width:100%;padding:15px;border:0;border-radius:13px;background:#f5c744;color:#17314e;font-size:15px;font-weight:900;cursor:pointer}
+/* Removido: estilo do antigo botão amarelo de Conhecimentos Gerais. */
 body.logged-in.tt-theme-dark .tt-general-course{background:#1b2b43;border-color:#3b5576;color:#eaf3ff}
 body.logged-in.tt-theme-dark .tt-general-course h2{color:#eaf3ff}
 body.logged-in.tt-theme-dark .tt-general-course p{color:#bbcee5}
@@ -702,7 +702,7 @@ body.logged-in.tt-theme-dark .tt-general-course p{color:#bbcee5}
 </style><style>
 .tt-course-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;max-width:1100px;margin:0 auto 30px}
 .tt-interactive-card{min-width:0;position:relative;border-radius:24px;overflow:hidden;box-shadow:0 10px 27px rgba(8,34,70,.15);background:#092d53;transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s}
-.tt-interactive-button{width:100%;height:100%;padding:0;display:block;position:relative;cursor:pointer;border:0;background:transparent;overflow:hidden;border-radius:inherit;text-align:left;-webkit-tap-highlight-color:transparent}
+.tt-course-gallery #tt-enter-course.tt-interactive-button,.tt-course-gallery #tt-enter-general.tt-interactive-button{width:100%!important;height:100%!important;margin:0!important;padding:0!important;display:block!important;position:relative;cursor:pointer;border:0!important;background:#092d53!important;box-shadow:none!important;overflow:hidden;border-radius:inherit;text-align:left;-webkit-tap-highlight-color:transparent}
 .tt-interactive-button img{display:block;width:100%;height:auto;aspect-ratio:710/879;object-fit:cover;transition:transform .42s cubic-bezier(.2,.8,.2,1),filter .35s}
 .tt-interactive-card:hover,.tt-interactive-card:focus-within{transform:translateY(-6px);box-shadow:0 20px 40px rgba(8,34,70,.24)}
 .tt-interactive-card:hover img,.tt-interactive-card:focus-within img{transform:scale(1.025);filter:saturate(1.07)}
