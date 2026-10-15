@@ -657,47 +657,6 @@ body.logged-in.tt-profile-open #tt-home,body.logged-in.tt-profile-open #study-ar
 body.logged-in.tt-view-filter .layout>section>#tt-prova-selector{display:block!important}
 body.logged-in.tt-view-questions .layout>section>#tt-prova-selector{display:none!important}
 </style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js">
-// Texto de apoio independente do enunciado; marcações temporárias por visita.
-let ttTextoId=null,ttTextoRaw='',ttMarkerColor='#fff19a',ttErase=false,ttTextoRequest=0;
-const ttTextModal=document.getElementById('tt-texto-modal'),ttTextContent=document.getElementById('tt-texto-content');
-function ttResetTexto(q){
- const id=q?.id??null;const changed=String(id)!==String(ttTextoId);
- if(changed){ttTextoId=id;ttTextoRaw='';ttTextContent.replaceChildren();ttTextModal.hidden=true;document.body.style.overflow=''}
- const trigger=document.getElementById('tt-texto-trigger');trigger.hidden=true;
- if(!id||!client)return;
- const token=++ttTextoRequest;
- client.from('tetino_textos_apoio').select('texto').eq('questao_id',id).maybeSingle().then(({data,error})=>{
-  if(token!==ttTextoRequest||String(ttTextoId)!==String(id))return;
-  if(error){console.warn('Texto de apoio:',error.message);return}
-  const value=String(data?.texto||'').trim();
-  if(!value)return;
-  ttTextoRaw=value;trigger.hidden=false;
-  if(changed)ttTextContent.textContent=value;
- });
-}
-function ttCloseTexto(){ttTextModal.hidden=true;document.body.style.overflow='';document.getElementById('tt-open-texto').focus()}
-document.getElementById('tt-open-texto').onclick=()=>{if(!ttTextoRaw)return;ttTextModal.hidden=false;document.body.style.overflow='hidden';document.getElementById('tt-close-texto').focus()};
-document.getElementById('tt-close-texto').onclick=ttCloseTexto;
-ttTextModal.addEventListener('click',e=>{if(e.target===ttTextModal)ttCloseTexto()});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!ttTextModal.hidden)ttCloseTexto()});
-document.querySelectorAll('[data-tt-marker]').forEach(b=>b.onclick=()=>{ttErase=false;ttMarkerColor=b.dataset.ttMarker;document.querySelectorAll('[data-tt-marker]').forEach(x=>x.classList.toggle('active',x===b))});
-document.getElementById('tt-erase-mark').onclick=()=>{ttErase=true;document.querySelectorAll('[data-tt-marker]').forEach(x=>x.classList.remove('active'))};
-document.getElementById('tt-clear-marks').onclick=()=>{ttTextContent.textContent=ttTextoRaw};
-function ttApplyMark(){
- const sel=window.getSelection();if(!sel||sel.isCollapsed||!sel.rangeCount)return;
- const range=sel.getRangeAt(0);
- if(!ttTextContent.contains(range.commonAncestorContainer))return;
- if(ttErase){
-  const marks=[...ttTextContent.querySelectorAll('mark')].filter(m=>range.intersectsNode(m));
-  marks.forEach(m=>{const parent=m.parentNode;while(m.firstChild)parent.insertBefore(m.firstChild,m);m.remove();parent.normalize()});
- }else{
-  const mark=document.createElement('mark');mark.style.backgroundColor=ttMarkerColor;
-  try{range.surroundContents(mark)}catch(e){const frag=range.extractContents();mark.append(frag);range.insertNode(mark)}
- }
- sel.removeAllRanges();
-}
-ttTextContent.addEventListener('mouseup',ttApplyMark);
-ttTextContent.addEventListener('touchend',()=>setTimeout(ttApplyMark,100));
 </script><style>#enunciado,.teacher-explanation,.option{white-space:pre-wrap;overflow-wrap:anywhere}#enunciado img,.teacher-explanation img,.option img{object-fit:contain}</style><style>
 /* Correção de contraste da formatação: enunciado normal, apenas trechos marcados em negrito */
 body.logged-in #enunciado{font-weight:400!important}
@@ -1222,4 +1181,47 @@ document.getElementById('topico').addEventListener('change',()=>{
  $('tt-prof-file').addEventListener('change',async e=>{const f=e.target.files?.[0];if(!f)return;if(!['image/jpeg','image/png','image/webp'].includes(f.type)||f.size>5*1024*1024)return status('tt-prof-upload-status','Use JPG, PNG ou WebP de até 5 MB.',true);if(!current()?.id)return status('tt-prof-upload-status','Entre na sua conta.',true);status('tt-prof-upload-status','Preparando e enviando foto...');try{const bitmap=await createImageBitmap(f),side=Math.min(bitmap.width,bitmap.height),canvas=document.createElement('canvas');canvas.width=256;canvas.height=256;canvas.getContext('2d').drawImage(bitmap,(bitmap.width-side)/2,(bitmap.height-side)/2,side,side,0,0,256,256);bitmap.close?.();const blob=await new Promise(ok=>canvas.toBlob(ok,'image/jpeg',.83));if(!blob)throw Error('Falha ao processar imagem');const path=current().id+'/avatar.jpg';const r=await client.storage.from('avatares').upload(path,blob,{contentType:'image/jpeg',upsert:true,cacheControl:'60'});if(r.error)throw r.error;const url=client.storage.from('avatares').getPublicUrl(path).data.publicUrl+'?v='+Date.now();const a=await client.auth.updateUser({data:{avatar_url:url}});if(a.error)throw a.error;usuario=a.data.user||usuario;load();syncAccount();status('tt-prof-upload-status','Foto atualizada com sucesso!')}catch(err){status('tt-prof-upload-status','Não foi possível enviar: '+err.message+'. Verifique o bucket avatares e suas permissões.',true)}finally{e.target.value=''}});
  document.querySelectorAll('[data-theme]').forEach(b=>b.addEventListener('click',()=>{const wants=b.dataset.theme==='system'?(window.matchMedia?.('(prefers-color-scheme: dark)').matches?'dark':'light'):b.dataset.theme;const dark=document.body.classList.contains('tt-theme-dark');if((wants==='dark')!==dark)document.getElementById('tt-theme-toggle')?.click();document.querySelectorAll('[data-theme]').forEach(x=>x.classList.toggle('selected',x===b));status('tt-prof-theme-status','Preferência aplicada neste aparelho.')}));
 })();
+</script><script>
+// Texto de apoio independente do enunciado; marcações temporárias por visita.
+let ttTextoId=null,ttTextoRaw='',ttMarkerColor='#fff19a',ttErase=false,ttTextoRequest=0;
+const ttTextModal=document.getElementById('tt-texto-modal'),ttTextContent=document.getElementById('tt-texto-content');
+function ttResetTexto(q){
+ const id=q?.id??null;const changed=String(id)!==String(ttTextoId);
+ if(changed){ttTextoId=id;ttTextoRaw='';ttTextContent.replaceChildren();ttTextModal.hidden=true;document.body.style.overflow=''}
+ const trigger=document.getElementById('tt-texto-trigger');trigger.hidden=true;
+ if(!id||!client)return;
+ const token=++ttTextoRequest;
+ client.from('tetino_textos_apoio').select('texto').eq('questao_id',id).maybeSingle().then(({data,error})=>{
+  if(token!==ttTextoRequest||String(ttTextoId)!==String(id))return;
+  if(error){console.warn('Texto de apoio:',error.message);return}
+  const value=String(data?.texto||'').trim();
+  if(!value)return;
+  ttTextoRaw=value;trigger.hidden=false;
+  if(changed)ttTextContent.textContent=value;
+ });
+}
+function ttCloseTexto(){ttTextModal.hidden=true;document.body.style.overflow='';document.getElementById('tt-open-texto').focus()}
+document.getElementById('tt-open-texto').onclick=()=>{if(!ttTextoRaw)return;ttTextModal.hidden=false;document.body.style.overflow='hidden';document.getElementById('tt-close-texto').focus()};
+document.getElementById('tt-close-texto').onclick=ttCloseTexto;
+ttTextModal.addEventListener('click',e=>{if(e.target===ttTextModal)ttCloseTexto()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!ttTextModal.hidden)ttCloseTexto()});
+document.querySelectorAll('[data-tt-marker]').forEach(b=>b.onclick=()=>{ttErase=false;ttMarkerColor=b.dataset.ttMarker;document.querySelectorAll('[data-tt-marker]').forEach(x=>x.classList.toggle('active',x===b))});
+document.getElementById('tt-erase-mark').onclick=()=>{ttErase=true;document.querySelectorAll('[data-tt-marker]').forEach(x=>x.classList.remove('active'))};
+document.getElementById('tt-clear-marks').onclick=()=>{ttTextContent.textContent=ttTextoRaw};
+function ttApplyMark(){
+ const sel=window.getSelection();if(!sel||sel.isCollapsed||!sel.rangeCount)return;
+ const range=sel.getRangeAt(0);
+ if(!ttTextContent.contains(range.commonAncestorContainer))return;
+ if(ttErase){
+  const marks=[...ttTextContent.querySelectorAll('mark')].filter(m=>range.intersectsNode(m));
+  marks.forEach(m=>{const parent=m.parentNode;while(m.firstChild)parent.insertBefore(m.firstChild,m);m.remove();parent.normalize()});
+ }else{
+  const mark=document.createElement('mark');mark.style.backgroundColor=ttMarkerColor;
+  try{range.surroundContents(mark)}catch(e){const frag=range.extractContents();mark.append(frag);range.insertNode(mark)}
+ }
+ sel.removeAllRanges();
+}
+ttTextContent.addEventListener('mouseup',ttApplyMark);
+ttTextContent.addEventListener('touchend',()=>setTimeout(ttApplyMark,100));
+
 </script></body></html>
