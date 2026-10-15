@@ -748,17 +748,32 @@ function estatisticas(){const h=Object.values(historico);$('respondidas').textCo
 function filtros(persistir=true){const b=$('banca').value,a=$('ano').value,o=$('organizacao').value,m=$('materia').value,t=$('tipo').value,e=$('modo').value,topic=$('topico').value,subtopic=$('subtopico').value;const usePicker=!!window.pickerReady;lista=ttProvaQuestoes().filter(q=>{const h=historico[q.id];const selected=window.pickerSelected||new Set();const key=String(q.materia)+'||'+String(q.topico);const matchSelection=!usePicker||!selected.size||selected.has('m:'+q.materia)||selected.has('t:'+key)||selected.has('s:'+key+'||'+q.subtopico);const mode=usePicker?(window.pickerMode||'todas'):e;const matchMode=mode==='todas'||(mode==='nao'&&!h)||(mode==='respondidas'&&!!h)||(mode==='erros'&&h?.acertou===false)||(mode==='acertos'&&h?.acertou===true)||(mode==='favoritas'&&favoritos.has(String(q.id)));return matchSelection&&matchMode&&(!usePicker&&(!m||q.materia===m)&&(!topic||q.topico===topic)&&(!subtopic||q.subtopico===subtopic)||usePicker)&&(!b||q.banca===b)&&(!a||String(q.ano)===a)&&(!o||q.organizacao===o)&&(!t||q.tipo===t)});indice=0;mostrar();if(persistir)saveProgress();if(window.pickerRender)window.pickerRender()}
 
 const TT_IMG_RE=/\[\[IMG\|([^|\]\r\n]+)\|(\d{2,3})\|(left|center|right)\]\]/g;
-function ttRichText(node,source){
- node.replaceChildren();const text=String(source||'');const re=new RegExp(TT_IMG_RE.source,'g');let match,pos=0;
- while((match=re.exec(text))){
-  node.append(document.createTextNode(text.slice(pos,match.index)));
-  const url=match[1];if(url.startsWith('https://kdalqvbexttclxtjmsxc.supabase.co/storage/v1/object/public/questao-imagens/')){
-   const holder=document.createElement('div');holder.style.textAlign=match[3];holder.style.margin='10px 0';
-   const img=document.createElement('img');img.src=url;img.alt='Imagem da questão';img.loading='lazy';img.style.width=Math.min(100,Math.max(15,Number(match[2])))+'%';img.style.maxWidth='100%';img.style.height='auto';img.style.display='inline-block';img.style.borderRadius='8px';holder.append(img);node.append(holder);
-  }else node.append(document.createTextNode(match[0]));pos=re.lastIndex;
+function ttRenderRichTokens(target,value){
+ target.replaceChildren();const source=String(value||'');
+ const rx=/\[\[(IMG\|[^\]\r\n]+|B|\/B|I|\/I|U|\/U|COLOR\|#[0-9a-fA-F]{6}|\/COLOR)\]\]/g;
+ const stack=[{node:target,type:'ROOT'}];let pos=0,match;
+ function appendText(s){if(s)stack[stack.length-1].node.append(document.createTextNode(s));}
+ while((match=rx.exec(source))){
+  appendText(source.slice(pos,match.index));const tok=match[1];let consumed=false;
+  if(tok.startsWith('IMG|')){
+   const p=tok.split('|');const url=p[1],w=Number(p[2]),align=p[3];
+   if(p.length===4&&Number.isFinite(w)&&['left','center','right'].includes(align)&&url.startsWith('https://kdalqvbexttclxtjmsxc.supabase.co/storage/v1/object/public/questao-imagens/')){
+    const wrap=document.createElement('div');wrap.style.textAlign=align;wrap.style.margin='8px 0';
+    const img=document.createElement('img');img.src=url;img.alt='Imagem da questão';img.loading='lazy';img.style.width=Math.max(15,Math.min(100,w))+'%';img.style.maxWidth='100%';img.style.height='auto';wrap.append(img);stack[stack.length-1].node.append(wrap);consumed=true;
+   }
+  }else if(['B','I','U'].includes(tok)||tok.startsWith('COLOR|')){
+   const type=tok.startsWith('COLOR|')?'COLOR':tok;const el=document.createElement(({B:'strong',I:'em',U:'u',COLOR:'span'})[type]);
+   if(type==='COLOR')el.style.color=tok.slice(6);
+   stack[stack.length-1].node.append(el);stack.push({node:el,type});consumed=true;
+  }else if(tok.startsWith('/')&&stack.length>1&&stack[stack.length-1].type===tok.slice(1)){
+   stack.pop();consumed=true;
+  }
+  if(!consumed)appendText(match[0]);pos=rx.lastIndex;
  }
- node.append(document.createTextNode(text.slice(pos)));
+ appendText(source.slice(pos));
 }
+
+function ttRichText(node,source){ttRenderRichTokens(node,source)}
 
 function mostrar(){selecionada=null;corrigida=false;$('feedback').classList.add('hidden');$('responder').disabled=!catalogoCarregado;const q=lista[indice];$('opcoes').innerHTML='';updateFavoriteButton();if(!q){$('meta').textContent=catalogoCarregado?'Nenhuma questão encontrada':'Carregando catálogo...';$('enunciado').textContent=catalogoCarregado?'Não há questões para esta combinação de matéria, tópico e situação. Selecione “Todas” ou limpe a seleção para ampliar a busca.':'Aguarde a consulta ao Supabase.';$('contagem').textContent='0 questões';$('responder').disabled=true;$('proxima').disabled=true;$('anterior').disabled=true;return}$('proxima').disabled=indice>=lista.length-1;$('anterior').disabled=indice<=0;$('meta').replaceChildren();(()=>{const meta=$('meta');meta.classList.add('tt-compact-meta');const line1=document.createElement('div');line1.className='tt-compact-meta-origin';const org=String(q.organizacao||'Organização não informada').replace(/^Prefeitura\s+Municipal\s+de\s+/i,'Pref. ').replace(/^Prefeitura\s+de\s+/i,'Pref. ').replace(/\s*[–—-]\s*(MA|Maranhão)\s*$/i,' - MA');line1.textContent=[q.ano,org].filter(Boolean).join(' - ');const line2=document.createElement('div');line2.className='tt-compact-meta-subject';line2.textContent=[q.materia,q.topico].filter(Boolean).join(' · ');meta.append(line1,line2)})();ttRichText($('enunciado'),q.texto);$('contagem').textContent='Questão '+(indice+1)+' de '+lista.length;updateFavoriteButton();q.opcoes.forEach((op,i)=>{const btn=document.createElement('button');btn.className='option';ttRichText(btn,String.fromCharCode(65+i)+'. '+op);btn.onclick=()=>{if(corrigida)return;selecionada=i;document.querySelectorAll('.option').forEach(el=>el.classList.remove('selected'));btn.classList.add('selected');saveProgress()};$('opcoes').appendChild(btn)})}
 async function saveAnswer(q,resposta,acertou){const currentUser=usuario;if(!currentUser){try{localStorage.setItem(GUEST_KEY,JSON.stringify(historico))}catch{}return}setSync('Salvando resposta...');const {error}=await client.from('respostas').upsert({user_id:currentUser.id,questao_id:q.id,resposta,acertou,atualizado_em:new Date().toISOString()},{onConflict:'user_id,questao_id'});if(usuario?.id!==currentUser.id)return;if(error){setSync('Não foi possível sincronizar esta resposta.');message('Erro ao salvar: '+error.message,true)}else setSync('Histórico sincronizado com sua conta.')}
@@ -895,7 +910,7 @@ async function carregarQuestoes(version=authVersion){
       const legacy=q.banca===BANCA_ATIVA&&q.id>=PROVA_LEGATUS_INICIO&&q.id<=PROVA_LEGATUS_FIM;
       const pasta=ordemPastas.get(String(q.id));
       const nome=pasta?.nome||'';
-      const anoPasta=nome.match(/(?:19|20)\\d{2}(?!\\d)/)?.[0];
+      const anoPasta=(nome.match(/(?:19|20)\d{2}(?!\d)/)||[])[0]||'';
       return {...q,...(legacy?(CLASSIFICACAO_EDITAL_2024[q.id]||{}):{}),
         ano:anoPasta|| (legacy?'2024':''),
         organizacao:nome|| (legacy?'Pref. Buriti Bravo - MA - 2024':'Sem pasta'),
