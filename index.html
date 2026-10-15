@@ -1172,14 +1172,17 @@ function showAnalytics(){
  if(period==='today')start.setHours(0,0,0,0);
  else if(period==='7')start.setDate(start.getDate()-7);
  else if(period==='30')start.setDate(start.getDate()-30);
- const entries=questoes.filter(q=>{
-   const h=historico[q.id];
+ // A visão geral usa a MESMA fonte do contador de Resolver questões:
+ // todas as respostas da conta, inclusive questões retiradas do catálogo.
+ // O detalhamento por matéria continua limitado a questões publicadas,
+ // pois somente elas possuem classificação disponível no catálogo.
+ const entries=Object.values(historico).filter(h=>{
    if(!h)return false;
    if(period==='all')return true;
    const date=h.atualizado_em?new Date(h.atualizado_em):null;
    return date&&!Number.isNaN(date.getTime())&&date>=start&&date<=now;
  });
- const total=entries.length,hits=entries.filter(q=>historico[q.id].acertou).length,misses=total-hits,rate=total?Math.round(100*hits/total):0;
+ const total=entries.length,hits=entries.filter(h=>h.acertou===true).length,misses=total-hits,rate=total?Math.round(100*hits/total):0;
  const values={'analytics-total':total,'analytics-rate':rate+'%','analytics-hits':hits,'analytics-errors':misses,'analytics-favs':favoritos.size,'analytics-donut-value':rate+'%','analytics-legend-hits':hits,'analytics-legend-errors':misses};
  for(const [id,val] of Object.entries(values))document.getElementById(id).textContent=val;
  // Taxa: até 60% vermelha; 61% a 75% laranja; 76% a 100% verde.
