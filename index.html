@@ -760,6 +760,8 @@ body.logged-in.tt-theme-dark #tt-analytics-reset{background:#4c2831;color:#ffc6c
 /* TeTino — navegação condicionada à matrícula */
 .tt-drawer [data-tt-course],.tt-drawer [data-tt-page]:not([data-tt-page="home"]){display:none}
 .tt-drawer [hidden],.tt-course-gallery [hidden],#tt-access-panel[hidden],.tt-course-lock-message[hidden]{display:none!important}
+/* Esconde links sem matrícula mesmo diante das regras globais display:flex */
+.tt-drawer a[data-tt-course][hidden],.tt-drawer a[data-tt-page][hidden],.tt-drawer .tt-section[hidden]{display:none!important}
 .tt-course-locked{position:relative;opacity:.8}
 .tt-course-locked .tt-interactive-button{filter:grayscale(.65);cursor:not-allowed!important}
 .tt-course-lock-message{position:absolute;bottom:0;left:0;right:0;padding:16px;background:#102542f0;color:white;font-size:14px;font-weight:750;text-align:center;z-index:2}
@@ -841,7 +843,7 @@ function ttAtualizarCursosVisiveis(carregado=false){
    if(botao){botao.disabled=bloqueado;botao.setAttribute('aria-disabled',String(bloqueado));}
   }
   document.querySelectorAll('.tt-drawer [data-tt-course="'+curso+'"]').forEach(link=>{
-   link.hidden=!(liberado||bloqueado);link.style.display=liberado||bloqueado?'':'none';
+   link.hidden=!(liberado||bloqueado);link.style.setProperty('display',liberado||bloqueado?'flex':'none','important');
    link.classList.toggle('tt-course-locked-link',bloqueado);
    link.setAttribute('aria-disabled',String(bloqueado));
    const texto=link.querySelector('span');if(texto){const original=texto.dataset.ttOriginal||(texto.dataset.ttOriginal=texto.textContent);texto.textContent=original+(bloqueado?' · Bloqueado':'');}
@@ -850,12 +852,12 @@ function ttAtualizarCursosVisiveis(carregado=false){
  document.querySelectorAll('.tt-drawer [data-tt-page]').forEach(el=>{
   const pagina=el.dataset.ttPage;
   if(pagina==='home')return;
-  el.hidden=!temAtivo;el.style.display=temAtivo?'':'none';
+  el.hidden=!temAtivo;el.style.setProperty('display',temAtivo?'flex':'none','important');
  });
  document.querySelectorAll('.tt-drawer .tt-section').forEach(sec=>{
   if(sec.textContent.trim()==='REVISÃO'||sec.textContent.trim()==='SEUS CONCURSOS'){
    sec.hidden=sec.textContent.trim()==='REVISÃO'?!temAtivo:!Object.keys(permissoes).some(c=>permissoes[c]||conhecidos.has(c));
-   sec.style.display=sec.hidden?'none':'';
+   sec.style.setProperty('display',sec.hidden?'none':'block','important');
   }
  });
  const vazio=document.getElementById('tt-no-courses');
