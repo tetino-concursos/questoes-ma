@@ -816,6 +816,8 @@ let ttCursoAtivo='ace';
 const TT_CURSOS_IDS={ace:'ce0cc1d8-a612-40cd-989b-2af0b0780d07',geral:'3d365340-29da-4579-b9e3-16bde0edb453'};
 const TT_ADMIN_ID='34b371a4-733b-484a-9db3-e3f6891d853f';
 let ttCursosLiberados=new Set();
+// Oculta os links de cursos e regularização até a confirmação do Supabase.
+document.querySelectorAll('.tt-drawer [data-tt-course], #tt-manage-access').forEach(link=>{link.hidden=true;link.style.setProperty('display','none','important');});
 // Oculta os cartões até que o Supabase confirme os acessos.
 document.querySelectorAll('.tt-course-gallery .tt-interactive-card').forEach(card=>{card.hidden=true;card.style.display='none';});
 function ttTemCurso(curso){return usuario?.id===TT_ADMIN_ID||ttCursosLiberados.has(TT_CURSOS_IDS[curso]);}
@@ -853,7 +855,8 @@ function ttAtualizarCursosVisiveis(carregado=false){
  }
  document.querySelectorAll('.tt-drawer [data-tt-page]').forEach(el=>{
   const pagina=el.dataset.ttPage;
-  if(pagina==='home')return;
+  // Não sobrescrever a visibilidade individual dos cursos nem do início.
+  if(pagina==='home'||el.hasAttribute('data-tt-course'))return;
   el.hidden=!temAtivo;el.style.setProperty('display',temAtivo?'flex':'none','important');
  });
  document.querySelectorAll('.tt-drawer .tt-section').forEach(sec=>{
@@ -862,6 +865,13 @@ function ttAtualizarCursosVisiveis(carregado=false){
    sec.style.setProperty('display',sec.hidden?'none':'block','important');
   }
  });
+ // Regularização aparece exclusivamente quando não há matrícula ativa.
+ const regularizar=document.getElementById('tt-manage-access');
+ if(regularizar){
+  const irregular=logado&&carregado&&!temAtivo;
+  regularizar.hidden=!irregular;
+  regularizar.style.setProperty('display',irregular?'flex':'none','important');
+ }
  const vazio=document.getElementById('tt-no-courses');
  if(vazio){
   vazio.hidden=!logado||!carregado||temAtivo;
