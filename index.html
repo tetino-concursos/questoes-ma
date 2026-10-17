@@ -775,6 +775,11 @@ body.logged-in.tt-theme-dark #tt-analytics-reset{background:#4c2831;color:#ffc6c
 .tt-access-actions a{background:#1977c8;color:#fff;text-decoration:none;border-radius:12px;padding:13px 17px;font-weight:750}
 .tt-access-actions a+a{background:#e8f2fb;color:#205680}
 #tt-access-panel small{color:#77889a}
+
+/* Concursos e Planos: aviso apenas para usuário sem matrícula ativa */
+.tt-drawer #tt-available-courses .tt-plan-label{display:flex;flex-direction:column;align-items:flex-start;gap:5px;line-height:1.25}
+.tt-drawer #tt-regularize-hint{font-size:12px;font-weight:800;color:#ff666b;letter-spacing:.1px}
+.tt-drawer #tt-regularize-hint[hidden]{display:none!important}
 </style></head><body><header><div class="tt-header-brand"><img alt="TeTino Concursos" class="brand-logo" src="tetino_assets/logo-tetino-transparente.png" onerror="this.hidden=true;this.nextElementSibling.hidden=false"/><span class="tt-logo-fallback" hidden>TeTino <b>CONCURSOS</b></span></div><button type="button" id="tt-profile-button" class="tt-profile-button" aria-label="Abrir meu perfil"><span class="tt-avatar-initials">?</span><img class="tt-avatar-image" alt="Foto do perfil" hidden/></button></header><button class="tt-menu-button" id="tt-menu-button" type="button" aria-label="Abrir menu" aria-expanded="false">☰</button><div class="tt-backdrop" id="tt-backdrop"></div><nav class="tt-drawer" id="tt-drawer" aria-label="Menu principal">
 <div class="tt-drawer-head"><div class="tt-drawer-logo"><img src="tetino_assets/logo-tetino-transparente.png" alt="TeTino Concursos" onerror="this.hidden=true;this.nextElementSibling.hidden=false"/><strong class="tt-logo-fallback" hidden>TeTino <b>CONCURSOS</b></strong></div><button type="button" id="tt-menu-close" aria-label="Fechar menu">×</button></div>
 <a href="#inicio" data-tt-page="home"><svg class="tt-nav-icon" viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg><span>Início</span></a>
@@ -789,7 +794,7 @@ body.logged-in.tt-theme-dark #tt-analytics-reset{background:#4c2831;color:#ffc6c
 <button type="button" class="tt-link tt-simulados-soon" id="tt-simulados-soon" hidden disabled aria-disabled="true" title="Simulados: em breve" style="opacity:.68;cursor:not-allowed"><svg class="tt-nav-icon" viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/><path d="m15 16 2 2 3-4"/></svg><span>Simulados <small style="font-size:11px;color:#9cb4d2">(em breve)</small></span></button>
 <div class="tt-section">CURSOS E PLANOS</div>
 <a href="#cursos" id="tt-manage-access" data-tt-page="home"><svg class="tt-nav-icon" viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="15" rx="2"/><path d="M3 10h18M7 15h4"/></svg><span>Meus cursos / Regularizar acesso</span></a>
-<a href="site.html#bancas" id="tt-available-courses" aria-label="Consultar todos os cursos disponíveis no site TeTino Concursos"><svg class="tt-nav-icon" viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5.5A2.5 2.5 0 0 1 5.5 3H11v17H5.5A2.5 2.5 0 0 0 3 22z"/><path d="M21 5.5A2.5 2.5 0 0 0 18.5 3H13v17h5.5A2.5 2.5 0 0 1 21 22z"/></svg><span>Consultar cursos disponíveis</span></a>
+<a href="site.html#bancas" id="tt-available-courses" aria-label="Conhecer concursos e planos do TeTino Concursos"><svg class="tt-nav-icon" viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5.5A2.5 2.5 0 0 1 5.5 3H11v17H5.5A2.5 2.5 0 0 0 3 22z"/><path d="M21 5.5A2.5 2.5 0 0 0 18.5 3H13v17h5.5A2.5 2.5 0 0 1 21 22z"/></svg><span class="tt-plan-label">Concursos e Planos<small id="tt-regularize-hint" hidden>Regularizar acesso</small></span></a>
 <div class="tt-section">SUPORTE</div>
 <a href="https://wa.me/5599984488733" target="_blank" rel="noopener noreferrer" aria-label="Falar com o suporte pelo WhatsApp"><svg class="tt-nav-icon" viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 11.5a8.5 8.5 0 0 1-12.4 7.5L3 20.5l1.6-4.9a8.5 8.5 0 1 1 15.9-4.1Z"/><path d="M8.3 8.1c-.4.4-.6 1-.5 1.6.4 2.7 3.4 5.7 6.1 6.1.6.1 1.2-.1 1.6-.5l.5-.7-2.4-1.2-1 1c-1.2-.6-2.2-1.6-2.8-2.8l1-1-1.2-2.4-.7.5" stroke-width="1.3"/></svg><span>Suporte (WhatsApp)</span></a>
 <div class="tt-section">CONTA</div>
@@ -874,8 +879,11 @@ function ttAtualizarCursosVisiveis(carregado=false){
  const regularizar=document.getElementById('tt-manage-access');
  if(regularizar){
   const irregular=logado&&carregado&&!temAtivo;
-  regularizar.hidden=!irregular;
-  regularizar.style.setProperty('display',irregular?'flex':'none','important');
+  // O aviso de regularização fica dentro do link Concursos e Planos.
+  regularizar.hidden=true;
+  regularizar.style.setProperty('display','none','important');
+  const avisoRegularizar=document.getElementById('tt-regularize-hint');
+  if(avisoRegularizar){avisoRegularizar.hidden=!irregular;avisoRegularizar.style.setProperty('display',irregular?'block':'none','important');}
  }
  const vazio=document.getElementById('tt-no-courses');
  if(vazio){
