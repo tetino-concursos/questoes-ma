@@ -180,8 +180,6 @@ $('purchase-search').oninput=ttRenderPurchases;$('purchase-filter').onchange=ttR
 </script><script>
 
 // Imagens: marcação de texto segura, compatível com questões antigas e com o schema existente.
-const TT_IMG_RE=/\[\[IMG\|([^|\]\r\n]+)\|(\d{2,3})\|(left|center|right)\]\]/g;
-const TT_IMAGE_BUCKET='questao-imagens';
 function ttRenderRichTokens(target,value){
  target.replaceChildren();const source=String(value||'');
  const rx=/\[\[(IMG\|[^\]\r\n]+|B|\/B|I|\/I|U|\/U|COLOR\|#[0-9a-fA-F]{6}|\/COLOR)\]\]/g;
@@ -206,37 +204,5 @@ function ttRenderRichTokens(target,value){
  }
  appendText(source.slice(pos));
 }
-function ttRenderImageText(target,value){ttRenderRichTokens(target,value)}
-function ttPreview(target){const p=document.querySelector('[data-preview="'+target+'"]');if(p)ttRenderImageText(p,$(target).value)}
-function ttInsertAtCaret(field,token){const input=$(field),a=input.selectionStart??input.value.length,b=input.selectionEnd??a;input.value=input.value.slice(0,a)+token+input.value.slice(b);input.focus();input.setSelectionRange(a+token.length,a+token.length);ttPreview(field)}
-for(const tools of document.querySelectorAll('.tt-image-tools')){
- const target=tools.dataset.target,file=tools.querySelector('input[type=file]');
- tools.querySelector('button').onclick=()=>file.click();
- $(target).addEventListener('input',()=>ttPreview(target));
- file.addEventListener('change',async()=>{
-  const image=file.files?.[0];if(!image)return;
-  if(!['image/png','image/jpeg','image/webp','image/gif'].includes(image.type)){status('Escolha JPG, PNG, WEBP ou GIF.',true);file.value='';return}
-  if(image.size>5*1024*1024){status('A imagem deve ter até 5 MB.',true);file.value='';return}
-  const widthRaw=prompt('Largura da imagem em % (15 a 100):','70');if(widthRaw===null){file.value='';return}
-  const width=Number(widthRaw);if(!Number.isInteger(width)||width<15||width>100){status('Informe uma largura de 15 a 100.',true);file.value='';return}
-  const alignRaw=prompt('Alinhamento: esquerda, centro ou direita','centro');if(alignRaw===null){file.value='';return}
-  const align=({'esquerda':'left','centro':'center','direita':'right','left':'left','center':'center','right':'right'})[alignRaw.toLowerCase().trim()];
-  if(!align){status('Alinhamento inválido.',true);file.value='';return}
-  const button=tools.querySelector('button');button.disabled=true;status('Enviando imagem...');
-  try{
-   const ext=({'image/png':'png','image/jpeg':'jpg','image/webp':'webp','image/gif':'gif'})[image.type];
-   const path=(user?.id||'admin')+'/'+crypto.randomUUID()+'.'+ext;
-   const {error}=await client.storage.from(TT_IMAGE_BUCKET).upload(path,image,{contentType:image.type,upsert:false});if(error)throw error;
-   const {data}=client.storage.from(TT_IMAGE_BUCKET).getPublicUrl(path);
-   const token='[[IMG|'+data.publicUrl+'|'+width+'|'+align+']]';
-   ttInsertAtCaret(target,token);status('Imagem inserida. Confira a prévia e salve a questão.');
-  }catch(err){status('Falha no envio: '+(err.message||err)+'. Verifique a configuração SQL do Storage.',true)}
-  finally{button.disabled=false;file.value=''}
- });
-}
-
-// Atualiza as prévias sempre que uma questão é aberta para edição.
-const ttOriginalOpenEditor=openEditor;openEditor=function(q=null){ttOriginalOpenEditor(q);for(const field of ["texto","comentario","alt0","alt1","alt2","alt3","alt4"])ttPreview(field)};
-
 </script>
 </body></html>
