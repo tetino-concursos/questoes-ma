@@ -1557,10 +1557,10 @@ function ttResetTexto(q){
  ttTrigger.hidden=true;
  if(!id||!client)return;
  const token=++ttTextoRequest;
- client.from('tetino_textos_apoio').select('texto').eq('questao_id',id).maybeSingle().then(({data,error})=>{
+ client.rpc('tetino_texto_apoio_autorizado',{p_questao_id:id}).then(({data,error})=>{
   if(token!==ttTextoRequest||String(ttTextoId)!==String(id))return;
   if(error){console.warn('Texto de apoio:',error.message);return}
-  const value=String(data?.texto||'').trim();if(!value)return;
+  const value=String(data||'').trim();if(!value)return;
   if(ttTextoRaw!==value){ttTextoRaw=value;ttMarks=[];ttUndo=[];ttRedo=[];ttRender()}
   ttTrigger.hidden=false;
  });
