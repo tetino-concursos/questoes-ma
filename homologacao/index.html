@@ -1027,7 +1027,7 @@ function ttRenderRichTokens(target,value){
   appendText(source.slice(pos,match.index));const tok=match[1];let consumed=false;
   if(tok.startsWith('IMG|')){
    const p=tok.split('|');const url=p[1],w=Number(p[2]),align=p[3];
-   if(p.length===4&&Number.isFinite(w)&&['left','center','right'].includes(align)&&url.startsWith('https://kdalqvbexttclxtjmsxc.supabase.co/storage/v1/object/public/questao-imagens/')){
+   if(p.length===4&&Number.isFinite(w)&&['left','center','right'].includes(align)&&url.startsWith(SUPABASE_URL+'/storage/v1/object/public/questao-imagens/')){
     const wrap=document.createElement('div');wrap.style.textAlign=align;wrap.style.margin='8px 0';
     const img=document.createElement('img');img.src=url;img.alt='Imagem da questão';img.loading='lazy';img.style.width=Math.max(15,Math.min(100,w))+'%';img.style.maxWidth='100%';img.style.height='auto';wrap.append(img);stack[stack.length-1].node.append(wrap);consumed=true;
    }
@@ -1192,9 +1192,15 @@ async function carregarQuestoes(version=authVersion){
       if(!data||data.length<pagina)break;
     }
     if(version!==authVersion||!usuario)return;
-    // Ordem de pastas: leitura direta removida por isolamento de cursos.
-    // Metadados de pasta serão integrados após confirmar contrato da RPC autorizada.
+    // Pastas: somente vínculos de questões autorizadas ao aluno, via RPC segura.
+    const {data:vinculos,error:erroPastas}=await client.rpc('tetino_pastas_questoes_autorizadas');
+    if(erroPastas)throw erroPastas;
     const ordemPastas=new Map();
+    for(const item of (vinculos||[])){
+      if(!ordemPastas.has(String(item.questao_id)))ordemPastas.set(String(item.questao_id),{
+        nome:item.pasta_nome||'',posicao:Number(item.posicao)||0
+      });
+    }
     if(version!==authVersion||!usuario)return;
     questoes=todas.filter(q=>!CLASSIFICACAO_EDITAL_2024[q.id]?.anulada&&Array.isArray(q.opcoes)&&q.opcoes.length>=2).map(q=>{
       const legacy=q.banca===BANCA_ATIVA&&q.id>=PROVA_LEGATUS_INICIO&&q.id<=PROVA_LEGATUS_FIM;
@@ -1214,10 +1220,7 @@ async function carregarQuestoes(version=authVersion){
         if(x&&y){
           const byFolder=x.nome.localeCompare(y.nome,'pt-BR');
           if(byFolder)return byFolder;
-          // Para provas oficiais, a sequência original dos IDs acompanha o caderno
-          // (Português, Raciocínio, Informática, Conhecimentos Específicos).
-          // A posição manual do ADMIN não deve inverter a prova.
-          return Number(a.id)-Number(b.id);
+          return (x.posicao-y.posicao)||(Number(a.id)-Number(b.id));
         }
         if(x&&!y)return -1;
         if(!x&&y)return 1;
