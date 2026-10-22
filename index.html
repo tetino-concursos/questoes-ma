@@ -797,7 +797,7 @@ body.logged-in.tt-theme-dark #tt-analytics-reset{background:#4c2831;color:#ffc6c
 <a href="site.html#bancas" id="tt-available-courses" aria-label="Conhecer concursos e planos do TeTino Concursos"><svg class="tt-nav-icon" viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5.5A2.5 2.5 0 0 1 5.5 3H11v17H5.5A2.5 2.5 0 0 0 3 22z"/><path d="M21 5.5A2.5 2.5 0 0 0 18.5 3H13v17h5.5A2.5 2.5 0 0 1 21 22z"/></svg><span class="tt-plan-label">Concursos e Planos<small id="tt-regularize-hint" hidden>Regularizar acesso</small></span></a>
 <div class="tt-section">SUPORTE</div>
 <a href="https://wa.me/5599984488733" target="_blank" rel="noopener noreferrer" aria-label="Falar com o suporte pelo WhatsApp"><svg class="tt-nav-icon" viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 11.5a8.5 8.5 0 0 1-12.4 7.5L3 20.5l1.6-4.9a8.5 8.5 0 1 1 15.9-4.1Z"/><path d="M8.3 8.1c-.4.4-.6 1-.5 1.6.4 2.7 3.4 5.7 6.1 6.1.6.1 1.2-.1 1.6-.5l.5-.7-2.4-1.2-1 1c-1.2-.6-2.2-1.6-2.8-2.8l1-1-1.2-2.4-.7.5" stroke-width="1.3"/></svg><span>Suporte (WhatsApp)</span></a>
-<div class="tt-section">CONTA</div>
+<div id="tt-admin-nav" hidden><div class="tt-section">ADMINISTRAÇÃO</div><a href="./admin.html" class="tt-link" style="text-decoration:none"><span aria-hidden="true">🛡️</span><span>Painel administrativo</span></a></div><div class="tt-section">CONTA</div>
 <button class="tt-link" id="tt-profile-settings" type="button"><span class="tt-menu-gear" aria-hidden="true"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l1.5 0.2.7 2.2c.5.2 1 .4 1.5.7l2.1-1 2.1 2.1-1 2.1c.3.5.5 1 .7 1.5l2.2.7v3l-2.2.7c-.2.5-.4 1-.7 1.5l1 2.1-2.1 2.1-2.1-1c-.5.3-1 .5-1.5.7l-.7 2.2h-3l-.7-2.2c-.5-.2-1-.4-1.5-.7l-2.1 1-2.1-2.1 1-2.1c-.3-.5-.5-1-.7-1.5l-2.2-.7v-3l2.2-.7c.2-.5.4-1 .7-1.5l-1-2.1 2.1-2.1 2.1 1c.5-.3 1-.5 1.5-.7l.7-2.2z"/><circle cx="12" cy="12" r="3.5"/></svg></span><span>Meu perfil</span></button>
 <button class="tt-link" id="tt-theme-toggle" type="button" aria-label="Alternar modo claro ou escuro"><span class="tt-power-switch" aria-hidden="true"><span class="tt-power-knob"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><path d="M12 3v9"/><path d="M6.1 6.7a9 9 0 1 0 11.8 0"/></svg></span></span><span id="tt-theme-label">Modo escuro</span></button>
 <div class="tt-drawer-bottom"><div class="tt-user-card"><span class="tt-user-avatar">?</span><div><strong id="tt-user-name">Minha conta</strong><small id="tt-user-email"></small></div></div><button class="tt-link" id="tt-signout" type="button"><svg class="tt-nav-icon" viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5M21 12H9"/></svg><span>Sair da conta</span></button></div>
@@ -825,11 +825,32 @@ let ttCursoAtivo='ace';
 const TT_CURSOS_IDS={ace:'ce0cc1d8-a612-40cd-989b-2af0b0780d07',geral:'3d365340-29da-4579-b9e3-16bde0edb453'};
 const TT_ADMIN_ID='34b371a4-733b-484a-9db3-e3f6891d853f';
 let ttCursosLiberados=new Set();
+let ttCursosDinamicos={};
 // Oculta os links de cursos e regularização até a confirmação do Supabase.
 document.querySelectorAll('.tt-drawer [data-tt-course], #tt-manage-access').forEach(link=>{link.hidden=true;link.style.setProperty('display','none','important');});
 // Oculta os cartões até que o Supabase confirme os acessos.
 document.querySelectorAll('.tt-course-gallery .tt-interactive-card').forEach(card=>{card.hidden=true;card.style.display='none';});
-function ttTemCurso(curso){return usuario?.id===TT_ADMIN_ID||ttCursosLiberados.has(TT_CURSOS_IDS[curso]);}
+function ttTemCurso(curso){return usuario?.id===TT_ADMIN_ID||ttCursosLiberados.has(TT_CURSOS_IDS[curso]||ttCursosDinamicos[curso]);}
+function ttTemAlgumCurso(){return ttCursosLiberados.size>0||usuario?.id===TT_ADMIN_ID;}
+function ttRenderizarCursosDinamicos(){
+ const galeria=document.getElementById('tt-course-gallery');if(!galeria)return;
+ galeria.querySelectorAll('[data-tt-dynamic-card]').forEach(e=>e.remove());
+ document.querySelectorAll('.tt-drawer [data-tt-dynamic-link]').forEach(e=>e.remove());
+ const drawer=document.querySelector('.tt-drawer');
+ for(const [chave,id] of Object.entries(ttCursosDinamicos)){
+  if(!ttCursosLiberados.has(id))continue;
+  const nome=id==='8d959e72-30eb-491b-8eee-22f8e2644dc1'?'TeTino Concursos — Curso de Teste':'Curso autorizado';
+  const artigo=document.createElement('article');artigo.className='tt-course-card';artigo.dataset.ttDynamicCard=chave;
+  const topo=document.createElement('div');topo.className='tt-course-banner';
+  const titulo=document.createElement('h2');titulo.textContent=nome;topo.appendChild(titulo);
+  const conteudo=document.createElement('div');conteudo.className='tt-course-content';
+  const descricao=document.createElement('p');descricao.textContent='Acesso confirmado pelo Supabase.';
+  const botao=document.createElement('button');botao.type='button';botao.textContent='Estudar questões →';
+  botao.addEventListener('click',()=>{ttEscolherCurso(chave);window.ttNavigateToFilter?.();});
+  conteudo.append(descricao,botao);artigo.append(topo,conteudo);galeria.appendChild(artigo);
+  if(drawer){const link=document.createElement('button');link.type='button';link.className='tt-link';link.dataset.ttDynamicLink=chave;link.textContent=nome;link.addEventListener('click',()=>{ttEscolherCurso(chave);window.ttNavigateToFilter?.();});drawer.appendChild(link);}
+ }
+}
 function ttCursosConhecidos(){
  if(!usuario?.id)return new Set();
  try{return new Set(JSON.parse(localStorage.getItem('tt-cursos-conhecidos:'+usuario.id)||'[]').filter(x=>Object.hasOwn(TT_CURSOS_IDS,x)));}catch{return new Set();}
@@ -837,7 +858,8 @@ function ttCursosConhecidos(){
 function ttAtualizarCursosVisiveis(carregado=false){
  const logado=!!usuario;
  const permissoes={ace:logado&&carregado&&ttTemCurso('ace'),geral:logado&&carregado&&ttTemCurso('geral')};
- const temAtivo=Object.values(permissoes).some(Boolean);
+ const temAtivo=logado&&carregado&&ttTemAlgumCurso();
+ if(carregado)ttRenderizarCursosDinamicos();
  const conhecidos=ttCursosConhecidos();
  if(logado&&carregado){
   for(const curso of Object.keys(permissoes))if(permissoes[curso])conhecidos.add(curso);
@@ -908,7 +930,8 @@ function ttEhGeral(q){
 }
 function ttQuestaoDoCurso(q){return ttTemCurso(ttCursoAtivo)&&(ttCursoAtivo!=='geral'||ttEhGeral(q))}
 function ttEscolherCurso(curso){
- ttCursoAtivo=curso==='geral'?'geral':'ace';
+ if(!ttTemCurso(curso))return false;
+ ttCursoAtivo=curso;
  document.querySelectorAll('.tt-drawer [data-tt-course]').forEach(link=>{const ativo=link.dataset.ttCourse===ttCursoAtivo;link.classList.toggle('tt-course-active',ativo);if(ativo)link.setAttribute('aria-current','page');else link.removeAttribute('aria-current');});
  const ano=document.getElementById('ano'),org=document.getElementById('organizacao');
  if(ano)ano.value='';if(org)org.value='';
@@ -980,7 +1003,7 @@ function ttCriarResultado(acertou){
  const mensagem=document.createElement('strong');mensagem.className='tt-resultado-mensagem';mensagem.textContent=acertou?'Você acertou!':'Você errou.';
  info.append(titulo,mensagem);painel.append(simbolo,info);return painel;
 }
-function restorePosition(p){if(!p||!lista.length)return;const i=lista.findIndex(q=>String(q.id)===String(p.questionId));const pos=i>=0?i:(Number.isInteger(p.index)&&p.index>=0&&p.index<lista.length?p.index:-1);if(pos>=0){indice=pos;mostrar();if(Number.isInteger(p.selected)&&p.selected>=0&&p.selected<lista[indice].opcoes.length){selecionada=p.selected;const opts=document.querySelectorAll('.option');opts[selecionada]?.classList.add('selected');if(p.corrected){ // Reexibe a correção sem salvar outra resposta.
+function restorePosition(p){if(!p||!lista.length)return;const i=lista.findIndex(q=>String(q.id)===String(p.questionId));const pos=i>=0?i:(Number.isInteger(p.index)&&p.index>=0&&p.index<lista.length?p.index:-1);if(pos>=0){indice=pos;mostrar();if(Number.isInteger(p.selected)&&p.selected>=0&&p.selected<lista[indice].opcoes.length){selecionada=p.selected;const opts=document.querySelectorAll('.option');opts[selecionada]?.classList.add('selected');if(p.corrected&&Number.isInteger(lista[indice].correta)){ // Reexibe apenas após gabarito recebido nesta sessão.
   const q=lista[indice];corrigida=true;opts.forEach((el,j)=>{el.classList.remove('selected');if(j===q.correta)el.classList.add('correct');else if(j===selecionada)el.classList.add('wrong')});
   const fb=$('feedback');fb.replaceChildren();const result=ttCriarResultado(selecionada===q.correta);const title=document.createElement('div');title.className='teacher-title';title.textContent='📘 Comentário do professor';const answer=document.createElement('div');answer.className='teacher-answer';answer.textContent='Resposta correta: '+String.fromCharCode(65+q.correta)+'. '+q.opcoes[q.correta];const exp=document.createElement('p');exp.className='teacher-explanation';ttRichText(exp,q.comentario?.trim()||'Explicação em preparação. Confira a alternativa correta indicada acima.');fb.append(result,title,answer,exp);
   if(q.recurso_banca?.trim()){const recurso=document.createElement('section');recurso.className='recurso-banca';const cab=document.createElement('div');cab.className='recurso-titulo';cab.textContent='⚖️ Recurso da banca — Instituto Legatus';const decisao=document.createElement('div');decisao.className='recurso-decisao';decisao.textContent='Resultado: '+(q.resultado_recurso||'Consulte a justificativa oficial');const texto=document.createElement('p');texto.className='recurso-texto';texto.textContent=q.recurso_banca;recurso.append(cab,decisao,texto);fb.appendChild(recurso)}fb.classList.remove('hidden');$('responder').disabled=true;
@@ -1004,7 +1027,7 @@ function ttRenderRichTokens(target,value){
   appendText(source.slice(pos,match.index));const tok=match[1];let consumed=false;
   if(tok.startsWith('IMG|')){
    const p=tok.split('|');const url=p[1],w=Number(p[2]),align=p[3];
-   if(p.length===4&&Number.isFinite(w)&&['left','center','right'].includes(align)&&url.startsWith('https://kdalqvbexttclxtjmsxc.supabase.co/storage/v1/object/public/questao-imagens/')){
+   if(p.length===4&&Number.isFinite(w)&&['left','center','right'].includes(align)&&url.startsWith(SUPABASE_URL+'/storage/v1/object/public/questao-imagens/')){
     const wrap=document.createElement('div');wrap.style.textAlign=align;wrap.style.margin='8px 0';
     const img=document.createElement('img');img.src=url;img.alt='Imagem da questão';img.loading='lazy';img.style.width=Math.max(15,Math.min(100,w))+'%';img.style.maxWidth='100%';img.style.height='auto';wrap.append(img);stack[stack.length-1].node.append(wrap);consumed=true;
    }
@@ -1023,23 +1046,35 @@ function ttRenderRichTokens(target,value){
 function ttRichText(node,source){ttRenderRichTokens(node,source)}
 
 function mostrar(){ttResetTexto(lista[indice]);selecionada=null;corrigida=false;$('feedback').classList.add('hidden');$('responder').disabled=!catalogoCarregado;const q=lista[indice];$('opcoes').innerHTML='';updateFavoriteButton();if(!q){$('meta').textContent=catalogoCarregado?'Nenhuma questão encontrada':'Carregando catálogo...';$('enunciado').textContent=catalogoCarregado?'Não há questões para esta combinação de matéria, tópico e situação. Selecione “Todas” ou limpe a seleção para ampliar a busca.':'Aguarde a consulta ao Supabase.';$('contagem').textContent='0 questões';$('responder').disabled=true;$('proxima').disabled=true;$('anterior').disabled=true;return}$('proxima').disabled=indice>=lista.length-1;$('anterior').disabled=indice<=0;$('meta').replaceChildren();(()=>{const meta=$('meta');meta.classList.add('tt-compact-meta');const line1=document.createElement('div');line1.className='tt-compact-meta-origin';const org=String(q.organizacao||'Organização não informada').replace(/^Prefeitura\s+Municipal\s+de\s+/i,'Pref. ').replace(/^Prefeitura\s+de\s+/i,'Pref. ').replace(/\s*[–—-]\s*(MA|Maranhão)\s*$/i,' - MA');line1.textContent=(q.ano&&new RegExp('(?:^|\\D)'+String(q.ano)+'(?:\\D|$)').test(org))?org:[q.ano,org].filter(Boolean).join(' - ');const line2=document.createElement('div');line2.className='tt-compact-meta-subject';line2.textContent=[q.materia,q.topico].filter(Boolean).join(' · ');meta.append(line1,line2)})();ttRichText($('enunciado'),q.texto);$('contagem').textContent='Questão '+(indice+1)+' de '+lista.length;updateFavoriteButton();q.opcoes.forEach((op,i)=>{const btn=document.createElement('button');btn.className='option';ttRichText(btn,String.fromCharCode(65+i)+'. '+op);btn.onclick=()=>{if(corrigida)return;selecionada=i;document.querySelectorAll('.option').forEach(el=>el.classList.remove('selected'));btn.classList.add('selected');saveProgress()};$('opcoes').appendChild(btn)})}
-async function saveAnswer(q,resposta,acertou){const currentUser=usuario;if(!currentUser){try{localStorage.setItem(GUEST_KEY,JSON.stringify(historico))}catch{}return}setSync('Salvando resposta...');const {error}=await client.from('respostas').upsert({user_id:currentUser.id,questao_id:q.id,resposta,acertou,atualizado_em:new Date().toISOString()},{onConflict:'user_id,questao_id'});if(usuario?.id!==currentUser.id)return;if(error){setSync('Não foi possível sincronizar esta resposta.');message('Erro ao salvar: '+error.message,true)}else setSync('Histórico sincronizado com sua conta.')}
-async function corrigir(){const q=lista[indice];if(!q||corrigida)return;if(selecionada===null){$('feedback').textContent='Selecione uma alternativa antes de corrigir.';$('feedback').classList.remove('hidden');return}corrigida=true;const acertou=selecionada===q.correta;historico[q.id]={acertou,resposta:selecionada,atualizado_em:new Date().toISOString()};estatisticas();document.querySelectorAll('.option').forEach((el,i)=>{el.classList.remove('selected');if(i===q.correta)el.classList.add('correct');else if(i===selecionada)el.classList.add('wrong')});$('feedback').replaceChildren();
-  const resultado=ttCriarResultado(acertou);
-  const titulo=document.createElement('div');titulo.className='teacher-title';titulo.textContent='📘 Comentário do professor';
-  const resposta=document.createElement('div');resposta.className='teacher-answer';
-  resposta.textContent='Resposta correta: '+String.fromCharCode(65+q.correta)+'. '+q.opcoes[q.correta];
-  const explicacao=document.createElement('p');explicacao.className='teacher-explanation';
-  ttRichText(explicacao,q.comentario?.trim()||'Explicação em preparação. Confira a alternativa correta indicada acima.');
-  $('feedback').append(resultado,titulo,resposta,explicacao);
-  if(q.recurso_banca?.trim()){
-    const recurso=document.createElement('section');recurso.className='recurso-banca';
-    const cab=document.createElement('div');cab.className='recurso-titulo';cab.textContent='⚖️ Recurso da banca — Instituto Legatus';
-    const decisao=document.createElement('div');decisao.className='recurso-decisao';decisao.textContent='Resultado: '+(q.resultado_recurso||'Consulte a justificativa oficial');
-    const texto=document.createElement('p');texto.className='recurso-texto';texto.textContent=q.recurso_banca;
-    recurso.append(cab,decisao,texto);$('feedback').appendChild(recurso);
-  }
-  $('feedback').classList.remove('hidden');$('responder').disabled=true;saveProgress();await saveAnswer(q,selecionada,acertou)}
+// HOMOLOGAÇÃO: o servidor corrige e salva. O gabarito nunca vem no catálogo.
+let ttCorrecaoEmAndamento=false;
+async function corrigir(){
+  const q=lista[indice];
+  if(!q||corrigida||ttCorrecaoEmAndamento)return;
+  if(selecionada===null){$('feedback').textContent='Selecione uma alternativa antes de corrigir.';$('feedback').classList.remove('hidden');return}
+  if(!usuario){$('feedback').textContent='Faça login para responder.';$('feedback').classList.remove('hidden');return}
+  const escolha=selecionada,usuarioAtual=usuario.id;
+  ttCorrecaoEmAndamento=true;$('responder').disabled=true;setSync('Corrigindo no servidor...');
+  try{
+    const {data,error}=await client.rpc('tetino_responder_questao',{p_questao_id:q.id,p_resposta:escolha});
+    if(error)throw error;
+    if(usuario?.id!==usuarioAtual)return;
+    const r=Array.isArray(data)?data[0]:data;
+    if(!r||!Number.isInteger(Number(r.correta)))throw new Error('Resposta inválida do servidor.');
+    const correta=Number(r.correta),acertou=Boolean(r.acertou);
+    // Gabarito mantido somente em memória após resposta validada pelo servidor.
+    q.correta=correta;q.comentario=String(r.comentario||'');
+    corrigida=true;historico[q.id]={acertou,resposta:escolha,atualizado_em:new Date().toISOString()};
+    estatisticas();document.querySelectorAll('.option').forEach((el,i)=>{el.classList.remove('selected');if(i===correta)el.classList.add('correct');else if(i===escolha)el.classList.add('wrong')});
+    const fb=$('feedback');fb.replaceChildren();
+    const titulo=document.createElement('div');titulo.className='teacher-title';titulo.textContent='📘 Comentário do professor';
+    const resposta=document.createElement('div');resposta.className='teacher-answer';resposta.textContent='Resposta correta: '+String.fromCharCode(65+correta)+'. '+(q.opcoes[correta]||'');
+    const explicacao=document.createElement('p');explicacao.className='teacher-explanation';ttRichText(explicacao,q.comentario.trim()||'Explicação em preparação.');
+    fb.append(ttCriarResultado(acertou),titulo,resposta,explicacao);
+    fb.classList.remove('hidden');saveProgress();setSync('Histórico sincronizado com sua conta.');
+  }catch(e){$('feedback').textContent='Não foi possível corrigir a resposta: '+(e.message||'Erro desconhecido');$('feedback').classList.remove('hidden');setSync('Falha na correção.');$('responder').disabled=false;}
+  finally{ttCorrecaoEmAndamento=false;}
+}
 function preencher(id,values){$(id).length=1;[...new Set(values.filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR')).forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v;$(id).appendChild(o)})}
 function atualizarTela(){
   const logado=!!usuario;
@@ -1102,7 +1137,7 @@ async function loadAccountCore(session){
   historico={};loadFavorites();estatisticas();
   if(!usuario){
     document.body.classList.remove('tt-profile-open','tt-menu-open','tt-view-home','tt-view-filter','tt-view-questions','tt-view-analytics');
-    ttCursosLiberados.clear();questoes=[];catalogoCarregado=false;lista=[];indice=0;
+    ttCursosLiberados.clear();ttCursosDinamicos={};ttRenderizarCursosDinamicos();questoes=[];catalogoCarregado=false;lista=[];indice=0;
     $('opcoes').replaceChildren();$('enunciado').textContent='';$('feedback').classList.add('hidden');
     $('banca').length=1;$('ano').length=1;$('organizacao').length=1;$('materia').length=1;$('topico').length=1;$('subtopico').length=1;
     $('senha').value='';
@@ -1114,12 +1149,15 @@ async function loadAccountCore(session){
   if(version!==authVersion||!usuario)return;
   if(erroAcessos){message('Não foi possível conferir suas matrículas: '+erroAcessos.message,true);return;}
   ttCursosLiberados=new Set((acessos||[]).map(a=>String(a.curso_id)));
+  ttCursosDinamicos={};
+  for(const id of ttCursosLiberados){if(!Object.values(TT_CURSOS_IDS).includes(id))ttCursosDinamicos['curso:'+id]=id;}
   ttAtualizarCursosVisiveis(true);
   if(!ttTemCurso(ttCursoAtivo)){
     if(ttTemCurso('geral'))ttCursoAtivo='geral';
     else if(ttTemCurso('ace'))ttCursoAtivo='ace';
+    else if(Object.keys(ttCursosDinamicos).length)ttCursoAtivo=Object.keys(ttCursosDinamicos)[0];
   }
-  if(!ttTemCurso('ace')&&!ttTemCurso('geral')){
+  if(!ttTemAlgumCurso()){
     questoes=[];lista=[];catalogoCarregado=true;
     $('meta').textContent='Nenhum curso ativo';
     $('enunciado').textContent='Sua conta não possui matrícula ativa. Consulte as opções de cursos para começar.';
@@ -1148,30 +1186,23 @@ async function carregarQuestoes(version=authVersion){
     const todas=[];
     const pagina=500;
     for(let inicio=0;inicio<100000;inicio+=pagina){
-      const {data,error}=await client.from('questoes')
-        .select('id,banca,materia,assunto,tipo,texto,opcoes,correta,comentario,recurso_banca,resultado_recurso')
-        .eq('publicada',true).order('id',{ascending:true}).range(inicio,inicio+pagina-1);
+      const {data,error}=await client.rpc('tetino_catalogo_questoes').range(inicio,inicio+pagina-1);
       if(error)throw error;
       todas.push(...(data||[]));
       if(!data||data.length<pagina)break;
     }
     if(version!==authVersion||!usuario)return;
-    // Consulta a ordem definida pelo administrador. Se a consulta falhar, não bloqueia as questões.
-    let ordemPastas=new Map();
-    try{
-      const [pastasResult,ordemResult]=await Promise.all([
-        client.from('tetino_pastas').select('id,nome').order('nome',{ascending:true}),
-        client.from('tetino_questao_pastas').select('questao_id,pasta_id,posicao')
-      ]);
-      if(pastasResult.error)throw pastasResult.error;
-      if(ordemResult.error)throw ordemResult.error;
-      const nomes=new Map((pastasResult.data||[]).map(p=>[String(p.id),p.nome]));
-      ordemPastas=new Map((ordemResult.data||[]).map(r=>[String(r.questao_id),{
-        pasta:String(r.pasta_id),nome:nomes.get(String(r.pasta_id))||'',posicao:Number(r.posicao)||0
-      }]));
-    }catch(err){console.warn('Ordem de pastas indisponível:',err.message||err)}
+    // Pastas: somente vínculos de questões autorizadas ao aluno, via RPC segura.
+    const {data:vinculos,error:erroPastas}=await client.rpc('tetino_pastas_questoes_autorizadas');
+    if(erroPastas)throw erroPastas;
+    const ordemPastas=new Map();
+    for(const item of (vinculos||[])){
+      if(!ordemPastas.has(String(item.questao_id)))ordemPastas.set(String(item.questao_id),{
+        nome:item.pasta_nome||'',posicao:Number(item.posicao)||0
+      });
+    }
     if(version!==authVersion||!usuario)return;
-    questoes=todas.filter(q=>!CLASSIFICACAO_EDITAL_2024[q.id]?.anulada&&Array.isArray(q.opcoes)&&q.opcoes.length>=2&&Number.isInteger(q.correta)&&q.correta>=0&&q.correta<q.opcoes.length).map(q=>{
+    questoes=todas.filter(q=>!CLASSIFICACAO_EDITAL_2024[q.id]?.anulada&&Array.isArray(q.opcoes)&&q.opcoes.length>=2).map(q=>{
       const legacy=q.banca===BANCA_ATIVA&&q.id>=PROVA_LEGATUS_INICIO&&q.id<=PROVA_LEGATUS_FIM;
       const pasta=ordemPastas.get(String(q.id));
       const nome=pasta?.nome||'';
@@ -1189,10 +1220,7 @@ async function carregarQuestoes(version=authVersion){
         if(x&&y){
           const byFolder=x.nome.localeCompare(y.nome,'pt-BR');
           if(byFolder)return byFolder;
-          // Para provas oficiais, a sequência original dos IDs acompanha o caderno
-          // (Português, Raciocínio, Informática, Conhecimentos Específicos).
-          // A posição manual do ADMIN não deve inverter a prova.
-          return Number(a.id)-Number(b.id);
+          return (x.posicao-y.posicao)||(Number(a.id)-Number(b.id));
         }
         if(x&&!y)return -1;
         if(!x&&y)return 1;
@@ -1214,7 +1242,7 @@ async function carregarQuestoes(version=authVersion){
     if(version!==authVersion||!usuario)return;
     catalogoCarregado=false;
     $('meta').textContent='Não foi possível carregar as questões';
-    $('enunciado').textContent='Confira a conexão e as permissões de leitura da tabela questoes no Supabase. Detalhes: '+(e.message||'Erro desconhecido');
+    $('enunciado').textContent='Confira a autenticação, matrícula e permissões da função tetino_catalogo_questoes. Detalhes: '+(e.message||'Erro desconhecido');
     $('opcoes').replaceChildren();$('responder').disabled=true;$('proxima').disabled=true;
   }
 }
@@ -1416,7 +1444,7 @@ document.getElementById('topico').addEventListener('change',()=>{
  const close=()=>{body.classList.remove('tt-menu-open');menu.setAttribute('aria-expanded','false')};
  const toggle=()=>{body.classList.toggle('tt-menu-open');menu.setAttribute('aria-expanded',String(body.classList.contains('tt-menu-open')))};
  menu.addEventListener('click',toggle);document.getElementById('tt-menu-close').addEventListener('click',close);document.getElementById('tt-backdrop').addEventListener('click',close);
- function go(page){if(!body.classList.contains('logged-in'))return;if(page!=='home'&&!ttTemCurso('ace')&&!ttTemCurso('geral'))page='home';close();body.classList.remove('tt-view-home','tt-view-filter','tt-view-questions','tt-view-analytics','analytics-open','focus-mode');
+ function go(page){if(!body.classList.contains('logged-in'))return;if(page!=='home'&&!ttTemAlgumCurso())page='home';close();body.classList.remove('tt-view-home','tt-view-filter','tt-view-questions','tt-view-analytics','analytics-open','focus-mode');
   document.getElementById('desempenho-painel').classList.add('hidden');home.classList.remove('tt-visible');
   if(page==='errors'||page==='favorites'){window.pickerSelected?.clear();window.pickerMode=page==='errors'?'erros':'favoritas';document.getElementById('modo').value=page==='errors'?'erros':'favoritas';window.pickerRender?.();filtros(true);page='questions'}
   if(page==='home'){body.classList.add('tt-view-home');home.classList.add('tt-visible')}
@@ -1426,6 +1454,7 @@ document.getElementById('topico').addEventListener('change',()=>{
   window.scrollTo({top:0,behavior:'instant'});
  }
  window.ttNavigateToHome=()=>go('home');
+ window.ttNavigateToFilter=()=>go('filter');
  document.querySelectorAll('[data-tt-page]').forEach(el=>el.addEventListener('click',e=>{e.preventDefault();if(el.dataset.ttCourse&&!ttTemCurso(el.dataset.ttCourse)){go('home');return;}if(el.dataset.ttCourse&&!ttEscolherCurso(el.dataset.ttCourse))return;go(el.dataset.ttPage)}));
  document.querySelectorAll('[data-tt-go]').forEach(el=>el.addEventListener('click',()=>go(el.dataset.ttGo)));
  function ttAbrirCursoComAnimacao(id,curso){
@@ -1528,10 +1557,10 @@ function ttResetTexto(q){
  ttTrigger.hidden=true;
  if(!id||!client)return;
  const token=++ttTextoRequest;
- client.from('tetino_textos_apoio').select('texto').eq('questao_id',id).maybeSingle().then(({data,error})=>{
+ client.rpc('tetino_texto_apoio_autorizado',{p_questao_id:id}).then(({data,error})=>{
   if(token!==ttTextoRequest||String(ttTextoId)!==String(id))return;
   if(error){console.warn('Texto de apoio:',error.message);return}
-  const value=String(data?.texto||'').trim();if(!value)return;
+  const value=String(data||'').trim();if(!value)return;
   if(ttTextoRaw!==value){ttTextoRaw=value;ttMarks=[];ttUndo=[];ttRedo=[];ttRender()}
   ttTrigger.hidden=false;
  });
@@ -1585,4 +1614,17 @@ ttEraseBtn.onclick=()=>{ttEraseMode=true;ttEraseBtn.classList.add('active');docu
 document.getElementById('tt-undo-mark').onclick=()=>{if(!ttUndo.length)return;ttRedo.push(ttMarks.map(m=>({...m})));ttMarks=ttUndo.pop();ttPending=null;ttRender()};
 document.getElementById('tt-redo-mark').onclick=()=>{if(!ttRedo.length)return;ttUndo.push(ttMarks.map(m=>({...m})));ttMarks=ttRedo.pop();ttPending=null;ttRender()};
 document.getElementById('tt-clear-marks').onclick=()=>{if(!ttMarks.length)return;ttSaveUndo();ttMarks=[];ttPending=null;ttRender()};
+</script><script>
+// Exibe atalho administrativo somente após validação do servidor.
+(function(){
+ const el=document.getElementById('tt-admin-nav');
+ const sb=window.supabase?.createClient('https://kdalqvbexttclxtjmsxc.supabase.co','sb_publishable_rRKrza682_7gRi-I_MTyAA_cQYP61Xs', {auth:{storageKey:'sb-kdalqvbexttclxtjmsxc-auth-token'}});
+ if(!el||!sb)return;
+ let seq=0;
+ async function update(){const n=++seq;el.hidden=true;
+  try{const {data:{user},error}=await sb.auth.getUser();if(error||!user)return;
+    const r=await sb.rpc('eh_admin');if(n===seq&&r.error==null&&r.data===true)el.hidden=false;
+  }catch(_){} }
+ sb.auth.onAuthStateChange(()=>setTimeout(update,0));update();
+})();
 </script></body></html>
