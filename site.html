@@ -35,10 +35,13 @@
 .course-detail details summary{cursor:pointer;font-weight:750}
 .course-detail details p{font-size:14px;margin-bottom:0}
 @media(max-width:720px){.course-detail .course-intro{grid-template-columns:1fr}.course-detail .course-highlights{grid-template-columns:1fr}.course-detail .plans{grid-template-columns:1fr}.course-detail .plan{min-height:0;gap:6px}.course-detail .course-visual{min-height:185px}}
+
+.navlinks a{min-height:44px;display:inline-flex;align-items:center}.navlinks a:focus-visible,.hero-actions a:focus-visible{outline:3px solid #9fd2ff;outline-offset:4px}
+@media(max-width:720px){.nav{flex-wrap:wrap;justify-content:center;padding-top:12px;padding-bottom:12px;gap:10px}.nav .logo{justify-content:center;flex-basis:100%}.navlinks{justify-content:center;gap:18px}.navlinks .btn{padding:12px 20px}}
 </style>
 </head>
 <body>
-<header class="top"><div class="wrap nav"><a class="logo" href="#inicio"><img src="tetino_assets/logo-tetino-transparente.png" alt="" onerror="this.style.display='none'">TeTino Concursos</a><nav class="navlinks"><a href="#bancas">Bancas e cursos</a><a class="btn" href="index.html">Entrar / Cadastrar</a></nav></div></header>
+<header class="top"><div class="wrap nav"><a class="logo" href="#inicio"><img src="tetino_assets/logo-tetino-transparente.png" alt="" onerror="this.style.display='none'">TeTino Concursos</a><nav class="navlinks" aria-label="Navegação principal"><a href="#bancas">Bancas e cursos</a><a href="index.html">Entrar</a><a class="btn" href="index.html?cadastro=1">Criar conta</a></nav></div></header>
 <main>
 <section class="hero" id="inicio"><div class="wrap"><div class="hero-inner"><span class="kicker">TeTino Concursos</span><h1>Seu próximo passo rumo à aprovação começa aqui.</h1><p>Estude com questões comentadas, organize sua preparação por matéria e acompanhe sua evolução em uma plataforma feita para quem leva concursos a sério.</p><div class="hero-actions"><a class="btn" href="#bancas">Explorar bancas e cursos ↓</a><a class="btn alt" href="index.html">Já sou aluno</a></div></div></div></section>
 <section class="section" id="bancas"><div class="wrap"><span class="kicker">Encontre sua preparação</span><h2>Escolha a banca do seu concurso</h2><p class="sub">Selecione uma banca para conhecer os cursos disponíveis.</p><div class="banks"><button class="bank" type="button" data-bank="legatus"><span class="bank-logo legatus">legatus</span><small>Instituto Legatus · Ver cursos</small></button><button class="bank" type="button" data-bank="jk"><span class="bank-logo jk">JK</span><small>Instituto JK · Ver cursos</small></button></div></div></section>
