@@ -81,9 +81,10 @@ header .pill{font-size:12px;color:#9fc6ff}
 body:not(.logged-in) header{display:none}
 body:not(.logged-in){background:radial-gradient(ellipse at 52% 5%,#123f83 0%,#06162f 40%,#020a19 100%)}
 body:not(.logged-in) main{max-width:100%;padding:12px 15px 36px;min-height:100vh;position:relative;overflow:hidden}
-body:not(.logged-in) main:before,body:not(.logged-in) main:after{content:"";position:absolute;top:0;bottom:0;pointer-events:none;opacity:.75;z-index:0}
-body:not(.logged-in) main:before{left:0;width:22%;background:linear-gradient(90deg,transparent 85%,#06162f),url("tetino_assets/fundo-maranhao-esquerda.jpg") left center/cover no-repeat}
-body:not(.logged-in) main:after{right:0;width:17%;background:linear-gradient(270deg,transparent 85%,#06162f),url("tetino_assets/fundo-maranhao-direita.jpg") center center/cover no-repeat}
+/* Fundo decorativo único, sem elementos de interface embutidos. */
+body:not(.logged-in) main:before{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;opacity:1;background:linear-gradient(90deg,#020b1b26,#020b1b12 25%,#020b1b26 50%,#020b1b12 75%,#020b1b26),url("tetino_assets/fundo-login-maranhao-v2.jpg") center center/cover no-repeat}
+body:not(.logged-in) main:after{content:none}
+@media(min-width:701px) and (max-width:1100px){body:not(.logged-in) main:before{background-image:url("tetino_assets/fundo-login-maranhao-v2.jpg");background-size:100% auto;background-position:center bottom;mask-image:linear-gradient(180deg,transparent calc(100% - 66.6667vw),#000 calc(100% - 66.6667vw + 140px))}}
 body:not(.logged-in) main>.hero{display:none}
 #login-screen{position:relative;z-index:1;max-width:470px;margin:0 auto;display:flex;flex-direction:column;align-items:stretch;gap:13px}
 #login-screen.hidden{display:none}
@@ -116,12 +117,10 @@ select,.option,.auth-input{background:#0d213e}
 .stat strong{color:#fff}
 #study-area.hidden{display:none}
 @media(max-width:1050px){body.logged-in .layout{grid-template-columns:185px minmax(0,1fr)}.member-nav{grid-column:1}body.logged-in .layout>aside{grid-column:1;grid-row:2}body.logged-in .layout>section{grid-column:2;grid-row:1 / span 2}}
-@media(max-width:700px){body:not(.logged-in) main:before,body:not(.logged-in) main:after{opacity:.28;width:20%}.login-logo{height:190px;width:235px}.login-tagline{font-size:9px}#login-screen{gap:10px}#login-screen #account-card{padding:18px}body.logged-in .layout{display:flex;flex-direction:column}.member-nav{width:100%;display:grid;grid-template-columns:repeat(2,1fr)}body.logged-in .layout>aside,body.logged-in .layout>section{width:100%}header{min-height:74px}.brand-logo{width:135px;height:55px}header .pill{display:none}}
+@media(max-width:700px){body:not(.logged-in) main:before{content:none}.login-logo{height:190px;width:235px}.login-tagline{font-size:9px}#login-screen{gap:10px}#login-screen #account-card{padding:18px}body.logged-in .layout{display:flex;flex-direction:column}.member-nav{width:100%;display:grid;grid-template-columns:repeat(2,1fr)}body.logged-in .layout>aside,body.logged-in .layout>section{width:100%}header{min-height:74px}.brand-logo{width:135px;height:55px}header .pill{display:none}}
 
 /* Refinamento fiel ao layout de referência */
 body:not(.logged-in) main{padding:12px 16px 30px;background:radial-gradient(ellipse at 50% 17%,#0d3873 0%,#07172f 39%,#020b1b 75%)}
-body:not(.logged-in) main:before{width:25%;opacity:.96;background:linear-gradient(90deg,transparent 72%,#07172f 100%),url("tetino_assets/fundo-maranhao-esquerda.jpg") left center/cover no-repeat}
-body:not(.logged-in) main:after{width:21%;opacity:.90;background:linear-gradient(270deg,transparent 68%,#07172f 100%),url("tetino_assets/fundo-maranhao-direita.jpg") center center/cover no-repeat}
 #login-screen{max-width:455px;gap:9px}
 .login-brand{padding-top:4px}
 .login-logo{width:min(100%,300px);height:215px;object-fit:contain;filter:drop-shadow(0 10px 20px #0006)}
@@ -137,7 +136,7 @@ body.logged-in .stat{border-radius:13px}
 body.logged-in .card{border-radius:15px}
 body.logged-in .primary{background:linear-gradient(100deg,#087aff,#0869e7)}
 @media(max-width:700px){
- body:not(.logged-in) main:before,body:not(.logged-in) main:after{width:25%;opacity:.30}
+ body:not(.logged-in) main:before{content:none}
  .login-logo{height:165px;width:235px}
  #login-screen{max-width:430px}
  #login-screen #account-card{padding:18px}
