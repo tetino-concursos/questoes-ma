@@ -78,10 +78,11 @@ body:not(.logged-in) .auth-message:empty{ display: none; }
 body:not(.logged-in) .login-benefits{ display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 30px 0 40px; text-align: center; }
 body:not(.logged-in) .login-benefits > div{ min-width: 0; position: relative; }
 body:not(.logged-in) .login-benefits > div + div::before{ content: ''; position: absolute; left: 0; top: 28%; bottom: 4%; width: 1px; background: #397fb9; }
-body:not(.logged-in) .benefit-icon-slot{ display: block; width: 54px; height: 54px; margin: auto; background-repeat: no-repeat; background-position: center; background-size: contain; filter: drop-shadow(0 0 5px #ffc93350); }
-body:not(.logged-in) .benefit-target{ background-image: url("icons/target.svg"); }
-body:not(.logged-in) .benefit-chart{ background-image: url("icons/chart.svg"); }
-body:not(.logged-in) .benefit-document{ background-image: url("icons/document.svg"); }
+/* Only the three footer icons use the supplied premium artwork. */
+body:not(.logged-in) .benefit-icon-slot{ display: block; width: 54px; height: 54px; margin: auto; background-image: url("beneficios.png"); background-repeat: no-repeat; background-size: 700% auto; }
+body:not(.logged-in) .benefit-target{ background-position: 13.16% 33.6%; }
+body:not(.logged-in) .benefit-chart{ background-position: 49.68% 33.6%; }
+body:not(.logged-in) .benefit-document{ background-position: 86.73% 33.6%; }
 body:not(.logged-in) .icon-mail,
 body:not(.logged-in) .icon-lock,
 body:not(.logged-in) .icon-eye,
