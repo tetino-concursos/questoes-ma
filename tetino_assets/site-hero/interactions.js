@@ -16,11 +16,13 @@
     frame = requestAnimationFrame(() => {
       frame = 0;
       if (!point || reducedMotion.matches) return;
-      const device = document.elementFromPoint(point.x, point.y)?.closest('.hero-device');
-      if (!device || !hero.contains(device)) { current = null; return; }
-      if (device === current) return;
-      current = device;
-      const animation = device.animate([
+      const target = document.elementFromPoint(point.x, point.y)?.closest(
+        '#inicio .hero-device, #inicio .hero-image-link, #inicio [data-touch-motion], .top a'
+      );
+      if (!target) { current = null; return; }
+      if (target === current) return;
+      current = target;
+      const animation = target.animate([
         { transform: 'translateY(0) scale(1)' },
         { transform: 'translateY(-7px) scale(1.012)', offset: 0.45 },
         { transform: 'translateY(0) scale(1)' }
