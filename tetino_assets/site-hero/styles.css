@@ -1,5 +1,5 @@
 /* Part 1: the supplied blue/gold composition, with live text and real links. */
-body .top{position:absolute;inset:0 0 auto;background:transparent;border:0;color:#fff}
+body .top{position:absolute;inset:0 0 auto;background:linear-gradient(180deg,#06182ff5,#06182fe8);border:0;border-bottom:1px solid #51baff38;color:#fff}
 body .top .nav{width:90%;max-width:846px;min-height:0;aspect-ratio:846/190;gap:0;align-items:center}
 body .top .logo{display:block;width:25%;flex-shrink:0}
 body .top .hero-logo{width:100%;height:auto;filter:none}
@@ -17,7 +17,8 @@ body .hero-copy h1 .gold{color:#ffd16a;background:linear-gradient(#fff0ad 12%,#f
 body .hero-copy>p{max-width:60cqi;margin-top:3cqi;font-size:2.95cqi;line-height:1.27;color:#b8d1f1}
 body .hero-devices{position:absolute;inset:0;pointer-events:none;z-index:1}
 body .hero-devices img{position:absolute;height:auto;max-width:none}
-body .hero-device{position:absolute;display:block;padding:0;border:0;background:none;color:inherit;pointer-events:auto;cursor:pointer;transition:transform .25s ease;transform-origin:center 80%;touch-action:manipulation}
+body .hero-device{position:absolute;display:block;padding:0;border:0;background:none;color:inherit;pointer-events:auto;cursor:pointer;transition:transform .25s ease;transform-origin:center 80%;touch-action:manipulation;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;user-select:none}
+body .hero-device:focus:not(:focus-visible){outline:none}
 body .hero-device img{position:static;width:100%;height:auto;pointer-events:none}
 body .hero-device:focus-visible{outline:3px solid #fff1a6;outline-offset:5px;border-radius:20px}
 @media(hover:hover) and (pointer:fine){body .hero-device:hover{transform:translateY(-8px) scale(1.015)}}
@@ -45,6 +46,7 @@ body .hero-image-link:focus-visible,body .top a:focus-visible{outline:3px solid 
   body .top .nav{max-width:1180px;width:calc(100% - 64px);height:130px;aspect-ratio:auto}
   body .top .logo{width:155px}
   body .top .navlinks{width:330px;font-size:19px}
+  body .top .nav-create{width:63%}
   body .hero{background-image:linear-gradient(90deg,#021329 0%,#021329f5 34%,#02132980 48%,transparent 67%),url("background-pc.png");background-position:center 78%;background-size:cover}
   body .hero-shell{max-width:1280px}
   body .hero-frame{height:850px;min-height:100svh;max-height:1000px}
@@ -64,6 +66,15 @@ body .hero-image-link:focus-visible,body .top a:focus-visible{outline:3px solid 
   body .hero-banks-link{width:370px;border-radius:17px}
   body .hero-student-link{width:200px;border-radius:15px}
 }
+/* Separate the visible image face from its 44px touch target. Tight rounded
+   crops exclude the external PNG glow even when the target is taller. */
+@media(max-width:1099px){
+  body .hero-banks-link,body .hero-student-link,body .top .nav-create{position:relative;background-image:none;box-shadow:none;filter:none;-webkit-tap-highlight-color:transparent}
+  body .hero-banks-link::before,body .hero-student-link::before,body .top .nav-create::before{content:'';position:absolute;left:0;top:50%;width:100%;transform:translateY(-50%);background-repeat:no-repeat;pointer-events:none;box-shadow:none;filter:none;overflow:hidden}
+  body .hero-banks-link::before{aspect-ratio:6.45;background-image:url("banks-button.png");background-size:112.5% auto;background-position:51% 50%;border-radius:clamp(10px,2.9vw,28px)}
+  body .hero-student-link::before{aspect-ratio:4.4;background-image:url("student-button.png");background-size:166.5% auto;background-position:50% 50%;border-radius:clamp(10px,2.9vw,28px)}
+  body .top .nav-create::before{aspect-ratio:3.1;background-image:url("header.png");background-size:286% auto;background-position:91.4% 59%;border-radius:clamp(10px,2.9vw,24px)}
+}
 @media(prefers-reduced-motion:reduce){
   body .hero-image-link{transition:none}
   body .hero-image-link:hover,body .nav-create:hover{transform:none}
@@ -71,6 +82,7 @@ body .hero-image-link:focus-visible,body .top a:focus-visible{outline:3px solid 
   body .hero-device:hover,body .hero-device:active{transform:none}
 }
 @media(forced-colors:active){
+  body .hero-banks-link::before,body .hero-student-link::before,body .top .nav-create::before{display:none}
   body .hero-copy h1 .gold{-webkit-text-fill-color:CanvasText;background:none}
   body .hero-image-link,body .top .nav-create{background:none;border:1px solid LinkText;width:auto;padding:12px;font-size:16px;aspect-ratio:auto}
   body .hero-image-link .sr-only,body .nav-create .sr-only{position:static!important;width:auto;height:auto;clip-path:none;white-space:normal}
