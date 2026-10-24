@@ -1,0 +1,79 @@
+/* Part 1: the supplied blue/gold composition, with live text and real links. */
+body .top{position:absolute;inset:0 0 auto;background:transparent;border:0;color:#fff}
+body .top .nav{width:90%;max-width:846px;min-height:0;aspect-ratio:846/190;gap:0;align-items:center}
+body .top .logo{display:block;width:25%;flex-shrink:0}
+body .top .hero-logo{width:100%;height:auto;filter:none}
+body .top .navlinks{width:43%;gap:8%;justify-content:flex-end;font-size:clamp(12px,2.9vw,28px)}
+body .top .navlinks>a{justify-content:center;min-height:44px}
+body .top .nav-signin{width:26%;color:#c6dcf7}
+body .top .nav-create{width:70%;aspect-ratio:3.1;background-image:url("header.png");background-size:286% auto;background-position:91.4% 59%;border-radius:clamp(10px,2.3vw,24px)}
+body .hero{background:#01142e url("background.png") center top / cover no-repeat;color:#fff;overflow:hidden}
+body .hero-shell{max-width:941px;margin:auto;container-type:inline-size}
+body .hero-frame{position:relative;height:177.68cqi;isolation:isolate}
+body .hero-copy{position:absolute;left:6.3%;top:12.5%;width:74%;z-index:3}
+body .hero-copy h1{font-family:Arial,Helvetica,sans-serif;font-size:8.5cqi;font-weight:800;line-height:.96;letter-spacing:-.045em;max-width:none;text-wrap:initial}
+body .hero-copy h1 span{display:block;white-space:nowrap}
+body .hero-copy h1 .gold{color:#ffd16a;background:linear-gradient(#fff0ad 12%,#ffd46b 50%,#eeb147 90%);background-clip:text;-webkit-text-fill-color:transparent}
+body .hero-copy>p{max-width:60cqi;margin-top:3cqi;font-size:2.95cqi;line-height:1.27;color:#b8d1f1}
+body .hero-devices{position:absolute;inset:0;pointer-events:none;z-index:1}
+body .hero-devices img{position:absolute;height:auto;max-width:none}
+body .hero-device{position:absolute;display:block;padding:0;border:0;background:none;color:inherit;pointer-events:auto;cursor:pointer;transition:transform .25s ease;transform-origin:center 80%;touch-action:manipulation}
+body .hero-device img{position:static;width:100%;height:auto;pointer-events:none}
+body .hero-device:focus-visible{outline:3px solid #fff1a6;outline-offset:5px;border-radius:20px}
+@media(hover:hover) and (pointer:fine){body .hero-device:hover{transform:translateY(-8px) scale(1.015)}}
+body .hero-device:active{transform:translateY(2px) scale(.98)}
+body .hero-notebook{left:0;top:34.5%;width:94%;z-index:1}
+body .hero-books{left:-14%;top:49%;width:48%;z-index:2}
+body .hero-phone{right:-1%;top:44%;width:37%;z-index:3}
+body .hero-benefits-art{position:absolute;left:3.3%;top:81%;width:93.4%;aspect-ratio:6.8;background:url("benefits.png") center / 110% auto no-repeat;border-radius:2.6cqi;overflow:hidden;z-index:4}
+body .hero-actions{position:absolute;inset:89.5% 0 auto;display:flex;flex-direction:column;align-items:center;gap:1.8cqi;margin:0;z-index:4}
+body .hero-image-link{display:block;flex:none;padding:0;border:0;min-height:44px;background-repeat:no-repeat;transition:transform .15s ease;touch-action:manipulation}
+body .hero-banks-link{width:54.4%;aspect-ratio:6.45;background-image:url("banks-button.png");background-size:112.5% auto;background-position:51% 50%;border-radius:2cqi}
+body .hero-student-link{width:26.5%;aspect-ratio:4.4;background-image:url("student-button.png");background-size:166.5% auto;background-position:50% 50%;border-radius:2cqi}
+body .hero-image-link:hover,body .nav-create:hover{transform:translateY(-2px)}
+body .hero-image-link:active,body .nav-create:active{transform:translateY(0)}
+body .hero-image-link:focus-visible,body .top a:focus-visible{outline:3px solid #fff1a6;outline-offset:5px}
+@media(max-width:600px){
+  body .hero-frame{height:calc(177.68cqi + 40px)}
+  body .hero-actions{gap:2cqi;top:auto;bottom:16px}
+  body .hero-banks-link{width:67%}
+  body .hero-student-link{width:35%}
+  body .hero-benefits-art{top:auto;bottom:136px}
+  body .top .nav{aspect-ratio:846/190}
+}
+@media(min-width:1100px){
+  body .top .nav{max-width:1180px;width:calc(100% - 64px);height:130px;aspect-ratio:auto}
+  body .top .logo{width:155px}
+  body .top .navlinks{width:330px;font-size:19px}
+  body .hero{background-image:linear-gradient(90deg,#021329 0%,#021329f5 34%,#02132980 48%,transparent 67%),url("background-pc.png");background-position:center 78%;background-size:cover}
+  body .hero-shell{max-width:1280px}
+  body .hero-frame{height:850px;min-height:100svh;max-height:1000px}
+  body .hero-copy{left:4%;top:190px;width:48%}
+  body .hero-copy h1{font-size:clamp(48px,4.8vw,68px);line-height:1}
+  body .hero-copy h1 .gold{background:none;color:#ffd16a;-webkit-text-fill-color:currentColor}
+  body .hero-copy>p{font-size:20px;max-width:430px;margin-top:24px;color:#dbe8fa}
+  /* Desktop devices occupy the lower-right edge of the full viewport.
+     Negative bottom offsets compensate only for transparent PNG padding. */
+  body .hero-devices{inset:170px calc((min(100vw,1280px) - 100vw)/2 - 24px) 0 48%}
+  body .hero-devices::after{content:'';position:absolute;left:-6%;right:-2%;bottom:-16px;height:36px;background:radial-gradient(ellipse,#000b,transparent 70%);filter:blur(5px);z-index:0}
+  body .hero-notebook{left:0;top:auto;bottom:-1.4cqi;width:96%}
+  body .hero-phone{right:-1%;top:auto;bottom:-2.2cqi;width:39%}
+  body .hero-books{display:none}
+  body .hero-benefits-art{left:4%;top:auto;bottom:148px;width:42%;border-radius:20px}
+  body .hero-actions{inset:auto 4% 40px;flex-direction:row;justify-content:flex-start;gap:22px}
+  body .hero-banks-link{width:370px;border-radius:17px}
+  body .hero-student-link{width:200px;border-radius:15px}
+}
+@media(prefers-reduced-motion:reduce){
+  body .hero-image-link{transition:none}
+  body .hero-image-link:hover,body .nav-create:hover{transform:none}
+  body .hero-device{transition:none}
+  body .hero-device:hover,body .hero-device:active{transform:none}
+}
+@media(forced-colors:active){
+  body .hero-copy h1 .gold{-webkit-text-fill-color:CanvasText;background:none}
+  body .hero-image-link,body .top .nav-create{background:none;border:1px solid LinkText;width:auto;padding:12px;font-size:16px;aspect-ratio:auto}
+  body .hero-image-link .sr-only,body .nav-create .sr-only{position:static!important;width:auto;height:auto;clip-path:none;white-space:normal}
+  body .hero-benefits-art{background:none;border:1px solid CanvasText;aspect-ratio:auto;min-height:44px;padding:8px}
+  body .hero-benefits-art .sr-only{position:static!important;width:auto;height:auto;clip-path:none;white-space:normal;display:flex;justify-content:space-around;gap:12px;font-size:12px;list-style:none}
+}
