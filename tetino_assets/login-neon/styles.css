@@ -205,3 +205,15 @@ body:not(.logged-in) #login-screen .tt-login-return .return-arrow{display:none}
 @media(forced-colors:active){
   body:not(.logged-in) #login-screen .tt-login-return a{background:none;font-size:16px;text-align:center;line-height:44px}
 }
+
+/* Login motion is decorative: native controls, focus and hit areas stay intact. */
+body:not(.logged-in) #login-screen :is(#entrar,#cadastrar,#recuperar,#tt-toggle-password,.login-logo,.benefit-icon-slot,.tt-login-return a,.icon-mail,.icon-lock){transition:transform .2s ease,filter .15s ease;-webkit-tap-highlight-color:transparent}
+body:not(.logged-in) #login-screen :is(.login-logo,.benefit-icon-slot,.icon-mail,.icon-lock){-webkit-touch-callout:none;user-select:none}
+@media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
+ body:not(.logged-in) #login-screen :is(#entrar,#cadastrar,#recuperar,#tt-toggle-password,.login-logo,.benefit-icon-slot,.tt-login-return a,.icon-mail,.icon-lock):hover{transform:translateY(-4px) scale(1.012)}
+}
+body:not(.logged-in) #login-screen :is(#entrar,#cadastrar,#recuperar,#tt-toggle-password,.tt-login-return a):active{transform:translateY(1px) scale(.985)}
+@media(prefers-reduced-motion:reduce){
+ body:not(.logged-in) #login-screen :is(#entrar,#cadastrar,#recuperar,#tt-toggle-password,.login-logo,.benefit-icon-slot,.tt-login-return a,.icon-mail,.icon-lock){transition:none;transform:none}
+ body:not(.logged-in) #login-screen :is(#entrar,#cadastrar,#recuperar,#tt-toggle-password,.tt-login-return a):active{transform:none}
+}
