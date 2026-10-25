@@ -181,3 +181,9 @@
 @media (forced-colors: active) {
   #bancas .ttb-banks-scene::after { display: none; }
 }
+
+/* Fundo branco solicitado para a Parte 2, preservando os cartões. */
+#bancas,
+#bancas .ttb-banks-scene { background: #fff; }
+#bancas .ttb-banks-scene::before,
+#bancas .ttb-banks-scene::after { content: none; display: none; }
