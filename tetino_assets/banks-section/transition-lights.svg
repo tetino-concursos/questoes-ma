@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" fill="none" preserveAspectRatio="none">
+<defs>
+  <linearGradient id="blue"><stop stop-color="#00d9ff" stop-opacity="0"/><stop offset=".28" stop-color="#00d9ff"/><stop offset=".65" stop-color="#078bff"/><stop offset="1" stop-color="#078bff" stop-opacity="0"/></linearGradient>
+  <linearGradient id="gold"><stop stop-color="#ffc035" stop-opacity="0"/><stop offset=".25" stop-color="#ffe6a0"/><stop offset=".65" stop-color="#ffc035"/><stop offset="1" stop-color="#ffc035" stop-opacity="0"/></linearGradient>
+  <filter id="glow" x="-30%" y="-70%" width="160%" height="240%"><feGaussianBlur stdDeviation="5"/></filter>
+  <g id="waves" stroke-linecap="round">
+    <path d="M-90 284C70 267 35 192 70 140S105 39 120-46" stroke="url(#blue)" stroke-width="2.5"/>
+    <path d="M-100 222C42 171 60 79 100-24" stroke="url(#gold)" stroke-width="2"/>
+    <path d="M1300-34C1300-4 1340 80 1535 150" stroke="url(#blue)" stroke-width="2.5"/>
+    <path d="M1380-36C1360 67 1390 141 1530 191" stroke="url(#gold)" stroke-width="2"/>
+  </g>
+</defs>
+<use href="#waves" filter="url(#glow)" opacity=".75"/>
+<use href="#waves"/>
+</svg>
