@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 852 680" fill="none">
+  <defs>
+    <linearGradient id="gold" x1="180" y1="530" x2="852" y2="510" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffc735" stop-opacity="0"/>
+      <stop offset=".25" stop-color="#ffce4e"/>
+      <stop offset=".6" stop-color="#ffe8a4"/>
+      <stop offset="1" stop-color="#ffcb40"/>
+    </linearGradient>
+    <linearGradient id="blue" x1="0" y1="585" x2="852" y2="650" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00baff"/>
+      <stop offset=".5" stop-color="#036aff" stop-opacity=".2"/>
+      <stop offset="1" stop-color="#00d2ff"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-100%" width="140%" height="300%">
+      <feGaussianBlur stdDeviation="5"/>
+    </filter>
+  </defs>
+  <path d="M175 532C339 528 413 571 503 631S734 700 875 490" stroke="url(#gold)" stroke-width="10" opacity=".65" filter="url(#glow)"/>
+  <path d="M175 532C339 528 413 571 503 631S734 700 875 490" stroke="url(#gold)" stroke-width="2.5"/>
+  <path d="M-20 586H267C464 576 421 688 695 675Q812 675 875 633" stroke="url(#blue)" stroke-width="10" opacity=".7" filter="url(#glow)"/>
+  <path d="M-20 586H267C464 576 421 688 695 675Q812 675 875 633" stroke="url(#blue)" stroke-width="2.3"/>
+</svg>
