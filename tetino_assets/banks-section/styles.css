@@ -148,3 +148,36 @@
   left: min(0px, (100% - 100vw) / 2);
   right: min(0px, (100% - 100vw) / 2);
 }
+
+/* No PC, as bancas compartilham a mesma linha. */
+@media (min-width: 1100px) {
+  #bancas .ttb-banks { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+  #bancas .ttb-card2 { padding: 24px; gap: 16px; border-radius: 26px; }
+  #bancas .ttb-media { grid-column: 1; grid-row: 1 / span 2; width: 100%; aspect-ratio: 1.75 / 1; border-radius: 16px; }
+  #bancas .ttb-bank-content { display: contents; }
+  #bancas .ttb-bank-content .ttb-h2 { grid-column: 2; grid-row: 1; align-self: end; font-size: 24px; padding-right: 58px; }
+  #bancas .ttb-subtitle { grid-column: 2; grid-row: 2; align-self: start; font-size: 16px; margin: 0; }
+  #bancas .ttb-preparing { white-space: normal; }
+  #bancas .ttb-benefits { grid-column: 1 / -1; grid-row: 3; gap: 10px; margin-top: 6px; }
+  #bancas .ttb-card3 { padding: 12px 7px; gap: 7px; }
+  #bancas .ttb-card3 .ttb-t2 { font-size: 13px; }
+  #bancas .ttb-icon-slot { width: 34px; height: 34px; }
+  #bancas .ttb-arrow-slot { right: 16px; top: 18px; width: 48px; height: 48px; }
+}
+
+/* Luzes em primeiro plano atravessam a emenda; o texto fica acima delas. */
+#bancas { position: relative; z-index: 2; }
+#bancas .ttb-banks-scene::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  top: -64px;
+  left: 0;
+  right: 0;
+  height: clamp(190px, 22vw, 290px);
+  background: url("transition-lights.svg") center / 100% 100% no-repeat;
+  pointer-events: none;
+}
+@media (forced-colors: active) {
+  #bancas .ttb-banks-scene::after { display: none; }
+}
