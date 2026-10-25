@@ -65,6 +65,8 @@ details{border-bottom:1px solid #dce6ef;padding:20px 0;color:#536b83}summary{lis
 <script src="tetino_assets/site-hero/interactions.js" defer></script>
 <link rel="stylesheet" href="tetino_assets/history-original/styles.css">
 <script src="tetino_assets/history-original/app.js" defer></script>
+<link rel="stylesheet" href="tetino_assets/banks-section/styles.css">
+<script src="tetino_assets/banks-section/app.js" defer></script>
 </head><body>
 
 <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
@@ -76,7 +78,56 @@ details{border-bottom:1px solid #dce6ef;padding:20px 0;color:#536b83}summary{lis
 <div class="hero-benefits-art"><ul class="hero-benefits-list"><li><span class="hero-benefit-icon benefit-practice" data-touch-motion aria-hidden="true"></span><span>Prática<br>por assunto</span></li><li><span class="hero-benefit-icon benefit-review" data-touch-motion aria-hidden="true"></span><span>Revisão<br>dos erros</span></li><li><span class="hero-benefit-icon benefit-progress" data-touch-motion aria-hidden="true"></span><span>Seu<br>desempenho</span></li></ul></div>
 <div class="hero-actions"><a class="hero-image-link hero-banks-link" href="#bancas"><span class="sr-only">Conhecer os bancos de questões</span></a><a class="hero-image-link hero-student-link" href="index.html"><span class="sr-only">Já sou aluno</span></a></div>
 </div></div></section>
-<section class="section banks-section" id="bancas"><div class="wrap"><div class="section-head"><span class="section-mark">Escolha sua preparação</span><h2>Qual é a sua banca?</h2><p>Encontre a preparação que combina com o seu objetivo. Primeiro a banca, depois o banco de questões.</p></div><div class="path-guide" aria-label="Etapas para conhecer sua preparação"><span><b>1</b>Escolha a banca</span><i aria-hidden="true">→</i><span><b>2</b>Selecione o banco</span><i aria-hidden="true">→</i><span><b>3</b>Conheça e escolha o plano</span></div><div class="banks"><button class="bank" type="button" data-bank="legatus" aria-pressed="false"><span class="bank-logo official"><img src="tetino_assets/logo-instituto-legatus.png" alt="Instituto Legatus" width="645" height="180" loading="lazy"></span><span class="bank-copy"><strong>Instituto Legatus</strong><small>Banco de questões</small></span><span class="bank-arrow" aria-hidden="true">↗</span></button><button class="bank" type="button" data-bank="jk" aria-pressed="false"><span class="bank-logo official jk-official"><img src="tetino_assets/logo-instituto-jk.png" alt="Instituto JK" width="453" height="149" loading="lazy"></span><span class="bank-copy"><strong>Instituto JK</strong><small>Banco de questões · em preparação</small></span><span class="bank-arrow" aria-hidden="true">↗</span></button></div></div></section>
+<section id="bancas" class="tt-banks" aria-labelledby="banks-title">
+<div class="ttb-banks-scene">
+    <div class="ttb-section" aria-labelledby="banks-title">
+      <header class="ttb-hero">
+        <p class="ttb-eyebrow ttb-t2">Escolha sua preparação</p>
+        <h2 class="ttb-h1" id="banks-title">Qual é a sua <span>banca</span>?</h2>
+        <p class="ttb-introduction ttb-t1">Encontre a preparação que combina com o seu objetivo.</p>
+      </header>
+      <ol class="ttb-rail" aria-label="Etapas para conhecer sua preparação">
+        <li class="ttb-card"><span class="ttb-step-number ttb-t3" aria-hidden="true">1</span><span class="ttb-t2">Escolha a banca</span><span class="ttb-step-arrow" aria-hidden="true">→</span></li>
+        <li class="ttb-card"><span class="ttb-step-number ttb-t3" aria-hidden="true">2</span><span class="ttb-t2">Escolha o cargo</span><span class="ttb-step-arrow" aria-hidden="true">→</span></li>
+        <li class="ttb-card"><span class="ttb-step-number ttb-t3" aria-hidden="true">3</span><span class="ttb-t2">Escolha o plano</span></li>
+      </ol>
+      <div class="ttb-banks">
+        <article class="ttb-card2" aria-labelledby="legatus-title">
+          <div class="ttb-media" aria-hidden="true"><img class="ttb-logo-slot" src="tetino_assets/banks-section/logo-legatus.png" alt="" width="645" height="180" loading="lazy"></div>
+          <div class="ttb-bank-content">
+            <h3 class="ttb-h2" id="legatus-title">Instituto Legatus</h3>
+            <p class="ttb-subtitle ttb-t1">Banco de questões</p>
+            <ul class="ttb-benefits">
+              <li class="ttb-card3"><span class="ttb-icon-slot" aria-hidden="true"><img src="tetino_assets/banks-section/icon-questions.png" alt="" width="512" height="512" loading="lazy"></span><span class="ttb-t2">Questões<br>atualizadas</span></li>
+              <li class="ttb-card3"><span class="ttb-icon-slot" aria-hidden="true"><img src="tetino_assets/banks-section/icon-topics.png" alt="" width="512" height="512" loading="lazy"></span><span class="ttb-t2">Organizadas por<br>tópicos do edital</span></li>
+              <li class="ttb-card3"><span class="ttb-icon-slot" aria-hidden="true"><img src="tetino_assets/banks-section/icon-answers.png" alt="" width="512" height="512" loading="lazy"></span><span class="ttb-t2">Questões com<br>gabarito comentado</span></li>
+            </ul>
+          </div>
+          <span class="ttb-arrow-slot" aria-hidden="true"><img src="tetino_assets/banks-section/arrow.png" alt="" width="512" height="512" loading="lazy"></span>
+          <button class="ttb-btn" type="button" data-bank="legatus" aria-label="Acessar Instituto Legatus" aria-pressed="false"></button>
+        </article>
+        <article class="ttb-card2" aria-labelledby="jk-title">
+          <div class="ttb-media" aria-hidden="true"><img class="ttb-logo-slot" src="tetino_assets/banks-section/logo-jk.png" alt="" width="453" height="149" loading="lazy"></div>
+          <div class="ttb-bank-content">
+            <h3 class="ttb-h2" id="jk-title">Instituto JK</h3>
+            <p class="ttb-subtitle ttb-t1">Banco de questões <span class="ttb-preparing">· em preparação</span></p>
+            <ul class="ttb-benefits">
+              <li class="ttb-card3"><span class="ttb-icon-slot" aria-hidden="true"><img src="tetino_assets/banks-section/icon-soon.png" alt="" width="512" height="512" loading="lazy"></span><span class="ttb-t2">Em breve<br>no TeTino</span></li>
+              <li class="ttb-card3"><span class="ttb-icon-slot" aria-hidden="true"><img src="tetino_assets/banks-section/icon-preparing.png" alt="" width="512" height="512" loading="lazy"></span><span class="ttb-t2">Estamos<br>preparando</span></li>
+              <li class="ttb-card3"><span class="ttb-icon-slot" aria-hidden="true"><img src="tetino_assets/banks-section/icon-notifications.png" alt="" width="512" height="512" loading="lazy"></span><span class="ttb-t2">Ative as<br>notificações</span></li>
+            </ul>
+          </div>
+          <span class="ttb-arrow-slot" aria-hidden="true"><img src="tetino_assets/banks-section/arrow.png" alt="" width="512" height="512" loading="lazy"></span>
+          <button class="ttb-btn" type="button" data-bank="jk" aria-label="Acessar Instituto JK" aria-pressed="false"></button>
+        </article>
+      </div>
+      <aside class="ttb-card4" aria-labelledby="more-title">
+        <span class="ttb-trophy-slot" aria-hidden="true"><img src="tetino_assets/banks-section/trophy.png" alt="" width="512" height="512" loading="lazy"></span>
+        <div class="ttb-notice-copy"><h3 class="ttb-h2" id="more-title">Mais bancas em breve!</h3><p class="ttb-t1">Estamos preparando novas bancas para ampliar a sua preparação.</p></div>
+      </aside>
+    </div>
+  </div>
+</section>
 <section id="jk-founder" class="hidden tt-founder" aria-labelledby="founder-title"><div class="ttf-story-scene">
 <section class="ttf-hero" aria-labelledby="founder-title">
 <div class="ttf-scene-opening" aria-hidden="true" data-static-scene><div class="ttf-scene-photograph"><img src="tetino_assets/history-original/static-scenery.png" alt="" width="1130" height="1392"></div><div class="ttf-scene-shade"></div></div>
