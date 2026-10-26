@@ -128,15 +128,16 @@
     if (!target || reduced.matches) return;
     if (target.matches('.tsp-arrow')) target = target.querySelector('span');
     pulses.get(target)?.cancel();
+    target.classList.add('is-lit');
     const animation = target.animate([
       { transform: 'translateY(0) scale(1)' },
       { transform: 'translateY(-3px) scale(1.015)', offset: 0.45 },
       { transform: 'translateY(0) scale(1)' }
     ], { duration: 460, easing: 'ease-out' });
     pulses.set(target, animation);
-    animation.finished.then(() => { if (pulses.get(target) === animation) pulses.delete(target); }).catch(() => {});
+    animation.finished.then(() => { if (pulses.get(target) === animation) { pulses.delete(target); target.classList.remove('is-lit'); } }).catch(() => {});
   }
-  const selector = '.tsp-icon-slot, .tsp-card, .tsp-device, .tsp-view-switch button, .tsp-arrow:not(:disabled), .tsp-cta';
+  const selector = '.tsp-icon-slot, .tsp-card, .tsp-device, .tsp-view-switch button, .tsp-arrow:not(:disabled), .tsp-cta, .tsp-social-cover';
   let lastTarget = null;
   let point = null;
   let pointFrame = 0;
@@ -156,11 +157,11 @@
     const touch = event.touches[0];
     if (touch) hover(touch.clientX, touch.clientY);
   }, { passive: true });
-  document.getElementById('detail-section').addEventListener('touchend', () => { lastTarget = null; }, { passive: true });
+  ['touchend','touchcancel','pointerleave'].forEach(type => document.getElementById('detail-section').addEventListener(type, () => { lastTarget = null; }, { passive: true }));
   document.getElementById('detail-section').addEventListener('focusin', event => pulse(event.target.closest(selector)));
   document.getElementById('detail-section').addEventListener('click', event => pulse(event.target.closest(selector)));
   reduced.addEventListener('change', () => {
-    pulses.forEach(animation => animation.cancel());
+    pulses.forEach((animation,target) => { animation.cancel(); target.classList.remove('is-lit'); });
     pulses.clear();
     tracks.forEach(track => track.querySelectorAll('img').forEach(image => {
       image.style.transform = '';
@@ -172,4 +173,31 @@
   previous.setAttribute('aria-controls', active.id);
   next.setAttribute('aria-controls', active.id);
   schedule();
+})();
+
+// This is a visit clock, not an offer deadline. Prices never depend on it.
+(() => {
+ 'use strict';
+ const minutes=document.getElementById('visit-minutes'),seconds=document.getElementById('visit-seconds');
+ const status=document.getElementById('visit-timer-status'),toggle=document.getElementById('toggle-visit-timer');
+ const remainingText=document.getElementById('visit-remaining-text');
+ if(!minutes||!seconds||!status||!toggle||!remainingText)return;
+ let ends=Date.now()+30*60*1000,pausedRemaining=null,interval=null;
+ function update(){
+  const remaining=Math.max(0,Math.ceil((pausedRemaining??(ends-Date.now()))/1000));
+  minutes.textContent=String(Math.floor(remaining/60)).padStart(2,'0');seconds.textContent=String(remaining%60).padStart(2,'0');
+  remainingText.textContent=minutes.textContent+' minutos e '+seconds.textContent+' segundos';
+  if(!remaining){clearInterval(interval);interval=null;toggle.disabled=true;status.textContent='O tempo da visita terminou. Você pode continuar explorando os planos.';}
+ }
+ toggle.addEventListener('click',()=>{
+  if(pausedRemaining===null){pausedRemaining=Math.max(0,ends-Date.now());clearInterval(interval);interval=null;}
+  else{ends=Date.now()+pausedRemaining;pausedRemaining=null;interval=setInterval(update,1000);}
+  const paused=pausedRemaining!==null;
+  toggle.setAttribute('aria-pressed',String(paused));toggle.setAttribute('aria-label',paused?'Retomar cronômetro da visita':'Pausar cronômetro da visita');
+  toggle.title=paused?'Retomar cronômetro':'Pausar cronômetro';update();
+ });
+ update();interval=setInterval(update,1000);
+ document.addEventListener('visibilitychange',update);
+ window.addEventListener('pagehide',()=>{clearInterval(interval);interval=null;});
+ window.addEventListener('pageshow',event=>{if(event.persisted){update();if(pausedRemaining===null&&Date.now()<ends&&!interval)interval=setInterval(update,1000);}});
 })();
