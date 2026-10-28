@@ -15,7 +15,7 @@ body:not(.logged-in) main{
   color: var(--color-text);
   background-color: var(--color-background);
   /* Preserve the complete portrait art on narrow screens; fill wide screens. */
-  background-image: url("fundo-login-neon.png");
+  background-image: url("fundo-login-neon.webp");
   background-position: center top;
   background-size: cover;
   background-repeat: no-repeat;
@@ -79,7 +79,7 @@ body:not(.logged-in) .login-benefits{ display: grid; grid-template-columns: repe
 body:not(.logged-in) .login-benefits > div{ min-width: 0; position: relative; }
 body:not(.logged-in) .login-benefits > div + div::before{ content: ''; position: absolute; left: 0; top: 28%; bottom: 4%; width: 1px; background: #397fb9; }
 /* Transparent cutouts avoid the dark fill and clipped shadows of the source. */
-body:not(.logged-in) .benefit-icon-slot{ display: block; width: 54px; height: 54px; margin: auto; background-image: url("beneficios-limpos.png"); background-repeat: no-repeat; background-size: 400% auto; }
+body:not(.logged-in) .benefit-icon-slot{ display: block; width: 54px; height: 54px; margin: auto; background-image: url("beneficios-limpos.webp"); background-repeat: no-repeat; background-size: 400% auto; }
 body:not(.logged-in) .benefit-target{ background-position: 10.5% 50%; }
 body:not(.logged-in) .benefit-chart{ background-position: 50% 50%; }
 body:not(.logged-in) .benefit-document{ background-position: 89.5% 50%; }
@@ -125,7 +125,7 @@ body:not(.logged-in) .login-benefits{ margin: 24px 0 28px; }
 body:not(.logged-in) main{
     background-image:
       linear-gradient(to bottom, transparent 85%, var(--color-background)),
-      url("fundo-login-neon.png");
+      url("fundo-login-neon.webp");
     background-size: 100% calc(100vw * 1672 / 941), 100% auto;
   }
 }
@@ -194,7 +194,7 @@ body:not(.logged-in) #login-screen .tt-login-return::before,
 body:not(.logged-in) #login-screen .tt-login-return::after{display:none}
 body:not(.logged-in) #login-screen .tt-login-return a{
   display:block;width:100%;max-width:560px;min-height:44px;
-  font-size:0;background:url("voltar-ao-site.png") center / 100% auto no-repeat;
+  font-size:0;background:url("voltar-ao-site.webp") center / 100% auto no-repeat;
   border-radius:6px;transition:filter .15s ease;
 }
 body:not(.logged-in) #login-screen .tt-login-return a:hover{filter:brightness(1.15)}
