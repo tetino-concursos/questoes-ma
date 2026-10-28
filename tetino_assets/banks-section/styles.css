@@ -11,7 +11,7 @@
   width: 100%;
   min-height: max(760px, 100svh);
   aspect-ratio: 941 / 1672;
-  background: var(--paper) url("background.png") center / 100% 100% no-repeat;
+  background: var(--paper) url("background.webp") center / 100% 100% no-repeat;
 }#bancas .ttb-banks-scene::before{
   content: "";
   position: absolute;
@@ -106,7 +106,7 @@
 @media (max-width: 360px) {#bancas .ttb-card2{ grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; padding-inline: 12px; }#bancas .ttb-bank-content .ttb-h2{ font-size: 16px; }#bancas .ttb-card3 .ttb-t2{ font-size: 10px; }
 }
 @media (forced-colors: active) {#bancas .ttb-card2, #bancas .ttb-card3, #bancas .ttb-media{ border-color: CanvasText; box-shadow: none; }#bancas .ttb-arrow-slot{ background: Highlight; }
-}#bancas .ttb-logo-slot[src$="logo-legatus.png"]{ clip-path: inset(2px 0 0); }#bancas .ttb-card2::after{
+}#bancas .ttb-logo-slot[src$="logo-legatus.webp"]{ clip-path: inset(2px 0 0); }#bancas .ttb-card2::after{
   content: "";
   position: absolute;
   inset: 0;

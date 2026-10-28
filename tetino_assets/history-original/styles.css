@@ -10,7 +10,7 @@
 #jk-founder button{font:inherit}
 #jk-founder h1,#jk-founder h2,#jk-founder h3{text-wrap:balance}
 #jk-founder em{font-style:normal}
-#jk-founder .ttf-story-scene{position:relative;isolation:isolate;width:min(100%,var(--scene-width));margin-inline:auto;overflow:hidden;background:var(--navy) url('background.png') center/100% 100% no-repeat;container-type:inline-size}
+#jk-founder .ttf-story-scene{position:relative;isolation:isolate;width:min(100%,var(--scene-width));margin-inline:auto;overflow:hidden;background:var(--navy) url('background.webp') center/100% 100% no-repeat;container-type:inline-size}
 #jk-founder .ttf-t1{font-size:clamp(11px,2.35cqi,24px);line-height:1.5}
 #jk-founder .ttf-t2{font-size:clamp(9px,1.85cqi,20px);line-height:1.45}
 #jk-founder .ttf-t3{font-size:clamp(10px,1.35cqi,13px);line-height:1.5}

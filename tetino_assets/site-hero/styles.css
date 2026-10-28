@@ -6,8 +6,8 @@ body .top .hero-logo{width:100%;height:auto;filter:none}
 body .top .navlinks{width:43%;gap:8%;justify-content:flex-end;font-size:clamp(12px,2.9vw,28px)}
 body .top .navlinks>a{justify-content:center;min-height:44px}
 body .top .nav-signin{width:26%;color:#c6dcf7}
-body .top .nav-create{width:70%;aspect-ratio:3.1;background-image:url("header.png");background-size:286% auto;background-position:91.4% 59%;border-radius:clamp(10px,2.3vw,24px)}
-body .hero{background:#01142e url("background.png") center top / cover no-repeat;color:#fff;overflow:hidden}
+body .top .nav-create{width:70%;aspect-ratio:3.1;background-image:url("header.webp");background-size:286% auto;background-position:91.4% 59%;border-radius:clamp(10px,2.3vw,24px)}
+body .hero{background:#01142e url("background.webp") center top / cover no-repeat;color:#fff;overflow:hidden}
 body .hero-shell{max-width:941px;margin:auto;container-type:inline-size}
 body .hero-frame{position:relative;height:177.68cqi;isolation:isolate}
 body .hero-copy{position:absolute;left:6.3%;top:12.5%;width:74%;z-index:3}
@@ -31,7 +31,7 @@ body .hero-benefits-list{display:grid;grid-template-columns:repeat(3,minmax(0,1f
 body .hero-benefits-list li{display:flex;align-items:center;gap:1.8cqi;height:65%;min-width:0;padding-inline:10% 0}
 body .hero-benefits-list li>span:last-child{white-space:nowrap}
 body .hero-benefits-list li+li{border-left:1px solid #1489f3}
-body .hero-benefit-icon{display:block;flex:none;width:clamp(28px,9.8cqi,86px);aspect-ratio:1;background-image:url("benefits.png");background-repeat:no-repeat;background-size:1086% auto;clip-path:circle(49%);-webkit-tap-highlight-color:transparent;user-select:none;transition:transform .2s ease}
+body .hero-benefit-icon{display:block;flex:none;width:clamp(28px,9.8cqi,86px);aspect-ratio:1;background-image:url("benefits.webp");background-repeat:no-repeat;background-size:1086% auto;clip-path:circle(49%);-webkit-tap-highlight-color:transparent;user-select:none;transition:transform .2s ease}
 body .top .logo,body .top .nav-signin{transition:transform .2s ease}
 @media(hover:hover) and (pointer:fine){body .hero-benefit-icon:hover,body .top .logo:hover,body .top .nav-signin:hover{transform:translateY(-4px) scale(1.02)}}
 body .benefit-practice{background-position:9.3% 50%}
@@ -39,8 +39,8 @@ body .benefit-review{background-position:43.4% 50%}
 body .benefit-progress{background-position:74.7% 50%}
 body .hero-actions{position:absolute;inset:89.5% 0 auto;display:flex;flex-direction:column;align-items:center;gap:1.8cqi;margin:0;z-index:4}
 body .hero-image-link{display:block;flex:none;padding:0;border:0;min-height:44px;background-repeat:no-repeat;transition:transform .15s ease;touch-action:manipulation}
-body .hero-banks-link{width:54.4%;aspect-ratio:6.45;background-image:url("banks-button.png");background-size:112.5% auto;background-position:51% 50%;border-radius:2cqi}
-body .hero-student-link{width:26.5%;aspect-ratio:4.4;background-image:url("student-button.png");background-size:166.5% auto;background-position:50% 50%;border-radius:2cqi}
+body .hero-banks-link{width:54.4%;aspect-ratio:6.45;background-image:url("banks-button.webp");background-size:112.5% auto;background-position:51% 50%;border-radius:2cqi}
+body .hero-student-link{width:26.5%;aspect-ratio:4.4;background-image:url("student-button.webp");background-size:166.5% auto;background-position:50% 50%;border-radius:2cqi}
 body .hero-image-link:hover,body .nav-create:hover{transform:translateY(-2px)}
 body .hero-image-link:active,body .nav-create:active{transform:translateY(0)}
 body .hero-image-link:focus-visible,body .top a:focus-visible{outline:3px solid #fff1a6;outline-offset:5px}
@@ -57,7 +57,7 @@ body .hero-image-link:focus-visible,body .top a:focus-visible{outline:3px solid 
   body .top .logo{width:155px}
   body .top .navlinks{width:330px;font-size:19px}
   body .top .nav-create{width:63%}
-  body .hero{background-image:linear-gradient(90deg,#021329 0%,#021329f5 34%,#02132980 48%,transparent 67%),url("background-pc.png");background-position:center 78%;background-size:cover}
+  body .hero{background-image:linear-gradient(90deg,#021329 0%,#021329f5 34%,#02132980 48%,transparent 67%),url("background-pc.webp");background-position:center 78%;background-size:cover}
   body .hero-shell{max-width:1280px}
   body .hero-frame{height:850px;min-height:100svh;max-height:1000px}
   body .hero-copy{left:4%;top:190px;width:48%}
@@ -81,9 +81,9 @@ body .hero-image-link:focus-visible,body .top a:focus-visible{outline:3px solid 
 @media(max-width:1099px){
   body .hero-banks-link,body .hero-student-link,body .top .nav-create{position:relative;background-image:none;box-shadow:none;filter:none;-webkit-tap-highlight-color:transparent}
   body .hero-banks-link::before,body .hero-student-link::before,body .top .nav-create::before{content:'';position:absolute;left:0;top:50%;width:100%;transform:translateY(-50%);background-repeat:no-repeat;pointer-events:none;box-shadow:none;filter:none;overflow:hidden}
-  body .hero-banks-link::before{aspect-ratio:6.45;background-image:url("banks-button.png");background-size:112.5% auto;background-position:51% 50%;border-radius:clamp(10px,2.9vw,28px)}
-  body .hero-student-link::before{aspect-ratio:4.4;background-image:url("student-button.png");background-size:166.5% auto;background-position:50% 50%;border-radius:clamp(10px,2.9vw,28px)}
-  body .top .nav-create::before{aspect-ratio:3.1;background-image:url("header.png");background-size:286% auto;background-position:91.4% 59%;border-radius:clamp(10px,2.9vw,24px)}
+  body .hero-banks-link::before{aspect-ratio:6.45;background-image:url("banks-button.webp");background-size:112.5% auto;background-position:51% 50%;border-radius:clamp(10px,2.9vw,28px)}
+  body .hero-student-link::before{aspect-ratio:4.4;background-image:url("student-button.webp");background-size:166.5% auto;background-position:50% 50%;border-radius:clamp(10px,2.9vw,28px)}
+  body .top .nav-create::before{aspect-ratio:3.1;background-image:url("header.webp");background-size:286% auto;background-position:91.4% 59%;border-radius:clamp(10px,2.9vw,24px)}
 }
 @media(prefers-reduced-motion:reduce){
   body .hero-image-link{transition:none}
