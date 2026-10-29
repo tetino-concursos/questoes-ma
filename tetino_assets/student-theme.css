@@ -1,0 +1,93 @@
+/* Shared visual vocabulary of the site's banks and products sections.
+   Kept behind .logged-in so the approved login composition stays independent. */
+@font-face{font-family:TeTinoStudent;src:url("products-section/poppins-regular.ttf") format("truetype");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:TeTinoStudent;src:url("products-section/poppins-semibold.ttf") format("truetype");font-weight:600;font-style:normal;font-display:swap}
+@font-face{font-family:TeTinoStudent;src:url("products-section/poppins-bold.ttf") format("truetype");font-weight:700;font-style:normal;font-display:swap}
+body.logged-in{
+ --student-navy:#061344;--student-blue:#0065ff;--student-gold:#ffda00;
+ --student-muted:#5d7197;--student-line:#bcdcff;--student-soft:#eaf3ff;
+ font-family:TeTinoStudent,Arial,sans-serif;font-weight:400;line-height:1.6;min-height:100svh;
+}
+body.logged-in :is(button,input,select,textarea){font-family:inherit}
+body.logged-in :is(h1,h2,h3){font-weight:700;letter-spacing:-.035em;text-wrap:balance;line-height:1.2}
+body.logged-in :is(button,.tt-prof-upload){font-weight:600;letter-spacing:0}
+body.logged-in :is(.stat strong,.analytics-kpis strong,.session-number strong){font-variant-numeric:tabular-nums}
+body.logged-in :is(.eyebrow,.nav-caption,.picker-kicker,.tt-prof-kicker){font-weight:600;letter-spacing:0;text-transform:none}
+body.logged-in #tt-home{max-width:1186px;margin-inline:auto;padding-top:24px}
+body.logged-in #tt-home>.eyebrow{font-size:16px;margin-bottom:10px}
+body.logged-in #tt-home>.tt-page-title{font-size:clamp(28px,3.4vw,44px);margin:0 0 14px;max-width:900px}
+body.logged-in .tt-home-description{font-size:16px;margin:0 0 30px;max-width:680px}
+body.logged-in .tt-course-gallery{margin-inline:0}
+body.logged-in :is(.tt-interactive-card,.tt-course-card){border-radius:21px;box-shadow:0 8px 26px #0085ff17}
+body.logged-in :is(.card,.analytics-card,.tt-prof-card){border-radius:21px;box-shadow:0 8px 26px #0085ff0d}
+body.logged-in .question{font-size:18px;line-height:1.75}
+body.logged-in .option{font-size:16px;line-height:1.65}
+body.logged-in :is(.tt-page-title,.analytics-heading h2){font-size:clamp(26px,3vw,38px)}
+body.logged-in .tt-prof-hero h1{text-transform:none;font-size:clamp(26px,4vw,36px)}
+body.logged-in .tt-prof-card-head h2{font-size:20px}
+body.logged-in .tt-prof-card label{font-size:13px;letter-spacing:0}
+body.logged-in .tt-drawer .tt-section{letter-spacing:0!important;font-weight:600!important}
+body.logged-in :is(button,a,input,select,textarea):focus-visible{outline:3px solid #0065ff;outline-offset:3px}
+body.logged-in .tt-interactive-button:focus-visible{outline-color:var(--student-gold);outline-offset:-5px}
+body.logged-in header :is(button,a):focus-visible,body.logged-in .tt-drawer :is(button,a):focus-visible{outline-color:var(--student-gold)!important}
+/* White surfaces and navy text follow the public product section. */
+body.logged-in:not(.tt-theme-dark),body.logged-in.tt-profile-open:not(.tt-theme-dark){color:var(--student-navy)!important;background:#fff!important;color-scheme:light}
+body.logged-in:not(.tt-theme-dark) main{background:#fff}
+body.logged-in:not(.tt-theme-dark) :is(.card,.stat,.member-nav,.analytics-card,.analytics-kpis>div,.study-picker,.tt-prof-card){background:#fff;color:var(--student-navy);border-color:var(--student-line)}
+body.logged-in:not(.tt-theme-dark) :is(.tt-page-title,.card h2,.picker-head h2,.analytics-heading h2,.analytics-card h3,.stat strong,.question,.tt-prof-card-head h2){color:var(--student-navy)}
+body.logged-in:not(.tt-theme-dark) :is(.muted,.analytics-heading p,.analytics-card p,.tt-home-description,.tt-prof-card-head p,.tt-prof-photo-box p,.tt-prof-theme small,.tt-prof-help,.tt-prof-help p,footer){color:var(--student-muted)}
+body.logged-in:not(.tt-theme-dark) :is(.eyebrow,.nav-caption,.picker-kicker,.meta,.tt-prof-back){color:#0055d6}
+body.logged-in:not(.tt-theme-dark) :is(.primary,.tt-prof-button),body.logged-in:not(.tt-theme-dark) :is(#picker-apply,#responder){background:var(--student-gold)!important;color:var(--student-navy)!important;box-shadow:none!important}
+body.logged-in:not(.tt-theme-dark) :is(.primary,.tt-prof-button):hover{background:#f4cb00}
+body.logged-in:not(.tt-theme-dark) :is(.secondary,.tt-prof-upload,.tt-prof-tabs button,.tt-prof-theme){background:var(--student-soft);color:var(--student-navy);border:1px solid var(--student-line)}
+body.logged-in:not(.tt-theme-dark) :is(.secondary,.tt-prof-upload,.tt-prof-tabs button):hover{background:#dcecff}
+body.logged-in:not(.tt-theme-dark) :is(.tt-prof-tabs button.active,.tt-prof-theme.selected){background:var(--student-soft);border-color:var(--student-blue);color:#0055d6}
+body.logged-in:not(.tt-theme-dark) :is(select,input:not([type=file]),textarea){background:#fff;color:var(--student-navy);border-color:var(--student-line)}
+body.logged-in:not(.tt-theme-dark) input::placeholder{color:var(--student-muted);opacity:1}
+body.logged-in:not(.tt-theme-dark) :is(.card label,.tt-prof-card label,.picker-name,.performance-name){color:var(--student-navy)}
+body.logged-in:not(.tt-theme-dark) #opcoes .option{background:#fff!important;color:var(--student-navy)!important;border-color:var(--student-line)!important}
+body.logged-in:not(.tt-theme-dark) #opcoes .option:not(.selected):not(.correct):not(.wrong):hover{background:#f4f8ff!important;border-color:var(--student-blue)!important}
+body.logged-in:not(.tt-theme-dark) #opcoes .option.selected{background:var(--student-soft)!important;border-color:var(--student-blue)!important}
+body.logged-in:not(.tt-theme-dark) #opcoes .option.correct{background:#eaf8f0!important;border-color:#16845b!important;color:#155f43!important}
+body.logged-in:not(.tt-theme-dark) #opcoes .option.wrong{background:#fff0f1!important;border-color:#c92a3e!important;color:#9c1d2c!important}
+body.logged-in:not(.tt-theme-dark) #study-area :is(.card,.stat){background:#fff;color:var(--student-navy);border-color:var(--student-line)}
+body.logged-in:not(.tt-theme-dark) #study-area .primary{background:var(--student-gold);color:var(--student-navy)}
+body.logged-in:not(.tt-theme-dark) #study-area .primary:hover{background:#f4cb00}
+body.logged-in:not(.tt-theme-dark) :is(.tt-prof-card-head,.tt-prof-photo-box){border-color:var(--student-line)}
+body.logged-in:not(.tt-theme-dark) .tt-prof-card-head .tt-prof-symbol{background:var(--student-soft);color:#0055d6;border-color:var(--student-line)}
+body.logged-in:not(.tt-theme-dark) .tt-prof-notice{color:#126443}
+body.logged-in:not(.tt-theme-dark) .tt-prof-notice.error{color:#b02035}
+body.logged-in:not(.tt-theme-dark) .tt-prof-card-body p:not(.tt-prof-notice){color:var(--student-muted)}
+/* The profile hero and drawer retain the site's navy header treatment. */
+body.logged-in .tt-prof-hero{background:#061344;border-color:#183772;box-shadow:none}
+body.logged-in .tt-prof-hero h1{color:#fff}
+body.logged-in .tt-prof-hero .tt-prof-photo{color:#fff}
+body.logged-in .tt-prof-kicker{color:#ffda00}
+body.logged-in .tt-prof-hero :is(.tt-prof-email,.tt-prof-member){color:#e3edff;background:#102454;border-color:#35528a}
+body.logged-in header{background:#06182f!important;border-bottom-color:#254c79!important}
+body.logged-in .tt-drawer{background:#06182f!important}
+body.logged-in .tt-drawer .tt-course-link{background:#102b52!important;border-color:#355b8c!important;border-left-color:#ffda00!important}
+body.logged-in .tt-drawer .tt-course-link .tt-nav-icon{stroke:#ffda00!important}
+/* Retain semantic answer colors and the existing optional dark theme. */
+body.logged-in.tt-theme-dark .tt-home-description{color:#b8c9e1}
+body.logged-in.tt-theme-dark.tt-profile-open{background:#101827!important}
+body.logged-in.tt-theme-dark :is(.primary,.tt-prof-button,#picker-apply,#responder){background:var(--student-gold)!important;color:var(--student-navy)!important;box-shadow:none!important}
+body.logged-in.tt-theme-dark #tt-home>.eyebrow{color:#85bdff}
+body.logged-in.tt-theme-dark :is(button,a,input,select,textarea):focus-visible{outline-color:#85bdff}
+body.logged-in.tt-theme-dark :is(.stat small,.session-top small,.session-metrics small,#study-mode-label,.map-hint){color:#b8c9e1}
+body.logged-in.tt-theme-dark :is(.session-top strong,.session-metrics strong){color:#edf5ff}
+body.logged-in.tt-theme-dark #opcoes .option{background:#233450!important;color:#edf5ff!important;border-color:#526b8d!important}
+body.logged-in.tt-theme-dark #opcoes .option:not(.selected):not(.correct):not(.wrong):hover{background:#2d4363!important}
+body.logged-in.tt-theme-dark #opcoes .option.selected{background:#163e6a!important;border-color:#85bdff!important}
+body.logged-in.tt-theme-dark #opcoes .option.correct{background:#103e30!important;border-color:#68d6a1!important;color:#c0f5d9!important}
+body.logged-in.tt-theme-dark #opcoes .option.wrong{background:#4a2230!important;border-color:#f08f9f!important;color:#ffd7df!important}
+@media(max-width:700px){
+ body.logged-in #tt-home{padding-top:16px}
+ body.logged-in #tt-home>.eyebrow{font-size:14px}
+ body.logged-in .tt-home-description{font-size:14px;margin-bottom:24px}
+ body.logged-in .tt-course-gallery{margin-inline:auto}
+ body.logged-in .question{font-size:17px}
+ body.logged-in .option{font-size:15px}
+ body.logged-in .stat small{display:block;overflow-wrap:anywhere;line-height:1.4}
+}
+@media(forced-colors:active){body.logged-in :is(.card,.stat,.tt-interactive-card,.tt-prof-card){border:1px solid CanvasText;box-shadow:none}}
