@@ -68,7 +68,7 @@
   if(target){
    const days=Math.round((target-calendar(today()))/86400000);
    text('tt-exam-number',Math.abs(days));
-   text('tt-exam-count',days>1?'Faltam '+days+' dias':days===1?'Falta 1 dia':days===0?'É hoje!':'Prova realizada');
+   text('tt-exam-count',days>0?'dias para a prova':days===0?'É hoje!':'Prova realizada');
    const label=new Intl.DateTimeFormat('pt-BR',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}).format(target);
    text('tt-exam-caption','Sua prova: '+label);text('tt-exam-edit','Alterar data');
   }else{
