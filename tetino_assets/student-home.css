@@ -42,7 +42,8 @@ body.logged-in.tt-theme-dark .tt-home-metric:nth-child(2) dd{color:#68d6a1}
 @media(max-width:700px){
  body.logged-in .tt-exam-bar{padding:6px 12px}
  .tt-exam-inner{padding:9px 10px;gap:8px;border-radius:12px}
- .tt-exam-symbol{display:none}
+ .tt-exam-symbol{width:30px;height:30px;border-radius:10px}
+ .tt-exam-symbol svg{width:19px;height:19px}
  #tt-exam-count{font-size:13px}
  #tt-exam-caption{font-size:10px}
  body.logged-in #tt-exam-edit{font-size:10px;padding:9px 8px;min-height:40px;max-width:125px;white-space:normal}
