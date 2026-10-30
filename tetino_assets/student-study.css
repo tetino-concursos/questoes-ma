@@ -110,7 +110,7 @@ body.logged-in #opcoes .tt-q-option-row .option{display:flex;align-items:center;
 body.logged-in .tt-q-letter{display:grid;place-items:center;flex:none;width:32px;height:32px;border:1.5px solid #7ba6e4;border-radius:50%;color:#005be6;font-size:14px}
 body.logged-in .tt-q-option-text{min-width:0;white-space:pre-wrap;overflow-wrap:anywhere}
 body.logged-in .tt-q-icon{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-body.logged-in :is(.session-top strong,#tt-timer-pause,#tt-timer-reset,#focus-toggle,#favorite-toggle,#anterior,#proxima,#picker-apply,.tt-return-link,#tt-prof-back){display:inline-flex;align-items:center;gap:8px}
+body.logged-in :is(.session-top strong,#tt-timer-pause,#tt-timer-reset,#focus-toggle,#favorite-toggle,#anterior,#proxima,#picker-apply,.tt-return-link,#tt-prof-back,#close-analytics){display:inline-flex;align-items:center;gap:8px}
 body.logged-in .session-top strong .tt-q-icon{color:#005be6}
 body.logged-in :is(#tt-timer-pause,#tt-timer-reset,#focus-toggle,#favorite-toggle,#anterior,#proxima) .tt-q-icon{width:18px;height:18px}
 body.logged-in .tt-picker-search{position:relative;display:block;width:100%;min-width:0}
