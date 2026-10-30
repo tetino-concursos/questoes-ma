@@ -1,0 +1,165 @@
+/* Study surfaces follow the same TeTino icons, typography and interactions. */
+.tt-page-controls{display:none}
+body.logged-in:not(.tt-view-home) .tt-page-controls,body.logged-in.tt-profile-open .tt-page-controls{display:flex;justify-content:flex-end;margin:0 0 18px}
+body.logged-in .tt-page-controls button{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border:1px solid #bcdcff;border-radius:13px;background:#eaf3ff;color:#0055d6;font-weight:600;font-size:13px;transition:transform .18s ease,background-color .18s ease}
+.tt-study-icon{display:block;width:23px;height:23px;flex-shrink:0}
+body.logged-in .tt-study-heading{display:flex;align-items:center;gap:12px}
+.tt-study-heading .tt-study-icon{width:42px;height:42px;padding:9px;border-radius:13px;background:#eaf3ff;color:#0055d6}
+body.logged-in.tt-view-filter #tt-prova-selector,body.logged-in.tt-view-filter #study-picker{border:1px solid #bcdcff;background:#fff;box-shadow:0 7px 24px #0065ff08;border-radius:22px}
+body.logged-in.tt-view-filter .picker-head h2{font-size:20px;font-weight:600;letter-spacing:-.025em}
+body.logged-in.tt-view-filter .picker-row{background:#fff!important;border-bottom-color:#e1ebf8!important;padding-block:16px}
+body.logged-in.tt-view-filter .picker-row .picker-name{font-weight:600!important;line-height:1.5}
+body.logged-in.tt-view-filter .picker-row label{min-width:0}
+body.logged-in.tt-view-filter .picker-arrow{display:grid;place-items:center;border-radius:10px;color:#0055d6;background:#eaf3ff}
+body.logged-in.tt-view-filter .picker-modes button{border-radius:12px!important;font-weight:600!important}
+body.logged-in.tt-view-filter .picker-modes button.active{background:#eaf3ff!important;color:#0055d6!important;border-color:#77aeff!important}
+body.logged-in #study-area .stats{grid-template-columns:repeat(4,minmax(0,1fr))}
+body.logged-in #study-area .stat{min-width:0;border-radius:18px;padding:17px}
+body.logged-in #study-area .stat:nth-child(3)::before{background:#c92a3e}
+body.logged-in #study-area .stat:nth-child(4)::before{background:#0065ff}
+body.logged-in #study-area #acertos{color:#16845b}
+body.logged-in #study-area #erros{color:#b02035}
+body.logged-in .referral .tt-referral-condition{font-size:12px;line-height:1.6;color:#5d7197}
+body.logged-in.tt-theme-dark .tt-page-controls button{background:#233450;color:#b8d7ff;border-color:#405777}
+body.logged-in.tt-theme-dark.tt-view-filter #tt-prova-selector,body.logged-in.tt-theme-dark.tt-view-filter #study-picker,body.logged-in.tt-theme-dark.tt-view-filter .picker-row{background:#19263d!important;border-color:#344765!important}
+body.logged-in.tt-theme-dark #study-area #acertos{color:#68d6a1}
+body.logged-in.tt-theme-dark #study-area #erros{color:#ffb4bf}
+body.logged-in.tt-theme-dark .referral .tt-referral-condition{color:#b8c9e1}
+@media(hover:hover){body.logged-in .tt-page-controls button:hover{background:#dcecff;transform:translateY(-2px)}}
+@media(max-width:700px){body.logged-in #study-area .stats{grid-template-columns:repeat(2,minmax(0,1fr))}body.logged-in #study-area .stat{padding:14px}body.logged-in.tt-view-filter .picker-head h2{font-size:18px}}
+@media(prefers-reduced-motion:reduce){body.logged-in .tt-page-controls button{transition:none;transform:none}}
+/* The same question view also serves Favorites and the error notebook. */
+body.logged-in #study-area .stat::before{display:none}
+.tt-stat-icon{display:grid;place-items:center;width:35px;height:35px;border-radius:11px;background:#eaf3ff;color:#0055d6;margin-bottom:12px}
+body.logged-in #study-area .stat:nth-child(2) .tt-stat-icon{background:#eaf8f0;color:#16845b}
+body.logged-in #study-area .stat:nth-child(3) .tt-stat-icon{background:#fff0f1;color:#b02035}
+body.logged-in #study-area .stat strong{font-size:28px;line-height:1.2}
+body.logged-in #study-area .stat small{display:block;font-size:12px;margin-top:6px;overflow-wrap:anywhere}
+body.logged-in #study-area .card{border-radius:22px;box-shadow:0 7px 24px #0065ff08}
+body.logged-in .question{font-size:18px;line-height:1.75;color:#061344}
+body.logged-in #opcoes .option{border-radius:17px;padding:17px 18px;font-size:16px;line-height:1.6;min-height:56px}
+body.logged-in #study-area .meta{font-weight:600;line-height:1.5}
+body.logged-in .tt-compact-meta-subject{color:#5d7197;font-weight:600}
+body.logged-in .analytics{color:#061344}
+body.logged-in .analytics-heading h2{font-size:clamp(25px,3vw,36px);font-weight:700}
+body.logged-in .analytics-kpis>div,body.logged-in .analytics-card{border:1px solid #bcdcff;border-radius:21px;box-shadow:0 7px 24px #0065ff08}
+body.logged-in .analytics-kpis small{font-size:11px;letter-spacing:0;font-weight:600}
+body.logged-in .analytics-kpis strong{font-size:30px;font-weight:600;font-variant-numeric:tabular-nums}
+body.logged-in .analytics-card h3{font-size:18px;font-weight:600;line-height:1.4}
+body.logged-in .performance-level{border-color:#d5e5fa;border-radius:15px;padding:14px 16px;background:#fff}
+body.logged-in .performance-level-1{background:#f4f8ff}
+body.logged-in .performance-name{font-weight:600}
+body.logged-in .performance-level summary{min-height:40px;align-items:center;gap:10px}
+body.logged-in :is(.empty,.analytics-note,.map-hint){color:#5d7197;line-height:1.7}
+body.logged-in .session-panel{border:1px solid #bcdcff;border-radius:21px;box-shadow:0 7px 24px #0065ff08}
+body.logged-in .session-top{gap:12px;padding:18px;border-bottom-color:#d5e5fa}
+body.logged-in .session-top strong{font-weight:600;line-height:1.4}
+body.logged-in .session-metrics strong,body.logged-in .session-number strong{font-variant-numeric:tabular-nums}
+body.logged-in :is(.tt-timer-actions button,.focus-toggle){min-height:36px;border-radius:10px;font-weight:600}
+body.logged-in :is(.tt-texto-dialog,.tt-profile-dialog){font-family:TeTinoStudent,Arial,sans-serif;border:1px solid #bcdcff;border-radius:22px;color:#061344;background:#fff}
+body.logged-in .tt-texto-header{background:#fff;border-color:#d5e5fa}
+body.logged-in .tt-texto-content{font-size:17px;line-height:1.85}
+body.logged-in .tt-texto-heading strong{color:#061344;font-weight:600}
+body.logged-in .tt-texto-tools{background:#f4f8ff;border-color:#d5e5fa;gap:10px}
+body.logged-in .tt-icon-btn{border-radius:11px}
+body.logged-in #tt-profile-page .tt-prof-card{box-shadow:0 7px 24px #0065ff08}
+body.logged-in .tt-drawer .tt-link,body.logged-in .tt-drawer a{font-family:inherit}
+body.logged-in button:disabled{cursor:not-allowed}
+body.logged-in :is(input,select,textarea,button,a,summary):focus-visible{outline:3px solid #0065ff;outline-offset:3px}
+body.logged-in.tt-theme-dark .question,body.logged-in.tt-theme-dark .analytics{color:#edf5ff}
+body.logged-in.tt-theme-dark :is(.empty,.analytics-note,.map-hint,.tt-compact-meta-subject){color:#b8c9e1}
+body.logged-in.tt-theme-dark :is(.tt-texto-dialog,.tt-texto-header,.tt-profile-dialog){background:#19263d;color:#edf5ff;border-color:#344765}
+body.logged-in.tt-theme-dark .tt-texto-heading strong{color:#edf5ff}
+body.logged-in.tt-theme-dark .tt-texto-tools{background:#233450;border-color:#405777}
+body.logged-in.tt-theme-dark :is(input,select,textarea,button,a,summary):focus-visible{outline-color:#85bdff}
+@media(max-width:700px){
+ body.logged-in .question{font-size:17px}
+ body.logged-in #opcoes .option{font-size:15px;padding:15px}
+ body.logged-in .analytics-kpis{gap:10px}
+ body.logged-in .analytics-kpis>div{padding:16px;min-width:0}
+ body.logged-in .analytics-kpis strong{font-size:26px}
+ body.logged-in .analytics-card{padding:18px}
+ body.logged-in .performance-level{padding:12px}
+ body.logged-in .performance-name{overflow-wrap:anywhere}
+}
+
+.tt-study-metrics-data[hidden]{display:none!important}
+body.logged-in.tt-view-questions .session-panel{grid-row:2}
+/* Individual study shortcuts, without an enclosing navy surface. */
+body.logged-in #tt-question-actions nav.tt-shortcuts{background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important;border-radius:0!important;gap:12px!important}
+body.logged-in #tt-question-actions nav.tt-shortcuts .tt-shortcut{background:#fff!important;color:#061344!important;border:1px solid #bcdcff!important;border-radius:15px!important;min-height:58px;padding:14px!important;box-shadow:0 5px 18px #0055d608!important;transition:transform .2s ease,border-color .2s ease,background-color .2s ease}
+body.logged-in #tt-question-actions nav.tt-shortcuts .tt-shortcut svg{color:#0055d6!important;stroke:#0055d6;width:23px;height:23px;flex-shrink:0}
+body.logged-in #tt-question-actions nav.tt-shortcuts .tt-shortcut-primary{background:#eaf3ff!important;border-color:#8bbaff!important}
+body.logged-in.tt-theme-dark #tt-question-actions nav.tt-shortcuts .tt-shortcut{background:#19263d!important;color:#edf5ff!important;border-color:#405777!important}
+body.logged-in.tt-theme-dark #tt-question-actions nav.tt-shortcuts .tt-shortcut svg{color:#85bdff!important;stroke:#85bdff}
+@media(hover:hover){body.logged-in #tt-question-actions nav.tt-shortcuts .tt-shortcut:hover{transform:translateY(-2px);border-color:#0065ff!important}}
+@media(prefers-reduced-motion:reduce){body.logged-in #tt-question-actions nav.tt-shortcuts .tt-shortcut{transition:none;transform:none}}
+
+/* Approved question controls: letter circles, separate elimination and closed panels. */
+body.logged-in #opcoes .tt-q-option-row{display:flex;align-items:center;border:1px solid #cddff7;border-radius:16px;background:#fff;min-width:0;transition:background-color .18s,border-color .18s}
+body.logged-in #opcoes .tt-q-option-row .option{display:flex;align-items:center;gap:16px;flex:1;min-width:0;min-height:76px;padding:16px;border:0!important;border-radius:15px;background:transparent!important;color:#061344;box-shadow:none!important;text-align:left;font-weight:400;white-space:normal}
+body.logged-in .tt-q-letter{display:grid;place-items:center;flex:none;width:32px;height:32px;border:1.5px solid #7ba6e4;border-radius:50%;color:#005be6;font-size:14px}
+body.logged-in .tt-q-option-text{min-width:0;white-space:pre-wrap;overflow-wrap:anywhere}
+body.logged-in .tt-q-icon{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+body.logged-in #opcoes .tt-q-cut{display:grid;place-items:center;flex:none;margin:0 7px 0 0;width:44px;height:44px;min-height:44px;padding:0;border:0;background:transparent;box-shadow:none;color:#5d7197;border-radius:10px}
+body.logged-in #opcoes .tt-q-cut .tt-q-icon{width:19px;height:19px}
+body.logged-in .tt-q-option-row:has(.selected){border-color:#0065ff!important;background:#eff5ff!important}
+body.logged-in .selected .tt-q-letter{background:#005be6;color:white;border-color:#005be6}
+body.logged-in .tt-q-struck .tt-q-option-text{text-decoration:line-through;opacity:.4}
+body.logged-in .tt-q-struck .tt-q-letter{opacity:.45}
+body.logged-in #opcoes .tt-q-cut[aria-pressed=true]{background:#eff5ff;color:#005be6}
+body.logged-in .tt-q-option-row:has(.correct){border-color:#158460!important;background:#effaf5!important}
+body.logged-in .correct .tt-q-letter{background:#087d58;border-color:#087d58;color:white}
+body.logged-in .tt-q-option-row:has(.wrong){border-color:#cb3346!important;background:#fff2f3!important}
+body.logged-in .wrong .tt-q-letter{background:#c52c3d;border-color:#c52c3d;color:white}
+body.logged-in #opcoes .option:disabled{opacity:1;cursor:default}
+body.logged-in .study-actions{display:grid;gap:10px}
+body.logged-in #feedback{background:transparent!important;border:0!important;padding:0!important;box-shadow:none;color:#061344!important}
+body.logged-in #feedback .tt-resultado{display:flex;align-items:center;gap:10px;margin:0;padding:8px 0;min-height:0;background:transparent;border:0;box-shadow:none}
+body.logged-in #feedback .tt-resultado-simbolo{flex:0 0 25px;width:25px;height:25px;min-width:25px;padding:4px;border:1px solid currentColor;border-radius:50%;background:transparent}
+body.logged-in #feedback .tt-resultado-simbolo svg{width:100%;height:100%}
+body.logged-in #feedback .tt-resultado-label{display:none}
+body.logged-in #feedback .tt-resultado-mensagem{font-size:14px;font-weight:600;line-height:1.5}
+body.logged-in .tt-q-button{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:12px 14px;border:1px solid #cddff7;border-radius:12px;background:#fff;color:#061344;font-size:13px;font-weight:600;text-decoration:none;transition:transform .18s,background-color .18s,border-color .18s}
+body.logged-in #tt-q-solution{width:100%;background:#eff5ff;color:#061344}
+body.logged-in .tt-q-panels{border-top:1px solid #d5e3f7;padding-top:20px;margin-top:20px}
+body.logged-in .tt-q-panel-buttons{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+body.logged-in .tt-q-panel-buttons .tt-q-button{justify-content:flex-start;text-align:left;font-size:12px;min-height:58px}
+body.logged-in .tt-q-panel-buttons .tt-q-icon{color:#005be6}
+body.logged-in .tt-q-panel-buttons [aria-expanded=true]{background:#eff5ff;border-color:#83b4ff;color:#005be6}
+body.logged-in .tt-q-content{border:1px solid #d5e3f7;border-radius:15px;padding:20px;margin-top:14px;animation:tt-question-open .2s ease}
+body.logged-in .tt-q-content h3{margin:0 0 12px;font-size:17px}
+body.logged-in .tt-q-content .teacher-explanation{font-size:15px;line-height:1.8;color:inherit}
+body.logged-in .tt-q-content .muted{font-size:12px}
+body.logged-in .tt-q-content[aria-busy=true]{opacity:.75}
+body.logged-in .tt-q-history-list{list-style:none;padding:0;margin:15px 0 0;display:grid;gap:8px}
+body.logged-in .tt-q-history-list li{display:flex;align-items:center;justify-content:space-between;gap:12px;border-radius:10px;background:#f5f8fe;padding:13px;font-size:12px;content-visibility:auto;contain-intrinsic-size:auto 90px}
+body.logged-in .tt-q-history-list li p{margin:3px 0}
+body.logged-in .tt-q-history-list time{color:#5d7197}
+body.logged-in .tt-q-hit{color:#087d58;white-space:nowrap}
+body.logged-in .tt-q-miss{color:#c52c3d;white-space:nowrap}
+body.logged-in .tt-q-content textarea{display:block;width:100%;max-width:100%;min-height:100px;resize:vertical;margin:8px 0 12px;border:1px solid #cddff7;border-radius:10px;padding:12px;background:#fff;color:#061344;font-size:16px}
+body.logged-in .tt-q-content label{font-size:13px}
+body.logged-in .tt-q-content .tt-q-decision{font-weight:600;font-size:14px}
+body.logged-in [hidden].tt-q-content,body.logged-in [hidden].tt-q-panels,body.logged-in #tt-q-solution[hidden]{display:none!important}
+body.logged-in.tt-theme-dark #opcoes .tt-q-option-row,body.logged-in.tt-theme-dark .tt-q-button{background:#19263d;color:#edf5ff;border-color:#405777}
+body.logged-in.tt-theme-dark #opcoes .tt-q-option-row .option{color:#edf5ff}
+body.logged-in.tt-theme-dark :is(.tt-q-letter,.tt-q-panel-buttons .tt-q-icon){color:#85bdff}
+body.logged-in.tt-theme-dark .tt-q-content{border-color:#405777}
+body.logged-in.tt-theme-dark :is(.tt-q-history-list li,#tt-q-solution,.tt-q-panel-buttons [aria-expanded=true]){background:#233450;color:#edf5ff}
+body.logged-in.tt-theme-dark .tt-q-history-list time{color:#b8c9e1}
+body.logged-in.tt-theme-dark .tt-q-hit{color:#70dcaf}
+body.logged-in.tt-theme-dark .tt-q-miss{color:#ff9da8}
+body.logged-in.tt-theme-dark .tt-q-content textarea{background:#19263d;color:#edf5ff;border-color:#405777}
+body.logged-in.tt-theme-dark .tt-q-option-row:has(.selected){background:#18335b!important}
+body.logged-in.tt-theme-dark .tt-q-option-row:has(.correct){background:#133f35!important}
+body.logged-in.tt-theme-dark .tt-q-option-row:has(.wrong){background:#492937!important}
+body.logged-in.tt-theme-dark :is(.correct,.wrong,.selected) .tt-q-letter{color:#fff}
+body.logged-in.tt-theme-dark #feedback{color:#edf5ff!important}
+body.logged-in.tt-theme-dark #feedback .tt-resultado-acerto{color:#70dcaf}
+body.logged-in.tt-theme-dark #feedback .tt-resultado-erro{color:#ff9da8}
+body.logged-in.tt-theme-dark :is(.tt-compact-meta-origin,.tt-compact-meta-subject){color:#b8c9e1!important}
+@keyframes tt-question-open{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+@media(hover:hover){body.logged-in .tt-q-button:hover:not(:disabled){background:#eff5ff;border-color:#83b4ff;transform:translateY(-2px)}body.logged-in #opcoes .tt-q-cut:hover:not(:disabled){background:#eff5ff}body.logged-in.tt-theme-dark .tt-q-button:hover:not(:disabled){background:#233450}}
+@media(max-width:700px){body.logged-in #opcoes .tt-q-option-row .option{gap:12px;padding:14px 12px;min-height:75px;font-size:14px}body.logged-in .tt-q-letter{width:30px;height:30px;font-size:13px}body.logged-in .tt-q-panel-buttons .tt-q-button{font-size:11px;padding:11px 9px;gap:8px;min-height:65px}body.logged-in .tt-q-content{padding:16px}body.logged-in .tt-q-history-list li{display:block}body.logged-in .tt-q-history-list strong{display:block;margin-top:5px}}
+@media(prefers-reduced-motion:reduce){body.logged-in .tt-q-content{animation:none}body.logged-in :is(.tt-q-button,.tt-q-option-row){transition:none;transform:none!important}}
