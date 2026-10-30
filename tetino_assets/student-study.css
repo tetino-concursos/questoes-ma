@@ -96,11 +96,22 @@ body.logged-in.tt-theme-dark #tt-question-actions nav.tt-shortcuts .tt-shortcut 
 @media(prefers-reduced-motion:reduce){body.logged-in #tt-question-actions nav.tt-shortcuts .tt-shortcut{transition:none;transform:none}}
 
 /* Approved question controls: letter circles, separate elimination and closed panels. */
+body.logged-in #picker-list .picker-level-0 :is(label,.picker-name,.picker-count){font-weight:700!important}
+body.logged-in #picker-list :is(.picker-level-1,.picker-level-2) :is(label,.picker-name,.picker-count){font-weight:400!important;color:#4b5563!important}
+body.logged-in.tt-theme-dark #picker-list :is(.picker-level-1,.picker-level-2) :is(label,.picker-name,.picker-count){color:#c1cbda!important}
 body.logged-in #opcoes .tt-q-option-row{display:flex;align-items:center;border:1px solid #cddff7;border-radius:16px;background:#fff;min-width:0;transition:background-color .18s,border-color .18s}
 body.logged-in #opcoes .tt-q-option-row .option{display:flex;align-items:center;gap:16px;flex:1;min-width:0;min-height:76px;padding:16px;border:0!important;border-radius:15px;background:transparent!important;color:#061344;box-shadow:none!important;text-align:left;font-weight:400;white-space:normal}
 body.logged-in .tt-q-letter{display:grid;place-items:center;flex:none;width:32px;height:32px;border:1.5px solid #7ba6e4;border-radius:50%;color:#005be6;font-size:14px}
 body.logged-in .tt-q-option-text{min-width:0;white-space:pre-wrap;overflow-wrap:anywhere}
 body.logged-in .tt-q-icon{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+body.logged-in :is(.session-top strong,#tt-timer-pause,#tt-timer-reset,#focus-toggle,#favorite-toggle,#anterior,#proxima,#picker-apply,.tt-return-link,#tt-prof-back){display:inline-flex;align-items:center;gap:8px}
+body.logged-in .session-top strong .tt-q-icon{color:#005be6}
+body.logged-in :is(#tt-timer-pause,#tt-timer-reset,#focus-toggle,#favorite-toggle,#anterior,#proxima) .tt-q-icon{width:18px;height:18px}
+body.logged-in .tt-picker-search{position:relative;display:block;width:100%;min-width:0}
+body.logged-in .tt-picker-search>.tt-q-icon{position:absolute;left:15px;top:50%;transform:translateY(-50%);pointer-events:none;color:#5d7197;width:19px;height:19px}
+body.logged-in #picker-search{padding-left:44px!important}
+body.logged-in #tt-menu-button .tt-q-icon{width:30px;height:30px}
+body.logged-in.tt-theme-dark .session-top strong .tt-q-icon{color:#85bdff}
 body.logged-in #opcoes .tt-q-cut{display:grid;place-items:center;flex:none;margin:0 7px 0 0;width:44px;height:44px;min-height:44px;padding:0;border:0;background:transparent;box-shadow:none;color:#5d7197;border-radius:10px}
 body.logged-in #opcoes .tt-q-cut .tt-q-icon{width:19px;height:19px}
 body.logged-in .tt-q-option-row:has(.selected){border-color:#0065ff!important;background:#eff5ff!important}
@@ -138,6 +149,8 @@ body.logged-in .tt-q-history-list li p{margin:3px 0}
 body.logged-in .tt-q-history-list time{color:#5d7197}
 body.logged-in .tt-q-hit{color:#087d58;white-space:nowrap}
 body.logged-in .tt-q-miss{color:#c52c3d;white-space:nowrap}
+body.logged-in .tt-q-history-list :is(.tt-q-hit,.tt-q-miss){display:inline-flex;align-items:center;gap:6px}
+body.logged-in .tt-q-history-list strong .tt-q-icon{width:17px;height:17px}
 body.logged-in .tt-q-content textarea{display:block;width:100%;max-width:100%;min-height:100px;resize:vertical;margin:8px 0 12px;border:1px solid #cddff7;border-radius:10px;padding:12px;background:#fff;color:#061344;font-size:16px}
 body.logged-in .tt-q-content label{font-size:13px}
 body.logged-in .tt-q-content .tt-q-decision{font-weight:600;font-size:14px}
