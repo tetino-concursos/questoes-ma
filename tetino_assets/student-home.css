@@ -54,3 +54,11 @@ body.logged-in.tt-theme-dark .tt-home-metric:nth-child(2) dd{color:#68d6a1}
 }
 
 body.logged-in.tt-view-home:not(.tt-profile-open) .tt-exam-bar{display:block}
+
+/* Pending data keeps the study identity; unavailable features remain distinct. */
+body.logged-in #tt-home .study-shortcuts [data-shortcut][data-loading]{opacity:1;filter:none;background:#fff;color:#061344;border-color:#d6e4f6;cursor:progress}
+body.logged-in #tt-home .study-shortcuts [data-loading] .shortcut-icon{background:#eaf3ff;color:#0055d6}
+body.logged-in #tt-home .study-shortcuts [data-shortcut=continue][data-loading] .shortcut-icon{background:#ffda00;color:#061344}
+body.logged-in #tt-home .tt-home-loading{margin:-22px 0 22px;font-size:12px;color:#5d7197}
+body.logged-in.tt-theme-dark #tt-home .study-shortcuts [data-loading]{background:#19263d;color:#edf5ff;border-color:#344765}
+body.logged-in.tt-theme-dark #tt-home .tt-home-loading{color:#b8c9e1}

@@ -9,9 +9,26 @@ document.addEventListener('tt-account-updated',()=>{
  ttQuestionReset(null);document.getElementById('opcoes').replaceChildren();document.getElementById('enunciado').textContent='';document.getElementById('feedback').replaceChildren();document.getElementById('feedback').classList.add('hidden');
 });
 const ttQuestionIcons={eye:'<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/>',cut:'<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="m8 8 12 12M8 16 20 4"/>',book:'<path d="M4 4h6l2 2 2-2h6v15h-6l-2 2-2-2H4V4Zm8 2v15"/>',file:'<path d="M6 3h9l4 4v14H6V3Zm9 0v5h4M9 12h7m-7 4h5"/>',chart:'<path d="M3 3v18h18M8 16v-5m5 5V6m5 10V9"/>',flag:'<path d="M5 22V3c5-5 9 5 14 0v11c-5 5-9-5-14 0"/>'};
+Object.assign(ttQuestionIcons,{
+ star:'<path d="m12 2 3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1 3-6Z"/>',
+ play:'<path d="m8 4 12 8-12 8V4Z"/>',pause:'<path d="M8 4v16M16 4v16"/>',reset:'<path d="M3 11a9 9 0 1 1 2 7M3 4v7h7"/>',
+ menu:'<path d="M3 5h18M3 12h18M3 19h18"/>',close:'<path d="m6 6 12 12M6 18 18 6"/>',
+ back:'<path d="M19 12H5m6-6-6 6 6 6"/>',arrow:'<path d="M5 12h14m-6-6 6 6-6 6"/>',
+ search:'<circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/>',focus:'<path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/>',
+ check:'<path d="m5 12 4 4L19 6"/>',alert:'<circle cx="12" cy="12" r="9"/><path d="M12 7v6m0 4h.01"/>'
+});
 function ttQElement(tag,className,text){const el=document.createElement(tag);if(className)el.className=className;if(text!==undefined)el.textContent=text;return el;}
 function ttQIcon(name){const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('class','tt-q-icon');svg.setAttribute('aria-hidden','true');svg.innerHTML=ttQuestionIcons[name];return svg;}
 function ttQButton(id,text,icon){const button=ttQElement('button','tt-q-button');button.type='button';if(id)button.id=id;if(icon)button.append(ttQIcon(icon));button.append(document.createTextNode(text));return button;}
+function ttQSetLabel(element,label,icon){if(element)element.replaceChildren(ttQIcon(icon),document.createTextNode(label));}
+document.addEventListener('DOMContentLoaded',()=>{
+ const byId=id=>document.getElementById(id);
+ for(const [id,label,icon] of [['tt-menu-button','','menu'],['tt-menu-close','','close'],['tt-signup-close','','close'],['tt-prof-back','Voltar aos meus bancos de questões','back'],['tt-timer-pause','Pausar','pause'],['tt-timer-reset','Zerar','reset'],['focus-toggle','Modo foco','focus'],['anterior','Voltar','back'],['proxima','Pular questão','arrow'],['picker-apply','Estudar questões selecionadas','arrow'],['nav-favorites','Questões favoritas','star']])ttQSetLabel(byId(id),label,icon);
+ ttQSetLabel(document.querySelector('.session-top strong'),'Painel de estudos','chart');
+ const back=document.querySelector('#tt-question-actions .tt-return-link');ttQSetLabel(back,'Voltar aos filtros','back');
+ const tip=document.querySelector('.nav-tip');if(tip)tip.textContent='Um passo por vez, rumo à aprovação.';
+ const search=byId('picker-search');if(search){search.placeholder='Buscar matéria ou tópico';const wrap=ttQElement('span','tt-picker-search');search.before(wrap);wrap.append(ttQIcon('search'),search);}
+});
 function ttQContext(){return {epoch:ttQuestionEpoch,user:usuario?.id,auth:authVersion,q:lista[indice]};}
 function ttQCurrent(ctx){return ctx.epoch===ttQuestionEpoch&&ctx.user===usuario?.id&&ctx.auth===authVersion&&ctx.q===lista[indice];}
 function ttQClosePanels(){document.querySelectorAll('#tt-q-panels [aria-controls]').forEach(b=>b.setAttribute('aria-expanded','false'));document.querySelectorAll('#tt-q-panels .tt-q-content').forEach(el=>el.hidden=true);}
@@ -77,7 +94,7 @@ async function ttQHistory(more){
  try{
   const {data,error}=await client.rpc('tetino_historico_questao',{p_questao_id:ctx.q.id,p_antes_id:more?ttQuestionHistoryCursor:null});if(!valid())return;if(error||!Array.isArray(data))throw Error('Histórico indisponível');
   const list=panel.querySelector('ol'),format=new Intl.DateTimeFormat('pt-BR',{dateStyle:'short',timeStyle:'short'});
-  for(const record of data){const li=ttQElement('li'),text=ttQElement('div'),time=ttQElement('time'),date=new Date(record.respondida_em),answer=Number(record.resposta);time.textContent=Number.isFinite(date.getTime())?format.format(date):'Data não disponível';if(Number.isFinite(date.getTime()))time.dateTime=date.toISOString();text.append(time,ttQElement('p',null,'Você respondeu a opção '+(Number.isInteger(answer)&&answer>=0&&answer<ctx.q.opcoes.length?String.fromCharCode(65+answer):'não disponível')+'.'));if(record.origem==='ultimo_registro_anterior')text.append(ttQElement('small','muted','Última resposta salva antes do histórico completo.'));const result=ttQElement('strong',record.acertou?'tt-q-hit':'tt-q-miss',record.acertou?'✓ Correta':'! Incorreta');li.append(text,result);list.append(li);}
+  for(const record of data){const li=ttQElement('li'),text=ttQElement('div'),time=ttQElement('time'),date=new Date(record.respondida_em),answer=Number(record.resposta);time.textContent=Number.isFinite(date.getTime())?format.format(date):'Data não disponível';if(Number.isFinite(date.getTime()))time.dateTime=date.toISOString();text.append(time,ttQElement('p',null,'Você respondeu a opção '+(Number.isInteger(answer)&&answer>=0&&answer<ctx.q.opcoes.length?String.fromCharCode(65+answer):'não disponível')+'.'));if(record.origem==='ultimo_registro_anterior')text.append(ttQElement('small','muted','Última resposta salva antes do histórico completo.'));const result=ttQElement('strong',record.acertou?'tt-q-hit':'tt-q-miss');result.append(ttQIcon(record.acertou?'check':'alert'),document.createTextNode(record.acertou?'Correta':'Incorreta'));li.append(text,result);list.append(li);}
   status.textContent=list.children.length?'':'Você ainda não respondeu a esta questão.';
   if(data.length===50){const last=String(data.at(-1).id);if(!/^\d+$/.test(last)||last===String(ttQuestionHistoryCursor))throw Error('Cursor inválido');ttQuestionHistoryCursor=last;const next=ttQButton(null,'Carregar registros anteriores');next.classList.add('tt-q-history-more');next.addEventListener('click',()=>ttQHistory(true));panel.append(next);}
  }catch{if(valid()){status.textContent='Não foi possível consultar o histórico.';const retry=ttQButton(null,'Tentar novamente');retry.classList.add('tt-q-history-more');retry.addEventListener('click',()=>ttQHistory(more));panel.append(retry);}}

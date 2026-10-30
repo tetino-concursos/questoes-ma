@@ -5,8 +5,9 @@
  if(!$('tt-home-greeting'))return;
  const adapter=window.ttStudentHomeAdapter||{
   user:()=>typeof usuario==='undefined'?null:usuario,
-  stats:()=>({ready:typeof catalogoCarregado!=='undefined'&&catalogoCarregado,
+  stats:()=>({ready:typeof catalogoCarregado!=='undefined'&&catalogoCarregado,error:typeof ttHomeStudyError!=='undefined'&&ttHomeStudyError,
    answers:typeof historico==='undefined'?[]:Object.values(historico)}),
+  coursesReady:()=>typeof ttAcessosCarregados!=='undefined'&&ttAcessosCarregados,
   courseCount:()=>new Set(Object.entries({...TT_CURSOS_IDS,...ttCursosDinamicos}).filter(([key])=>ttTemCurso(key)).map(([,id])=>id)).size,
   navigate:type=>{
    if(!usuario?.id||!catalogoCarregado||!ttTemAlgumCurso())return;
@@ -44,11 +45,19 @@
   return date.getUTCFullYear()===y&&date.getUTCMonth()===m-1&&date.getUTCDate()===d?date:null;
  }
  function text(id,value){const el=$(id);if(el&&el.textContent!==String(value))el.textContent=String(value);}
+ const shortcuts=document.querySelector('#tt-home .study-shortcuts');
+ const loading=document.createElement('p');loading.id='tt-home-loading';loading.className='tt-home-loading';loading.hidden=true;loading.setAttribute('role','status');shortcuts.after(loading);
+ function studyState(pending,error=false){
+  shortcuts.setAttribute('aria-busy',String(pending));
+  document.querySelectorAll('#tt-home [data-shortcut]').forEach(b=>{b.toggleAttribute('data-loading',pending);b.setAttribute('aria-busy',String(pending));});
+  loading.hidden=!pending&&!error;loading.textContent=error?'Não foi possível carregar seus estudos. Atualize a página para tentar novamente.':pending?'Carregando seus estudos…':'';
+ }
  function render(){
   const user=adapter.user();
   if(!user?.id){
    text('tt-home-course-count','— liberados');
    document.querySelectorAll('#tt-home [data-shortcut]').forEach(b=>{b.disabled=true;});
+   studyState(false);$('tt-home-course-count').setAttribute('aria-busy','false');
    text('tt-home-greeting','Olá.');text('tt-exam-count','Sua próxima prova');text('tt-exam-caption','Defina a data para acompanhar sua preparação.');
    ['tt-home-answered','tt-home-hits','tt-home-rate'].forEach(id=>text(id,'—'));
    if(dialog.open&&!busy)dialog.close();return;
@@ -57,9 +66,12 @@
   const name=[m.display_name,m.nickname,m.full_name,m.name].find(v=>typeof v==='string'&&v.trim());
   const first=name?.trim().split(/\s+/)[0];text('tt-home-greeting',first?'Olá, '+first+'.':'Olá.');
   const stats=adapter.stats(),answers=Array.isArray(stats.answers)?stats.answers:[];
-  const count=stats.ready?(adapter.courseCount?.()??document.querySelectorAll('#tt-course-gallery article:not([hidden]):not(.tt-course-locked)').length):null;
-  text('tt-home-course-count',count===null?'— liberados':count===1?'1 liberado':count+' liberados');
+  const coursesReady=adapter.coursesReady?.()??stats.ready;
+  const count=coursesReady?(adapter.courseCount?.()??document.querySelectorAll('#tt-course-gallery article:not([hidden]):not(.tt-course-locked)').length):null;
+  text('tt-home-course-count',count===null?(stats.error?'Não disponível':'Carregando…'):count===1?'1 liberado':count+' liberados');
+  $('tt-home-course-count').setAttribute('aria-busy',String(count===null&&!stats.error));
   document.querySelectorAll('#tt-home [data-shortcut]').forEach(b=>{b.disabled=!stats.ready||!count;});
+  studyState(!stats.ready&&!stats.error&&(count===null||count>0),!!stats.error);
   const hits=answers.filter(a=>a?.acertou===true).length;
   text('tt-home-answered',stats.ready?answers.length:'—');text('tt-home-hits',stats.ready?hits:'—');
   text('tt-home-rate',stats.ready?(answers.length?Math.round(hits/answers.length*100):0)+'%':'—');
