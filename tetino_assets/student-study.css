@@ -187,7 +187,7 @@ body.logged-in.tt-theme-dark :is(.tt-compact-meta-origin,.tt-compact-meta-subjec
 /* A focused session contains only the question and its on-demand answer panels. */
 body.logged-in .tt-q-focus-exit{display:none}
 body.logged-in.focus-mode{padding-top:0!important}
-body.logged-in.focus-mode>header,body.logged-in.focus-mode main>footer,body.logged-in.focus-mode :is(.tt-page-controls,#tt-question-actions,.session-panel,#tt-exam-bar,.member-nav,.tt-drawer,.tt-backdrop,#tt-home,#tt-profile-page,#tt-prova-selector,#study-picker,#desempenho-painel){display:none!important}
+body.logged-in.focus-mode>header,body.logged-in.focus-mode main>footer,body.logged-in.focus-mode :is(#tt-menu-button,.tt-page-controls,#tt-question-actions,.session-panel,#tt-exam-bar,.member-nav,.tt-drawer,.tt-backdrop,#tt-home,#tt-profile-page,#tt-prova-selector,#study-picker,#desempenho-painel){display:none!important}
 body.logged-in.focus-mode main{padding-top:16px!important;max-width:1000px!important}
 body.logged-in.focus-mode #study-area{display:block!important;max-width:960px!important;width:100%;margin:0 auto!important}
 body.logged-in.focus-mode #study-area>section{display:block!important;grid-template-columns:minmax(0,1fr)!important;width:100%!important}
