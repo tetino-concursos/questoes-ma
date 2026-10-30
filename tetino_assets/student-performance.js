@@ -89,7 +89,6 @@
   chart(data);
   const limited=data.daily.some(row=>!row.complete);
   text('tt-perf-status',limited?'O histórico de alguns dias anteriores está incompleto. Consulte os registros disponíveis.':data.daily.some(row=>row.total)?'':'Você ainda não respondeu questões neste período.');
-  text('tt-perf-history-note',`O resumo usa a última resposta por questão. A sequência considera respostas enviadas. Histórico diário completo a partir de ${fullFormatter.format(new Date(data.history_since))}; registros anteriores podem estar incompletos.`);
  }
  async function render(){
   const ctx=context();if(!ctx){clear();return;}
