@@ -26,6 +26,14 @@ payments/cloud-tests/.tools/
 !/admin.html
 !/site.html
 !/tetino_assets/
+!/.github/
+/.github/*
+!/.github/scripts/
+!/.github/workflows/
+/.github/scripts/*
+!/.github/scripts/publication-guard.cjs
+/.github/workflows/*
+!/.github/workflows/publication-guard.yml
 
 # Defesa adicional para segredos mesmo dentro de pastas publicaveis.
 *.dpapi
@@ -33,4 +41,3 @@ payments/cloud-tests/.tools/
 *.pfx
 *.key
 *.log
-
