@@ -1,0 +1,53 @@
+name: Publication guard
+
+on:
+  pull_request_target:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publication-guard-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  publication-guard:
+    name: Publication guard
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      REPOSITORY: ${{ github.repository }}
+      TRUSTED_SHA: ${{ github.workflow_sha }}
+      EVENT_NAME: ${{ github.event_name }}
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+      BASE_SHA: ${{ github.event.pull_request.base.sha }}
+    steps:
+      # No third-party actions, npm installs, credentials, builds or proposed code execution.
+      # pull_request_target executes the trusted default-branch verifier, never the PR copy.
+      - name: Inspect immutable Git objects
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$REPOSITORY" == 'tetino-concursos/questoes-ma' ]]
+          [[ "$TRUSTED_SHA" =~ ^[a-f0-9]{40}$ ]]
+          git init --quiet audit
+          cd audit
+          git remote add origin "https://github.com/$REPOSITORY.git"
+          git fetch --quiet --no-tags --depth=100 origin "$TRUSTED_SHA"
+          git show "$TRUSTED_SHA:.github/scripts/publication-guard.cjs" > ../trusted-publication-guard.cjs
+          if [[ "$EVENT_NAME" == 'pull_request_target' ]]; then
+            [[ "$PR_NUMBER" =~ ^[0-9]+$ ]]
+            [[ "$BASE_SHA" =~ ^[a-f0-9]{40}$ ]]
+            git fetch --quiet --no-tags --depth=100 origin "$BASE_SHA" \
+              "refs/pull/$PR_NUMBER/head:refs/guard/head" \
+              "refs/pull/$PR_NUMBER/merge:refs/guard/merge"
+            node ../trusted-publication-guard.cjs refs/guard/head "$BASE_SHA"
+            node ../trusted-publication-guard.cjs refs/guard/merge
+          else
+            node ../trusted-publication-guard.cjs "$TRUSTED_SHA"
+          fi
