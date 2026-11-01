@@ -1,0 +1,36 @@
+node_modules/
+test-results/
+playwright-report/
+.env
+.env.*
+env.local
+!.env.example
+payments/cloud-tests/.auth-credentials.dpapi
+payments/cloud-tests/.credential-probe-*.dpapi
+payments/cloud-tests/.mp-test-credentials.dpapi
+payments/cloud-tests/.mp-test-replacement.dpapi
+payments/cloud-tests/.mp-test-retired.dpapi
+payments/cloud-tests/.single-checkout-attempt.jsonl
+payments/cloud-tests/.single-checkout-attempt-preflight-20261028.jsonl
+payments/cloud-tests/.single-checkout-reconciliation.json
+payments/cloud-tests/.mp-webhook-test.dpapi
+payments/cloud-tests/.mp-webhook-candidate.dpapi
+payments/cloud-tests/.tools/
+
+# Repositorio publico: somente os arquivos necessarios ao site.
+# Fontes internas, testes, memoria e backups permanecem no desenvolvimento local.
+/*
+!/.gitignore
+!/CNAME
+!/index.html
+!/admin.html
+!/site.html
+!/tetino_assets/
+
+# Defesa adicional para segredos mesmo dentro de pastas publicaveis.
+*.dpapi
+*.p12
+*.pfx
+*.key
+*.log
+
