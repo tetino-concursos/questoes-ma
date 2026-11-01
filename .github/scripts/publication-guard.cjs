@@ -85,7 +85,7 @@ function verify(ref, base, cwd = process.cwd()) {
         failures.push(...inspect(name, body));
       }
     }
-    for (const required of ROOT) if (!found.has(required)) failures.push('required-file-missing');
+    for (const required of [...ROOT, ...CONTROL]) if (!found.has(required)) failures.push('required-file-missing');
   }
   if (failures.length) throw new Error([...new Set(failures)].sort().join(','));
   return {status: 'APROVADO COM EVIDÊNCIA', tree: target, trees: trees.length, entries: fileCount, blobs: checked.size};
