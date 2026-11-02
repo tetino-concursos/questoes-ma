@@ -88,9 +88,26 @@ async function ttRenameFolder(folder){
  try{await rpc('tetino_admin_renomear_pasta',{p_pasta_id:folder.id,p_novo_nome:clean})}catch(e){status('Erro ao renomear pasta: '+e.message,true);return;}
  folder.nome=clean;ttFolders.sort((a,b)=>a.nome.localeCompare(b.nome,'pt-BR'));renderQuestions();status('Pasta renomeada com sucesso.');
 }
+function ttConfirmFolderDelete(folder){
+ return new Promise(resolve=>{
+  const dialog=document.createElement('dialog');dialog.setAttribute('aria-labelledby','tt-delete-title');dialog.style.cssText='width:min(520px,calc(100% - 32px));max-height:90dvh;overflow:auto;border:1px solid #b8d3ff;border-radius:18px;padding:24px;color:#061631;background:white';
+  const title=element('h2','Excluir pasta');title.id='tt-delete-title';
+  const warning=element('p','Excluir definitivamente “'+folder.nome+'” e todas as suas questões de todos os cursos? Respostas, tentativas e textos de apoio vinculados também serão apagados. Esta ação não pode ser desfeita pelo painel.');warning.id='tt-delete-warning';dialog.setAttribute('aria-describedby',warning.id);
+  const form=document.createElement('form');form.method='dialog';
+  const label=element('label','Digite o nome exato da pasta para confirmar:');label.htmlFor='tt-delete-confirmation';
+  const input=document.createElement('input');input.id='tt-delete-confirmation';input.autocomplete='off';input.spellcheck=false;input.style.width='100%';
+  const feedback=element('p');feedback.setAttribute('role','alert');
+  const actions=element('div',undefined,'row'),cancel=element('button','Cancelar','secondary'),confirm=element('button','Excluir definitivamente','danger');cancel.type='button';confirm.type='submit';
+  let result=null;cancel.onclick=()=>dialog.close();
+  form.onsubmit=event=>{event.preventDefault();if(input.value!==folder.nome){feedback.textContent='Nome diferente. Nenhum conteúdo foi excluído.';input.focus();return;}result=input.value;dialog.close();};
+  dialog.addEventListener('close',()=>{dialog.remove();resolve(result);},{once:true});
+  actions.append(cancel,confirm);form.append(label,input,feedback,actions);dialog.append(title,warning,form);document.body.append(dialog);dialog.showModal();input.focus();
+ });
+}
 async function ttDeleteFolder(folder,button){
- const typed=prompt('Excluir definitivamente a pasta “'+folder.nome+'” e TODAS as suas questões de TODOS os cursos, incluindo respostas, tentativas e textos de apoio vinculados? Esta ação não pode ser desfeita pelo painel.\n\nDigite o nome exato da pasta para confirmar:');
- if(typed===null)return;
+ button.disabled=true;
+ let typed;try{typed=await ttConfirmFolderDelete(folder);}finally{button.disabled=false;}
+ if(typed===null){button.focus();return;}
  if(typed!==folder.nome){status('Nome diferente. Nenhum conteúdo foi excluído.',true);return;}
  button.disabled=true;
  try{
