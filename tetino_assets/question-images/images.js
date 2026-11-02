@@ -1,4 +1,4 @@
-/* Only three known legacy public assets are substituted. Originals stay intact. */
+/* Known public question assets: legacy substitutions and intrinsic dimensions. */
 (()=>{
  'use strict';
  const directory=new URL('.',document.currentScript.src);
@@ -7,8 +7,13 @@
   'campanha_questao_10.png':{file:'campaign.webp',width:663,height:701},
   'tirinha_questoes_08_09.png':{file:'comic.webp',width:666,height:838}
  };
+ const current={
+  'lima-campos-2025-ace/tirinha.webp':{width:735,height:807},
+  'lima-campos-2025-ace/campanha.webp':{width:510,height:723},
+  'lima-campos-2025-ace/word-estilos.webp':{width:702,height:135}
+ };
  function resolve(value){
-  try{const url=new URL(value);if(url.origin!=='https://kdalqvbexttclxtjmsxc.supabase.co'||!url.pathname.startsWith('/storage/v1/object/public/questao-imagens/'))return null;const name=url.pathname.split('/').at(-1),image=Object.hasOwn(legacy,name)?legacy[name]:null;return image?{src:new URL(image.file,directory).href,width:image.width,height:image.height}:null;}catch{return null;}
+  try{const url=new URL(value);if(url.origin!=='https://kdalqvbexttclxtjmsxc.supabase.co'||!url.pathname.startsWith('/storage/v1/object/public/questao-imagens/'))return null;const key=url.pathname.slice('/storage/v1/object/public/questao-imagens/'.length);if(Object.hasOwn(current,key))return {src:url.href,...current[key]};const name=url.pathname.split('/').at(-1),image=Object.hasOwn(legacy,name)?legacy[name]:null;return image?{src:new URL(image.file,directory).href,width:image.width,height:image.height}:null;}catch{return null;}
  }
  async function prepare(file){
   if(!['image/png','image/jpeg'].includes(file.type))return file;
