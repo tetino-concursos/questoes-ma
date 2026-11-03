@@ -15,6 +15,9 @@
   text=text.replace(/A decisão oficial manteve [A-E] e confirmou que\s+/i,'')
    .replace(/O comentário deve deixar essa diferença clara, sem trocar o gabarito oficial:\s*/i,'');
   text=text.split(/\n\s*\n/).filter(p=>! /^(?:(?:O recurso foi|A (?:decisão|justificativa)(?: oficial)? (?:indeferiu|mantém|manteve)|A banca (?:indeferiu|manteve|confirmou))\b|Nesta questão, houve recurso\b|Para responder à prova, preserve [A-E] e a justificativa oficial\b)/i.test(p.trim())).join('\n\n');
+  text=text.replace(/(?:^|\n\s*\n)Ainda não há, no material analisado, uma comparação de várias provas que permita afirmar que esse tema seja recorrente ou prever sua presença na próxima avaliação\.\s*/g,'')
+   .replace(/;\s*não prova, sozinho, frequência de cobrança em outras provas\./g,'.')
+   .replace(/;\s*não autoriza afirmar que a banca sempre repete essa estratégia ou que cobrará o mesmo assunto em outra cidade\./g,'.');
   return paragraphs(text);
  }
  function appeal(value){return paragraphs(String(value||'').replace(/^\s*Resultado da Análise:\s*(?:INDEFERIDO|DEFERIDO(?:\s+PARCIALMENTE)?)\s*\.\s*/i,''));}

@@ -1495,10 +1495,10 @@ document.getElementById('modo').addEventListener('change',updateFavoriteButton);
 function ttAnalyticsInPeriod(q){return window.TeTinoPerformance?.inPeriod(historico[q.id])||false}
 function renderNestedPerformance(){
  const target=document.getElementById('analytics-subjects');target.replaceChildren();
- const valid=questoes.filter(q=>q.materia && !(q.anulada||q.id==2024029||q.id===2024029)).sort((a,b)=>Number(a.id)-Number(b.id));
+ const valid=questoes.filter(q=>q.materia && !(q.anulada||q.id==2024029||q.id===2024029)).sort((a,b)=>(window.TeTinoLegatusEdital?.compare(a,b)||Number(a.id)-Number(b.id)));
  const groups=new Map();
  for(const q of valid){
-  const materia=q.materia,topico=q.topico||'A classificar',subtopico=q.subtopico||'A classificar';
+  const materia=window.TeTinoLegatusEdital?.displaySubject(q)||q.materia,topico=q.topico&&q.topico!=='A classificar'?q.topico:'',subtopico=q.subtopico&&q.subtopico!=='A classificar'?q.subtopico:'';
   if(!groups.has(materia))groups.set(materia,new Map());
   const topics=groups.get(materia);if(!topics.has(topico))topics.set(topico,new Map());
   const subs=topics.get(topico);if(!subs.has(subtopico))subs.set(subtopico,[]);
@@ -1521,8 +1521,8 @@ function renderNestedPerformance(){
   if(level===0&&status==='green'){const hint=document.createElement('span');hint.className='tt-performance-attention';hint.textContent='Ver outros assuntos com atenção';summary.append(hint)}
   const progress=document.createElement('div');progress.className='subject-track';
   const fill=document.createElement('div');fill.className='subject-fill';fill.style.width=pct+'%';progress.append(fill);details.append(progress);
-  const info=document.createElement('div');info.className='performance-counts';info.textContent=hits+' acertos · '+misses+' erros · '+total+' respondidas de '+qs.length+' questões';details.append(info);
-  if(node instanceof Map){const children=document.createElement('div');children.className='performance-children';for(const [child,subnode] of sort(node))children.append(makeLevel(child,subnode,level+1,color));details.append(children)}
+  const info=document.createElement('div');info.className='performance-counts';const hitText=document.createElement('span');hitText.className='tt-performance-hits';hitText.textContent=hits+' acertos';const missText=document.createElement('span');missText.className='tt-performance-misses';missText.textContent=misses+' erros';info.append(hitText,document.createTextNode(' · '),missText,document.createTextNode(' · '+total+' respondidas de '+qs.length+' questões'));details.append(info);
+  if(node instanceof Map){const children=document.createElement('div');children.className='performance-children';for(const [child,subnode] of sort(node))if(child)children.append(makeLevel(child,subnode,level+1,color));if(children.childElementCount)details.append(children)}
   else {const hint=document.createElement('div');hint.className='performance-leaf';hint.textContent='Subtópico do edital';details.append(hint)}
   return details;
  }
