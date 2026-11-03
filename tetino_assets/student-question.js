@@ -117,7 +117,7 @@ async function ttQContent(kind){
    const text=ttQElement('div','teacher-explanation');ttRichText(text,presentation?.comment(row.comentario)||String(row.comentario||'').trim()||'Comentário em preparação.');presentation?.decorate(text,correct);panel.append(text);
   }else{
    panel.append(ttQElement('h3',null,'Recurso da banca'));
-   if(row.resultado_recurso){const status=String(row.resultado_recurso).trim().toUpperCase(),decision=ttQElement('p','tt-q-decision','Resultado da Análise: ');decision.append(ttQElement('strong',status==='INDEFERIDO'?'tt-answer-incorrect':/^DEFERIDO(?:\s|$)/.test(status)?'tt-answer-correct':'',status+'.'));panel.append(decision);}
+   if(row.resultado_recurso){const status=String(row.resultado_recurso).trim().toUpperCase(),decision=ttQElement('p','tt-q-decision','Resultado da Análise: ');decision.append(ttQElement('strong',/^INDEFERIDO(?:\s|$)/.test(status)?'tt-answer-incorrect':/^DEFERIDO(?:\s|$)/.test(status)?'tt-answer-correct':'',status+'.'));panel.append(decision);}
    const text=ttQElement('div','teacher-explanation');ttRichText(text,presentation?.appeal(row.recurso_banca)||String(row.recurso_banca||'').trim()||'Nenhum recurso da banca foi publicado para esta questão.');presentation?.decorate(text,correct,true);panel.append(text);
   }
  }catch{if(valid()){panel.replaceChildren(ttQElement('p','muted','Não foi possível consultar o conteúdo. Feche e abra este balão para tentar novamente.'));}}
