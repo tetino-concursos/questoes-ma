@@ -237,3 +237,9 @@ body.logged-in.tt-theme-dark #tt-drawer :is(.tt-section,.tt-user-card small){col
 body.logged-in.tt-theme-dark #tt-drawer .tt-user-card{color:#edf5ff}
 @media(hover:hover){body.logged-in #tt-drawer :is(a,button.tt-link):hover:not(:disabled){background:#eff5ff!important;border-color:#c4dcfc!important;transform:translateX(2px)}body.logged-in.tt-theme-dark #tt-drawer :is(a,button.tt-link):hover:not(:disabled){background:#223e64!important}}
 @media(prefers-reduced-motion:reduce){body.logged-in #tt-drawer{transition:none!important}body.logged-in #tt-drawer :is(a,button.tt-link){transition:none!important;transform:none}}
+body.logged-in .tt-q-content .tt-answer-correct{color:#13703d!important;font-weight:800}
+body.logged-in .tt-q-content .tt-answer-incorrect{color:#b42318!important;font-weight:800}
+body.logged-in.tt-theme-dark .tt-q-content .tt-answer-correct{color:#78e5a3!important}
+body.logged-in.tt-theme-dark .tt-q-content .tt-answer-incorrect{color:#ffaaa3!important}
+body.logged-in #enunciado img,body.logged-in .teacher-explanation img{max-width:88%!important;max-height:64vh;max-height:64svh;object-fit:contain}
+body.logged-in #enunciado .tt-image-source{font-size:12px;line-height:1.6;color:inherit;margin:12px 0;white-space:pre-line}
