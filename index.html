@@ -1674,33 +1674,35 @@ document.getElementById('topico').addEventListener('change',()=>{
 })();
 </script><script>
 // Marcações por intervalos de caracteres: funciona com seleção no celular e no computador.
-let ttTextoId=null,ttTextoRaw='',ttTextoRequest=0,ttColor='#fff19a',ttEraseMode=false;
+let ttTextoId=null,ttTextoRaw='',ttTextoRequest=0,ttColor='#fff19a',ttEraseMode=false,ttTextoFormats=[];
 let ttMarks=[],ttUndo=[],ttRedo=[],ttPending=null;
 const ttTextModal=document.getElementById('tt-texto-modal'),ttTextContent=document.getElementById('tt-texto-content');
 const ttTrigger=document.getElementById('tt-texto-trigger');
 function ttRender(){
  ttTextContent.replaceChildren();let pos=0;
+ if(window.TeTinoQuestionPresentation?.renderSupport){window.TeTinoQuestionPresentation.renderSupport(ttTextContent,ttTextoRaw,ttTextoFormats,ttMarks);}else{
  for(const m of [...ttMarks].sort((a,b)=>a.start-b.start)){
   if(m.start>pos)ttTextContent.append(document.createTextNode(ttTextoRaw.slice(pos,m.start)));
   const mark=document.createElement('mark');mark.style.backgroundColor=m.color;mark.textContent=ttTextoRaw.slice(m.start,m.end);ttTextContent.append(mark);pos=m.end;
  }
  if(pos<ttTextoRaw.length)ttTextContent.append(document.createTextNode(ttTextoRaw.slice(pos)));
- if(!ttTextoRaw)ttTextContent.textContent='';
+ if(!ttTextoRaw)ttTextContent.textContent='';}
  document.getElementById('tt-undo-mark').disabled=!ttUndo.length;
  document.getElementById('tt-redo-mark').disabled=!ttRedo.length;
 }
 function ttResetTexto(q){
  const token=++ttTextoRequest,owner=usuario?.id,version=authVersion;
  const id=q?.id??null,changed=String(id)!==String(ttTextoId);
- if(changed){ttTextoId=id;ttTextoRaw='';ttMarks=[];ttUndo=[];ttRedo=[];ttPending=null;ttRender();ttTextModal.hidden=true;document.body.style.overflow=''}
+ if(changed){ttTextoId=id;ttTextoRaw='';ttTextoFormats=[];ttMarks=[];ttUndo=[];ttRedo=[];ttPending=null;ttRender();ttTextModal.hidden=true;document.body.style.overflow=''}
  ttTrigger.hidden=true;
  if(!id||!client)return;
  client.rpc('tetino_texto_apoio_autorizado',{p_questao_id:id}).then(({data,error})=>{
   if(token!==ttTextoRequest||owner!==usuario?.id||version!==authVersion||String(ttTextoId)!==String(id))return;
   if(error){console.warn('Texto de apoio:',error.message);return}
   const value=String(data||'').trim();
-  if(!value||window.TeTinoQuestionPresentation?.sourceOnly(value)){ttTextoRaw='';ttMarks=[];ttUndo=[];ttRedo=[];ttRender();ttTextModal.hidden=true;document.body.style.overflow='';document.querySelector('#enunciado .tt-image-source')?.remove();if(value){const source=document.createElement('p');source.className='tt-image-source';source.textContent=value;document.getElementById('enunciado').append(source);}return;}
-  if(ttTextoRaw!==value){ttTextoRaw=value;ttMarks=[];ttUndo=[];ttRedo=[];ttRender()}
+  if(!value||window.TeTinoQuestionPresentation?.sourceOnly(value)){ttTextoRaw='';ttTextoFormats=[];ttMarks=[];ttUndo=[];ttRedo=[];ttRender();ttTextModal.hidden=true;document.body.style.overflow='';document.querySelector('#enunciado .tt-image-source')?.remove();if(value){const source=document.createElement('p');source.className='tt-image-source';source.textContent=value;document.getElementById('enunciado').append(source);}return;}
+  const support=window.TeTinoQuestionPresentation?.parseSupport(value)||{text:value,formats:[]};
+  if(ttTextoRaw!==support.text||JSON.stringify(ttTextoFormats)!==JSON.stringify(support.formats)){ttTextoRaw=support.text;ttTextoFormats=support.formats;ttMarks=[];ttUndo=[];ttRedo=[];ttRender()}
   ttTrigger.hidden=false;
  });
 }

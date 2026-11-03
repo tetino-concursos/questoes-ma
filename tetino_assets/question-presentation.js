@@ -20,7 +20,7 @@
    .replace(/;\s*não autoriza afirmar que a banca sempre repete essa estratégia ou que cobrará o mesmo assunto em outra cidade\./g,'.');
   return paragraphs(text);
  }
- function appeal(value){return paragraphs(String(value||'').replace(/^\s*Resultado da Análise:\s*(?:INDEFERIDO|DEFERIDO(?:\s+PARCIALMENTE)?)\s*\.\s*/i,''));}
+ function appeal(value){return paragraphs(String(value||'').replace(/^\s*Resultado da Análise:\s*(?:INDEFERIDO(?:\s+PRELIMINARMENTE)?|DEFERIDO(?:\s+PARCIALMENTE)?)\s*\.\s*/i,''));}
  function decorate(node,correct,options=false){
   const walker=document.createTreeWalker(node,NodeFilter.SHOW_TEXT),texts=[];while(walker.nextNode())texts.push(walker.currentNode);
   for(const text of texts){
@@ -36,5 +36,21 @@
   }
  }
  function sourceOnly(value){const parts=String(value||'').trim().split(/\n\s*\n/);return parts.length>1&&/^Texto\s+\d+\s*[–—-]\s*Para\s+(?:as?\s+)?quest(?:ões|ão)\b/i.test(parts[0])&&parts.slice(1).every(p=>/^(?:Tirinha de |Disponível em:|Fonte:|https?:\/\/)/i.test(p));}
- window.TeTinoQuestionPresentation=Object.freeze({paragraphs,comment,appeal,decorate,sourceOnly});
+ function parseSupport(value){
+  const source=String(value||''),formats=[];let text='',bold=0,underline=0,pos=0;
+  const append=part=>{const start=text.length;text+=part;if(part&&(bold||underline))formats.push({start,end:text.length,bold:bold>0,underline:underline>0});};
+  for(const match of source.matchAll(/\[\[(\/)?(B|U)\]\]/g)){append(source.slice(pos,match.index));const change=match[1]?-1:1;if(match[2]==='B')bold=Math.max(0,bold+change);else underline=Math.max(0,underline+change);pos=match.index+match[0].length;}
+  append(source.slice(pos));return {text,formats};
+ }
+ function renderSupport(node,text,formats,marks){
+  const points=[...new Set([0,text.length,...formats.flatMap(f=>[f.start,f.end]),...marks.flatMap(m=>[m.start,m.end])])].filter(n=>Number.isInteger(n)&&n>=0&&n<=text.length).sort((a,b)=>a-b),fragment=document.createDocumentFragment();
+  for(let i=0;i<points.length-1;i++){const start=points[i],end=points[i+1],active=formats.filter(f=>f.start<=start&&f.end>=end),mark=marks.find(m=>m.start<=start&&m.end>=end);let part=document.createTextNode(text.slice(start,end));
+   if(active.some(f=>f.underline)){const u=document.createElement('u');u.append(part);part=u;}
+   if(active.some(f=>f.bold)){const strong=document.createElement('strong');strong.append(part);part=strong;}
+   if(mark){const highlight=document.createElement('mark');highlight.style.backgroundColor=mark.color;highlight.append(part);part=highlight;}
+   fragment.append(part);
+  }
+  node.replaceChildren(fragment);
+ }
+ window.TeTinoQuestionPresentation=Object.freeze({paragraphs,comment,appeal,decorate,sourceOnly,parseSupport,renderSupport});
 })();
