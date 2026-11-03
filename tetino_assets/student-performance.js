@@ -95,7 +95,7 @@
   if(owner&&owner!==ctx.id)clear();owner=ctx.id;
   const rows=Object.values(ctx.history).filter(inPeriod),total=rows.length,hits=rows.filter(row=>row.acertou===true).length;
   const counts={total,hits,rate:total?100*hits/total:0};
-  for(const [id,value] of Object.entries({'analytics-total':total,'analytics-hits':hits,'analytics-errors':total-hits,'analytics-favs':ctx.favorites.size}))text(id,numbers.format(value));
+  for(const [id,value] of Object.entries({'analytics-total':total,'analytics-hits':hits,'analytics-errors':total-hits,'analytics-favs':window.TeTinoFavorites&&!window.TeTinoFavorites.status().ready?null:ctx.favorites.size}))text(id,value===null?'—':numbers.format(value));
   text('analytics-rate',total?Math.round(counts.rate)+'%':'—');$('analytics-rate').dataset.state=classify(hits,total);
   overview(counts);
   renderNestedPerformance();
