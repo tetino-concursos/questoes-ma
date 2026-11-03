@@ -111,8 +111,15 @@ async function ttQReveal(){
 async function ttQContent(kind){
  const ctx=ttQContext(),request=++ttQuestionRequests[kind],valid=()=>ttQCurrent(ctx)&&request===ttQuestionRequests[kind],panel=document.getElementById('tt-q-'+kind);panel.replaceChildren(ttQElement('p','muted','Consultando conteúdo…'));panel.setAttribute('aria-busy','true');
  try{const row=await ttQSolution(ctx);if(!row||!valid())return;Object.assign(ctx.q,row);panel.replaceChildren();
-  if(kind==='comment'){panel.append(ttQElement('h3',null,'Resposta correta: '+String.fromCharCode(65+row.correta)));const text=ttQElement('div','teacher-explanation');ttRichText(text,String(row.comentario||'').trim()||'Comentário em preparação.');panel.append(text);}
-  else{panel.append(ttQElement('h3',null,'Recurso da banca'));if(row.resultado_recurso)panel.append(ttQElement('p','tt-q-decision','Resultado: '+row.resultado_recurso));const text=ttQElement('div','teacher-explanation');ttRichText(text,String(row.recurso_banca||'').trim()||'Nenhum recurso da banca foi publicado para esta questão.');panel.append(text);}
+  const presentation=window.TeTinoQuestionPresentation,correct=String.fromCharCode(65+row.correta);
+  if(kind==='comment'){
+   const heading=ttQElement('h3',null,'Resposta correta: ');heading.append(ttQElement('strong','tt-answer-correct',correct));panel.append(heading);
+   const text=ttQElement('div','teacher-explanation');ttRichText(text,presentation?.comment(row.comentario)||String(row.comentario||'').trim()||'Comentário em preparação.');presentation?.decorate(text,correct);panel.append(text);
+  }else{
+   panel.append(ttQElement('h3',null,'Recurso da banca'));
+   if(row.resultado_recurso){const status=String(row.resultado_recurso).trim().toUpperCase(),decision=ttQElement('p','tt-q-decision','Resultado da Análise: ');decision.append(ttQElement('strong',status==='INDEFERIDO'?'tt-answer-incorrect':/^DEFERIDO(?:\s|$)/.test(status)?'tt-answer-correct':'',status+'.'));panel.append(decision);}
+   const text=ttQElement('div','teacher-explanation');ttRichText(text,presentation?.appeal(row.recurso_banca)||String(row.recurso_banca||'').trim()||'Nenhum recurso da banca foi publicado para esta questão.');presentation?.decorate(text,correct,true);panel.append(text);
+  }
  }catch{if(valid()){panel.replaceChildren(ttQElement('p','muted','Não foi possível consultar o conteúdo. Feche e abra este balão para tentar novamente.'));}}
  finally{if(valid())panel.removeAttribute('aria-busy');}
 }
