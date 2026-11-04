@@ -64,7 +64,17 @@ body.logged-in .session-metrics strong,body.logged-in .session-number strong{fon
 body.logged-in :is(.tt-timer-actions button,.focus-toggle){min-height:36px;border-radius:10px;font-weight:600}
 body.logged-in :is(.tt-texto-dialog,.tt-profile-dialog){font-family:TeTinoStudent,Arial,sans-serif;border:1px solid #bcdcff;border-radius:22px;color:#061344;background:#fff}
 body.logged-in .tt-texto-header{background:#fff;border-color:#d5e5fa}
-body.logged-in .tt-texto-content{font-size:17px;line-height:1.85}
+body.logged-in .tt-texto-content{font:400 clamp(15px,2.4vw,17px)/1.8 TeTinoStudent,Arial,sans-serif;color:#263b55;letter-spacing:0}
+body.logged-in .tt-texto-dialog{width:min(860px,100%);max-height:calc(100dvh - 32px)}
+body.logged-in .tt-book-symbol{background:#eaf3ff;color:#0055d6;width:38px;height:38px;flex-shrink:0}
+body.logged-in .tt-book-symbol svg{width:22px;height:22px}
+body.logged-in .tt-texto-heading small{color:#5d7197;font-weight:400}
+body.logged-in .tt-texto-tools .tt-icon-btn,body.logged-in .tt-close-btn{width:40px;height:40px;touch-action:manipulation}
+body.logged-in .tt-texto-tools button{transition:background-color .18s ease,box-shadow .18s ease;touch-action:manipulation}
+body.logged-in .tt-texto-tools .tt-marker{width:32px;height:32px;min-width:32px}
+body.logged-in .tt-texto-tools .tt-icon-btn:disabled{opacity:.4}
+@media(prefers-reduced-motion:reduce){body.logged-in .tt-texto-tools button{transition:none}}
+@media(max-width:400px){body.logged-in .tt-texto-tools{gap:6px;padding:10px}body.logged-in .tt-colors{gap:7px}body.logged-in .tt-texto-tools .tt-icon-btn{width:34px;height:38px}body.logged-in .tt-toolbar-divider{margin:0}}
 body.logged-in .tt-texto-heading strong{color:#061344;font-weight:600}
 body.logged-in .tt-texto-tools{background:#f4f8ff;border-color:#d5e5fa;gap:10px}
 body.logged-in .tt-icon-btn{border-radius:11px}
@@ -77,6 +87,10 @@ body.logged-in.tt-theme-dark :is(.empty,.analytics-note,.map-hint,.tt-compact-me
 body.logged-in.tt-theme-dark :is(.tt-texto-dialog,.tt-texto-header,.tt-profile-dialog){background:#19263d;color:#edf5ff;border-color:#344765}
 body.logged-in.tt-theme-dark .tt-texto-heading strong{color:#edf5ff}
 body.logged-in.tt-theme-dark .tt-texto-tools{background:#233450;border-color:#405777}
+body.logged-in.tt-theme-dark .tt-texto-content{color:#edf5ff}
+body.logged-in.tt-theme-dark .tt-texto-heading small{color:#b8c9e1}
+body.logged-in.tt-theme-dark .tt-book-symbol{background:#233e64;color:#85bdff}
+body.logged-in.tt-theme-dark .tt-texto-tools .tt-icon-btn,body.logged-in.tt-theme-dark .tt-close-btn{color:#b8c9e1!important}
 body.logged-in.tt-theme-dark :is(input,select,textarea,button,a,summary):focus-visible{outline-color:#85bdff}
 @media(max-width:700px){
  body.logged-in .question{font-size:17px}

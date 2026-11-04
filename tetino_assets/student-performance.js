@@ -61,7 +61,7 @@
  }
  function chart(data){
   const root=$('tt-daily-chart');for(const child of [...root.children])if(!['title','desc'].includes(child.localName))child.remove();
-  const points=data.daily;
+  const points=data.daily.slice(-7);
   if(!points.length){$('tt-perf-chart-wrap').hidden=true;$('tt-perf-values').hidden=true;return;}
   const max=Math.ceil(Math.max(2,...points.map(row=>row.total))/2)*2;
   const x=i=>36+(points.length===1?382:i/(points.length-1)*772),y=value=>188-value/max*160;
@@ -71,8 +71,7 @@
    const flush=()=>{if(segment.length)root.append(svg('polyline',{points:segment.join(' '),class:css}));segment=[];};
    points.forEach((point,i)=>{if(!point.complete&&!point.total){flush();return;}segment.push(x(i)+','+y(point[field]));if(!point.complete){flush();root.append(svg('circle',{cx:x(i),cy:y(point[field]),r:3.5,class:field==='hits'?'tt-perf-dot':'tt-perf-dot tt-perf-dot-answered','data-partial':'true'}));}});flush();
   }
-  const ticks=[...new Set([0,Math.floor((points.length-1)/3),Math.floor((points.length-1)*2/3),points.length-1])];
-  for(const i of ticks)root.append(svg('text',{x:x(i),y:218,'text-anchor':i===0?'start':i===points.length-1?'end':'middle'},dateFormatter.format(dayDate(points[i].day))));
+  for(let i=0;i<points.length;i++)root.append(svg('text',{x:x(i),y:218,class:'tt-perf-date','text-anchor':i===0?'start':i===points.length-1?'end':'middle'},dateFormatter.format(dayDate(points[i].day))));
   const last=points[points.length-1];if(last.complete||last.total)root.append(svg('circle',{cx:x(points.length-1),cy:y(last.hits),r:4.5,class:'tt-perf-dot'}));
   const fragment=document.createDocumentFragment();
   for(const point of points){const tr=el('tr'),format=value=>!point.complete&&!point.total?'Sem registro':numbers.format(value)+(point.complete?'':' (parcial)');for(const value of [fullFormatter.format(dayDate(point.day)),format(point.total),format(point.hits)])tr.append(el('td','',value));fragment.append(tr);}
@@ -87,8 +86,8 @@
    text('tt-perf-comparison',`Antes: ${Math.round(before)}% · ${diff>0?'+':''}${numbers.format(diff)} p.p.`);
   }else text('tt-perf-comparison',period()==='all'?'Sem comparação neste período':data.comparison_available?'Sem respostas para comparar':'Histórico insuficiente para comparar');
   chart(data);
-  const limited=data.daily.some(row=>!row.complete);
-  text('tt-perf-status',limited?'O histórico de alguns dias anteriores está incompleto. Consulte os registros disponíveis.':data.daily.some(row=>row.total)?'':'Você ainda não respondeu questões neste período.');
+  const daily=data.daily.slice(-7),limited=daily.some(row=>!row.complete);
+  text('tt-perf-status',limited?'O histórico de alguns dias anteriores está incompleto. Consulte os registros disponíveis.':daily.some(row=>row.total)?'':'Você ainda não respondeu questões nos últimos sete dias.');
  }
  async function render(){
   const ctx=context();if(!ctx){clear();return;}
@@ -99,13 +98,15 @@
   text('analytics-rate',total?Math.round(counts.rate)+'%':'—');$('analytics-rate').dataset.state=classify(hits,total);
   overview(counts);
   renderNestedPerformance();
-  const selected=period();text('tt-daily-caption',selected==='all'?'Respondidas e acertos nos últimos 90 dias. O resumo considera todo o período.':selected==='today'?'Respondidas e acertos de hoje.':`Respondidas e acertos nos últimos ${selected} dias.`);
+  const selected=period();text('tt-daily-caption','Respondidas e acertos nos últimos 7 dias.');
   const key=signature(ctx);
   if(cache&&cache.key===key&&Date.now()-cache.at<60000){showAggregate(cache.data,counts);return;}
   if(inflight?.key===key)return;
   const ticket=++epoch;inflight={key};hideHistory();$('tt-perf-retry').hidden=true;text('tt-perf-status','Carregando seu histórico…');
   try{
-   const request=client.rpc('tetino_evolucao_desempenho',{p_dias:selected==='all'?0:selected==='today'?1:Number(selected)});
+   const summary=client.rpc('tetino_evolucao_desempenho',{p_dias:selected==='all'?0:selected==='today'?1:Number(selected)});
+   // Only "Hoje" lacks a full week; keep its comparison and fetch the weekly graph separately.
+   const request=selected==='today'?Promise.all([summary,client.rpc('tetino_evolucao_desempenho',{p_dias:7})]).then(([current,week])=>{if(current.error)return current;if(week.error)return week;return {data:{...validate(current.data),daily:validate(week.data).daily},error:null};}):summary;
    let timeout;
    const response=await Promise.race([request,new Promise((_,reject)=>{timeout=setTimeout(()=>reject(Error('Timeout')),12000);})]).finally(()=>clearTimeout(timeout));
    if(!current(ctx,ticket,key))return;
