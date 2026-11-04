@@ -63,16 +63,23 @@
   const root=$('tt-daily-chart');for(const child of [...root.children])if(!['title','desc'].includes(child.localName))child.remove();
   const points=data.daily.slice(-7);
   if(!points.length){$('tt-perf-chart-wrap').hidden=true;$('tt-perf-values').hidden=true;return;}
-  const max=Math.ceil(Math.max(2,...points.map(row=>row.total))/2)*2;
-  const x=i=>36+(points.length===1?382:i/(points.length-1)*772),y=value=>188-value/max*160;
-  for(const value of [0,max/2,max]){root.append(svg('line',{x1:36,x2:808,y1:y(value),y2:y(value),class:'tt-perf-grid'}));root.append(svg('text',{x:24,y:y(value)+4,'text-anchor':'end'},numbers.format(value)));}
+  const peak=Math.max(2,...points.map(row=>row.total)),rough=peak/5,magnitude=10**Math.floor(Math.log10(rough));
+  const step=Math.max(1,[1,2,5,10].find(n=>n*magnitude>=rough)*magnitude),max=Math.ceil(peak/step)*step;
+  const x=i=>96+(points.length===1?352:i/(points.length-1)*704),y=value=>188-value/max*160;
+  for(let value=0;value<=max;value+=step){root.append(svg('line',{x1:96,x2:800,y1:y(value),y2:y(value),class:'tt-perf-grid','data-value':value}));root.append(svg('text',{x:80,y:y(value),class:'tt-perf-axis','text-anchor':'end','dominant-baseline':'middle'},numbers.format(value)));}
   for(const [field,css] of [['total','tt-perf-line-answered'],['hits','tt-perf-line-hits']]){
    let segment=[];
    const flush=()=>{if(segment.length)root.append(svg('polyline',{points:segment.join(' '),class:css}));segment=[];};
-   points.forEach((point,i)=>{if(!point.complete&&!point.total){flush();return;}segment.push(x(i)+','+y(point[field]));if(!point.complete){flush();root.append(svg('circle',{cx:x(i),cy:y(point[field]),r:3.5,class:field==='hits'?'tt-perf-dot':'tt-perf-dot tt-perf-dot-answered','data-partial':'true'}));}});flush();
+   points.forEach((point,i)=>{if(!point.complete&&!point.total){flush();return;}segment.push(x(i)+','+y(point[field]));if(!point.complete)flush();});flush();
   }
-  for(let i=0;i<points.length;i++)root.append(svg('text',{x:x(i),y:218,class:'tt-perf-date','text-anchor':i===0?'start':i===points.length-1?'end':'middle'},dateFormatter.format(dayDate(points[i].day))));
-  const last=points[points.length-1];if(last.complete||last.total)root.append(svg('circle',{cx:x(points.length-1),cy:y(last.hits),r:4.5,class:'tt-perf-dot'}));
+  // Draw markers after both lines; concentric sizes keep coincident totals visible.
+  for(const field of ['total','hits'])points.forEach((point,i)=>{
+   if(!point.complete&&!point.total)return;
+   const dot=svg('circle',{cx:x(i),cy:y(point[field]),r:field==='total'?7:4.5,class:field==='hits'?'tt-perf-dot':'tt-perf-dot tt-perf-dot-answered','data-day':point.day,'data-series':field,...(!point.complete?{'data-partial':'true'}:{})});
+   dot.append(svg('title',{},`${dateFormatter.format(dayDate(point.day))}: ${numbers.format(point[field])} ${field==='hits'?'acertos':'respondidas'}${point.complete?'':' (registro parcial)'}`));root.append(dot);
+  });
+  for(let i=0;i<points.length;i++)root.append(svg('text',{x:x(i),y:218,class:'tt-perf-date','text-anchor':'middle'},dateFormatter.format(dayDate(points[i].day))));
+  const last=points[points.length-1];
   const fragment=document.createDocumentFragment();
   for(const point of points){const tr=el('tr'),format=value=>!point.complete&&!point.total?'Sem registro':numbers.format(value)+(point.complete?'':' (parcial)');for(const value of [fullFormatter.format(dayDate(point.day)),format(point.total),format(point.hits)])tr.append(el('td','',value));fragment.append(tr);}
   $('tt-perf-daily-rows').replaceChildren(fragment);

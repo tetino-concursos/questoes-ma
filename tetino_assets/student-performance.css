@@ -27,9 +27,9 @@ body.logged-in .tt-performance .tt-perf-key-hits{border-top-style:solid;border-c
 body.logged-in .tt-performance #tt-perf-chart-wrap{margin:20px 0 8px;overflow:hidden}
 body.logged-in .tt-performance #tt-daily-chart{display:block;width:100%;height:auto;min-height:160px;overflow:visible}
 body.logged-in .tt-performance #tt-daily-chart text{font:400 11px Poppins,Arial,sans-serif;fill:var(--perf-muted)}
-body.logged-in .tt-performance #tt-daily-chart text.tt-perf-date{font-size:16px;font-variant-numeric:tabular-nums}
-@media(max-width:1000px){body.logged-in .tt-performance #tt-daily-chart text.tt-perf-date{font-size:24px}}
-@media(max-width:400px){body.logged-in .tt-performance #tt-daily-chart text.tt-perf-date{font-size:32px}}
+body.logged-in .tt-performance #tt-daily-chart :is(text.tt-perf-date,text.tt-perf-axis){font-size:16px;font-variant-numeric:tabular-nums}
+@media(max-width:1000px){body.logged-in .tt-performance #tt-daily-chart :is(text.tt-perf-date,text.tt-perf-axis){font-size:24px}}
+@media(max-width:400px){body.logged-in .tt-performance #tt-daily-chart :is(text.tt-perf-date,text.tt-perf-axis){font-size:32px}}
 .tt-perf-grid{stroke:var(--perf-line);stroke-width:1}.tt-perf-line-answered{stroke:var(--perf-blue);stroke-dasharray:6 5;stroke-width:2.2;fill:none;vector-effect:non-scaling-stroke}.tt-perf-line-hits{stroke:var(--perf-green);stroke-width:2.5;fill:none;vector-effect:non-scaling-stroke}.tt-perf-dot{fill:var(--perf-green);stroke:var(--perf-surface);stroke-width:2}
 .tt-perf-dot-answered{fill:var(--perf-blue)}
 body.logged-in .tt-performance .tt-perf-overview{margin-top:20px}
