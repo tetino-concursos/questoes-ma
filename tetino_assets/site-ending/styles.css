@@ -27,7 +27,7 @@
 .foot.tte-footer{padding-block:34px}
 .tte-footer .footer-grid{gap:26px}
 .tte-footer .footer-brand{display:inline-flex;align-items:center;min-height:44px;flex-shrink:0}
-.tte-footer .footer-brand img{width:140px;height:92px}
+.tte-footer .footer-brand img{width:140px;height:92px;object-fit:contain}
 .tte-footer .tte-footer-copy{flex:1;min-width:0}
 .tte-footer .tte-footer-copy p{min-width:0}
 .tte-footer .tte-footer-motto{font-size:14px;line-height:1.65;font-weight:600;color:#e0eeff;margin-bottom:6px}
