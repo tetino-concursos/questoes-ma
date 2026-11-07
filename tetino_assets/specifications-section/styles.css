@@ -71,9 +71,6 @@
 #detail-section .tsp-preview-track{ display: flex; width: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-inline: contain; }
 #detail-section .tsp-preview-track::-webkit-scrollbar{ display: none; }
 #detail-section .tsp-preview-slide{ position:relative; flex: 0 0 100%; width: 100%; min-width: 0; scroll-snap-align: start; overflow: hidden; }
-/* Brand overlay follows the screenshot scale without recompressing the original. */
-#detail-section .tsp-preview-slide::after{content:"";position:absolute;pointer-events:none;top:0.5%;left:44%;width:12%;height:8%;background:#102747 url("../brand/tetino-escuro-240.webp") center/94% auto no-repeat}
-#detail-section .tsp-preview-slide:has(img[width="390"])::after{top:0.5%;left:30%;width:40%;height:8.4%}
 #detail-section .tsp-preview-track img{ display: block; width: 100%; height: auto; object-fit: contain; user-select: none; }
 #detail-section .tsp-preview-track:focus-visible{ outline-offset: -4px; }
 #detail-section .tsp-preview-track img{ transform-origin: center bottom; }
