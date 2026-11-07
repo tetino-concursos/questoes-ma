@@ -106,3 +106,9 @@ body .hero-image-link:focus-visible,body .top a:focus-visible{outline:3px solid 
   body .hero-benefit-icon{display:none}
   body .hero-benefits-list{font-size:12px}
 }
+
+/* Compact account action beside the sign-in link. */
+body .top .navlinks{width:auto;gap:18px;font-size:16px}
+body .top .nav-signin{width:auto}
+body .top .nav-create{width:140px;min-height:44px;flex-shrink:0}
+@media(max-width:600px){body .top .navlinks{gap:12px;font-size:14px}body .top .nav-create{width:112px}}
