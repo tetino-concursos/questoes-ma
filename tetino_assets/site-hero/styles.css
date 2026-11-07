@@ -2,7 +2,7 @@
 body .top{position:absolute;inset:0 0 auto;background:linear-gradient(180deg,#06182ff5,#06182fe8);border:0;border-bottom:1px solid #51baff38;color:#fff}
 body .top .nav{width:90%;max-width:846px;min-height:0;aspect-ratio:846/190;gap:0;align-items:center}
 body .top .logo{display:block;width:25%;flex-shrink:0}
-body .top .hero-logo{width:100%;height:auto;filter:none}
+body .top .hero-logo{width:100%;height:auto;aspect-ratio:1448/1086;object-fit:contain;filter:none}
 body .top .navlinks{width:43%;gap:8%;justify-content:flex-end;font-size:clamp(12px,2.9vw,28px)}
 body .top .navlinks>a{justify-content:center;min-height:44px}
 body .top .nav-signin{width:26%;color:#c6dcf7}
@@ -26,6 +26,10 @@ body .hero-device:active{transform:translateY(2px) scale(.98)}
 body .hero-notebook{left:0;top:34.5%;width:94%;z-index:1}
 body .hero-books{left:-14%;top:49%;width:48%;z-index:2}
 body .hero-phone{right:-1%;top:44%;width:37%;z-index:3}
+/* Keep the original device art and its motion; replace only the brand face. */
+body .hero-device::after{content:"";position:absolute;pointer-events:none;background:#021c34 url("../brand/tetino-escuro-240.webp") center/94% auto no-repeat}
+body .hero-notebook::after{left:35%;top:16.8%;width:9.5%;height:8.5%;transform:skew(-8deg,-6deg)}
+body .hero-phone::after{left:54.3%;top:10.7%;width:9.5%;height:4.3%;transform:skew(-8deg,-4deg);background-color:#0d2241}
 body .hero-benefits-art{position:absolute;left:3.3%;top:81%;width:93.4%;aspect-ratio:6.8;background:linear-gradient(135deg,#031a35ee,#001126f5);border:1px solid #087ae5;border-radius:2.6cqi;z-index:4;container-type:inline-size}
 body .hero-benefits-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:center;height:100%;list-style:none;padding:0;margin:0;color:#fff;font-size:clamp(9px,3cqi,26px);line-height:1.3}
 body .hero-benefits-list li{display:flex;align-items:center;gap:1.8cqi;height:65%;min-width:0;padding-inline:10% 0}
