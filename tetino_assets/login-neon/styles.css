@@ -15,7 +15,7 @@ body:not(.logged-in) main{
   color: var(--color-text);
   background-color: var(--color-background);
   /* Preserve the complete portrait art on narrow screens; fill wide screens. */
-  background-image: url("fundo-login-coruja-sem-estrelas.webp");
+  background-image: url("fundo-login-coruja-equilibrado.webp");
   background-position: center top;
   background-size: cover;
   background-repeat: no-repeat;
@@ -125,7 +125,7 @@ body:not(.logged-in) .login-benefits{ margin: 24px 0 28px; }
 body:not(.logged-in) main{
     background-image:
       linear-gradient(to bottom, transparent 85%, var(--color-background)),
-      url("fundo-login-coruja-sem-estrelas.webp");
+      url("fundo-login-coruja-equilibrado.webp");
     background-size: 100% calc(100vw * 1672 / 941), 100% auto;
   }
 }
